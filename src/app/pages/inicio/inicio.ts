@@ -8,7 +8,7 @@ import { Testimonios } from '../../components/testimonios/testimonios';
 import { Hero } from '../../components/hero/hero';
 @Component({
   selector: 'app-inicio',
-  imports: [RouterLink , Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero],
+  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
 })
