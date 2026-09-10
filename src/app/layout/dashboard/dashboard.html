@@ -1,0 +1,273 @@
+<div class="dashboard">
+
+  <!-- =========================
+       OVERLAY PARA MÓVIL
+  ========================== -->
+
+  @if (menuAbierto()) {
+    <div
+      class="overlay"
+      (click)="cerrarMenu()">
+    </div>
+  }
+
+
+  <!-- =========================
+       SIDEBAR
+  ========================== -->
+
+  <aside
+    class="sidebar"
+    [class.sidebar-abierto]="menuAbierto()">
+
+    <!-- LOGO -->
+
+    <div class="sidebar-header">
+
+      <div class="logo">
+
+        <div class="logo-icon">
+          <img src="img/icono.png" alt="Logo posgrado upea" />
+        </div>
+
+        <div class="logo-text">
+          <strong>POSGRADO</strong>
+
+          <span>UPEA</span>
+        </div>
+
+      </div>
+
+      <button
+        class="btn-cerrar"
+        type="button"
+        (click)="cerrarMenu()"
+        aria-label="Cerrar menú">
+
+        ✕
+      </button>
+
+    </div>
+
+
+    <!-- =========================
+         NAVEGACIÓN
+    ========================== -->
+
+    <nav class="menu">
+
+      <p class="menu-title">
+        PRINCIPAL
+      </p>
+
+
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="cerrarMenu()">
+
+        <span class="icon">⌂</span>
+
+        <span>Inicio</span>
+
+      </a>
+
+
+      <p class="menu-title">
+        GESTIÓN ACADÉMICA
+      </p>
+
+
+      <a
+        routerLink="/dashboard/personas"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">👤</span>
+
+        <span>Personas</span>
+
+      </a>
+
+
+      <a
+        routerLink="/dashboard/programas"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">🎓</span>
+
+        <span>Programas</span>
+
+      </a>
+
+
+      <a
+        routerLink="/dashboard/titulados"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">📜</span>
+
+        <span>Titulados</span>
+
+      </a>
+
+
+      <p class="menu-title">
+        COLACIÓN
+      </p>
+
+
+      <a
+        routerLink="/dashboard/salas"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">🏛</span>
+
+        <span>Salas</span>
+
+      </a>
+
+
+      <a
+        routerLink="/dashboard/asistencias"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">✓</span>
+
+        <span>Asistencias</span>
+
+      </a>
+
+
+      <a
+        routerLink="/dashboard/asignaciones"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">▦</span>
+
+        <span>Asignaciones</span>
+
+      </a>
+
+
+      <p class="menu-title">
+        CONFIGURACIÓN
+      </p>
+
+
+      <a
+        routerLink="/dashboard/usuarios"
+        routerLinkActive="active"
+        (click)="cerrarMenu()">
+
+        <span class="icon">⚙</span>
+
+        <span>Usuarios</span>
+
+      </a>
+
+        <!-- Cerrar sesión -->
+      <a  class="logout-btn" (click)="cerrarSesion()">
+        <span>🚪</span>
+        <span>Cerrar sesión</span>
+      </a>
+
+    </nav>
+
+
+    <!-- =========================
+         FOOTER SIDEBAR
+    ========================== -->
+
+    <div class="sidebar-footer">
+
+      <div class="usuario">
+
+        <div class="avatar">
+          <img src="img/user.png" alt="Avatar">
+        </div>
+
+        <div class="usuario-info">
+
+          <strong>Administrador</strong>
+
+          <span>Posgrado UPEA</span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================
+       CONTENIDO PRINCIPAL
+  ========================== -->
+
+  <main class="contenido">
+
+    <!-- HEADER -->
+
+    <header class="topbar">
+
+      <button
+        type="button"
+        class="btn-menu"
+        (click)="abrirCerrarMenu()"
+        aria-label="Abrir menú">
+
+        ☰
+
+      </button>
+
+
+      <div class="breadcrumb">
+
+        <h1>
+          Panel Administrativo
+        </h1>
+
+        <span>
+          Sistema de Gestión de Posgrado
+        </span>
+
+      </div>
+
+
+      <div class="topbar-actions">
+
+        <button
+          type="button"
+          class="btn-notificacion"
+          aria-label="Notificaciones">
+
+          🔔
+
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =========================
+         CONTENIDO DINÁMICO
+    ========================== -->
+
+    <section class="contenido-principal">
+
+      <router-outlet></router-outlet>
+
+    </section>
+
+  </main>
+
+</div>

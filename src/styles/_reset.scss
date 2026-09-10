@@ -1,0 +1,55 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+html {
+  margin: 0;
+  padding: 0;
+
+  scroll-behavior: smooth;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+
+  background: var(--color-background);
+
+  transition:
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+button {
+  cursor: pointer;
+}
+
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}

@@ -1,0 +1,99 @@
+<section id="conocenos" class="conocenos">
+  <div class="conocenos__container">
+
+    <h2 class="conocenos__title">Conócenos</h2>
+
+    <div class="conocenos__grid">
+
+      <!-- =========================================================
+           COLUMNA IZQUIERDA: MISIÓN / VISIÓN / PROPÓSITO
+           ========================================================= -->
+      <div class="conocenos__cards">
+
+        <article class="info-card">
+          <h3>Misión</h3>
+          <p>
+            Formar profesionales idóneos y con calidad en diversos niveles
+            de posgrado, recreando la actividad académica, investigación,
+            transferencia e integración tecnológica y del conocimiento, en
+            los procesos de interacción social, confrontando y asimilando la
+            incidencia de los valores socioeducativos para el desarrollo
+            económico, productivo y social a nivel local, regional, nacional
+            e internacional.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <h3>Visión</h3>
+          <p>
+            Ser una institución reconocida, de prestigio nacional e
+            internacional, con programas e innovaciones académicas y
+            pedagógicas, que le permitan desarrollar sus competencias
+            formativas e investigativas con pertinencia, de acuerdo al
+            desarrollo socioeconómico, tecnológico, y que responda a los
+            altos intereses y problemáticas de la sociedad y del país.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <h3>Propósito</h3>
+          <p>
+            El posgrado está dirigido a profesionales que buscan superarse
+            permanentemente con innovaciones en los diferentes campos del
+            conocimiento, generando y creando saberes a través de la
+            investigación científica, en correspondencia con los avances de
+            la ciencia y la tecnología, comprometidos con la problemática de
+            la sociedad.
+          </p>
+        </article>
+
+      </div>
+
+      <!-- =========================================================
+           COLUMNA DERECHA: AUTORIDADES
+           ========================================================= -->
+      <div class="conocenos__autoridades">
+
+        <h3 class="conocenos__autoridades-title">Nuestras Autoridades</h3>
+
+        @for (autoridad of autoridades; track autoridad.nombre) {
+          <article class="autoridad-card">
+            <img [src]="autoridad.foto" [alt]="autoridad.nombre" class="autoridad-card__foto" />
+
+            <div class="autoridad-card__info">
+              <span class="autoridad-card__rol">{{ autoridad.rol }}</span>
+              <h4>{{ autoridad.nombre }}</h4>
+              <p>{{ autoridad.cargo }}</p>
+
+              <div class="autoridad-card__redes">
+                <a href="#" aria-label="Facebook">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z"/>
+                  </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.3 1.7-2.3-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.6a4.1 4.1 0 0 0 1.3 5.5c-.6 0-1.3-.2-1.8-.5v.1c0 2 1.4 3.6 3.3 4a4.1 4.1 0 0 1-1.8.1 4.1 4.1 0 0 0 3.8 2.9A8.3 8.3 0 0 1 2 18.4a11.6 11.6 0 0 0 6.3 1.9c7.5 0 11.7-6.3 11.7-11.7v-.5c.8-.6 1.5-1.3 2-2.2Z"/>
+                  </svg>
+                </a>
+                <a href="#" aria-label="LinkedIn">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3-.02-2.96-1.8-2.96-1.8 0-2.08 1.4-2.08 2.87V21h-4V9Z"/>
+                  </svg>
+                </a>
+                <a href="#" aria-label="Instagram">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M12 2c2.7 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.89 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.06.06 1.42.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.42.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.7 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.45.53C6.09.28 6.82.11 7.88.06 8.94.01 9.3 0 12 0Zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4Zm5.2-8.4a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

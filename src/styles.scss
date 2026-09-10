@@ -1,0 +1,17 @@
+/*
+background → blanco
+text → oscuro
+En Dark:
+
+background → #0f172a
+text → blanco
+*/
+// body {
+//   background: var(--color-background);
+//   color: var(--color-text-primary);
+// }
+@use './styles/variables';
+@use './styles/themes';
+@use './styles/reset';
+@use './styles/typography';
+@use './styles/responsive';

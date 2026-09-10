@@ -1,0 +1,131 @@
+<!-- =========================================================
+NAVBAR
+========================================================= -->
+  <header class="navbar" [class.navbar--scrolled]="scrolled()">
+
+    <div class="navbar__container">
+
+      <!-- Logo -->
+      <a
+        class="navbar__brand"
+        routerLink="/"
+        aria-label="Posgrado UPEA - Inicio"
+      >
+        <img
+          src="/img/logo.png"
+          alt="Logo Posgrado UPEA"
+        />
+
+        <!-- <span>Posgrado</span> -->
+      </a>
+
+
+      <!-- Navegación -->
+      <nav
+        class="navbar__nav"
+        aria-label="Navegación principal"
+      >
+
+        <a
+          routerLink="/inicio"
+          class="navbar__link navbar__link--active"
+        >
+          Inicio
+        </a>
+
+        <a
+          routerLink="/" fragment="conocenos"
+          class="navbar__link"
+        >
+          Conócenos
+        </a>
+
+        <a
+          routerLink="/" fragment="testimonios"
+          class="navbar__link"
+        >
+          Testimonios
+        </a>
+
+        <!-- <a
+          href="#como-funciona"
+          class="navbar__link"
+        >
+          Cómo funciona
+        </a> -->
+
+        <a
+          routerLink="/" fragment="ubicacion"
+          class="navbar__link"
+        >
+          Ubicación
+        </a>
+
+      </nav>
+
+
+      <!-- Acciones -->
+      <div class="navbar__actions">
+
+        <!-- Botón de tema -->
+        <button
+          class="theme-button"
+          type="button"
+          (click)="toggleTheme()"
+          [attr.aria-label]="
+            themeService.theme() === 'light'
+              ? 'Activar modo oscuro'
+              : 'Activar modo claro'
+          "
+        >
+          {{ themeService.theme() === 'light' ? '☾' : '☀' }}
+          
+        </button>
+
+        <!-- Login -->
+        <a
+          routerLink="/login"
+          class="navbar__login"
+        >
+          Ingresar
+        </a>
+
+            <button
+            class="navbar__burger"
+            type="button"
+            [class.navbar__burger--open]="menuOpen()"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen()"
+            aria-label="Abrir menú de navegación"
+            aria-controls="navbar-mobile-menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+
+                
+            </button>
+
+      </div>
+
+    </div>
+
+     <!-- =========================================================
+       MENÚ MÓVIL
+       ========================================================= -->
+    <div
+        id="navbar-mobile-menu"
+        class="navbar__mobile"
+        [class.navbar__mobile--open]="menuOpen()"
+    >
+        <nav aria-label="Navegación móvil">
+        <a routerLink="/" class="navbar__mobile-link" (click)="closeMenu()">Inicio</a>
+        <a href="#conocenos" class="navbar__mobile-link" (click)="closeMenu()">Conócenos</a>
+        <a href="#testimonios" class="navbar__mobile-link" (click)="closeMenu()">Testimonios</a>
+        <!-- <a href="#como-funciona" class="navbar__mobile-link" (click)="closeMenu()">Cómo funciona</a>s -->
+        <a href="#ubicacion" class="navbar__mobile-link" (click)="closeMenu()">Ubicación</a>
+        <a routerLink="/login" class="navbar__mobile-login" (click)="closeMenu()">Ingresar al sistema</a>
+        </nav>
+    </div>
+
+  </header>

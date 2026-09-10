@@ -1,0 +1,120 @@
+@use '../../../styles/variables' as v;
+
+.ubicacion {
+  // background: var(--color-background);
+  padding-block: v.$spacing-24;
+
+   background:
+    radial-gradient(
+      circle at 80% 20%,
+      var(--color-primary-light),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      var(--color-background),
+      var(--color-background-secondary)
+    );
+
+     border-top: 1px solid var(--color-border);
+
+  @media (max-width: v.$breakpoint-md) {
+    padding-block: v.$spacing-16;
+  }
+}
+
+.ubicacion__container {
+  width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
+}
+
+.ubicacion__title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--color-primary);
+  margin: 0 0 v.$spacing-24;
+}
+
+.ubicacion__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$spacing-16;
+
+  @media (max-width: v.$breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ubicacion-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+
+  transition: box-shadow var(--transition-fast);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  &__mapa {
+    aspect-ratio: 16 / 9;
+    background: var(--color-background-secondary);
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+  }
+
+  &__body {
+    padding: v.$spacing-16;
+
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0 0 0.5rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+      margin: 0 0 v.$spacing-16;
+    }
+  }
+
+  &__boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.5rem;
+    background: var(--color-primary);
+    color: var(--color-white, #fff);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-primary-dark);
+    }
+  }
+}
+
+.ubicacion__tip {
+  text-align: center;
+  margin-top: v.$spacing-24;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,27 @@
+<section class="editar-persona">
+
+  <div class="encabezado">
+     <h1>Editar persona</h1>
+
+    <p>
+      Editar persona en el sistema.
+    </p>
+  </div>
+
+    @if (persona()) {
+
+      <app-persona-form
+        [persona]="persona()"
+        (guardar)="actualizarPersona($event)"
+      />
+
+    } @else {
+
+      <p>Cargando sala...</p>
+
+    }
+
+</section>
+
+
+

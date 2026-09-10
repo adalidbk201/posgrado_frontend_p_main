@@ -1,0 +1,20 @@
+export interface Persona{
+    id:string,
+    estado:string,
+    transaccion:string,
+    fecha_creacion:string,
+    fecha_modificacion:string | null,
+    nro_documento:string,
+    nombres:string,
+    primer_apellido:string,
+    segundo_apellido:string,
+    expedido:string,
+    genero:string,
+    celular:string,
+    codigo_verificacion:string,
+    observacion:string,
+    fecha_nacimiento:string,
+    usuario_creacion:string,
+    usuario_modificacion:string | null,
+
+}

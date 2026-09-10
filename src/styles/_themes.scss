@@ -1,0 +1,76 @@
+@use './variables' as v;
+
+
+// =====================================================
+// TEMA CLARO
+// =====================================================
+
+:root {
+  --color-primary: #{v.$color-primary};
+  --color-primary-dark: #{v.$color-primary-dark};
+  --color-primary-light: #{v.$color-primary-light};
+
+  --color-secondary: #{v.$color-secondary};
+  --color-secondary-dark: #{v.$color-secondary-dark};
+  --color-secondary-light: #{v.$color-secondary-light};
+
+  --color-background: #{v.$color-white};
+  --color-background-secondary: #{v.$color-gray-50};
+
+  --color-surface: #{v.$color-white};
+  --color-surface-hover: #{v.$color-gray-100};
+
+  --color-text-primary: #{v.$color-gray-900};
+  --color-text-secondary: #{v.$color-gray-600};
+  --color-text-muted: #{v.$color-gray-500};
+
+  --color-border: #{v.$color-gray-200};
+
+  --shadow-sm: #{v.$shadow-sm};
+  --shadow-md: #{v.$shadow-md};
+  --shadow-lg: #{v.$shadow-lg};
+  --shadow-xl: #{v.$shadow-xl};
+
+  --transition-fast: #{v.$transition-fast};
+  --transition-normal: #{v.$transition-normal};
+  --transition-slow: #{v.$transition-slow};
+}
+
+
+// =====================================================
+// TEMA OSCURO
+// =====================================================
+
+[data-theme='dark'] {
+  --color-primary: #38a4e8;
+  --color-primary-dark: #1685c8;
+  --color-primary-light: #123b55;
+
+  --color-secondary: #f5c84b;
+  --color-secondary-dark: #dcae24;
+  --color-secondary-light: #493e19;
+
+  --color-background: #0f172a;
+  --color-background-secondary: #111c2e;
+
+  --color-surface: #1e293b;
+  --color-surface-hover: #26364c;
+
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+
+  --color-border: #334155;
+
+  --shadow-sm:
+    0 1px 2px rgba(0, 0, 0, 0.25);
+
+  --shadow-md:
+    0 4px 12px rgba(0, 0, 0, 0.3);
+
+  --shadow-lg:
+    0 10px 30px rgba(0, 0, 0, 0.35);
+
+  --shadow-xl:
+    0 20px 50px rgba(0, 0, 0, 0.4);
+}

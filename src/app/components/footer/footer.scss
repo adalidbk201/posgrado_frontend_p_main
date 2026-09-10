@@ -1,0 +1,130 @@
+// components/footer/footer.scss
+@use '../../../styles/variables' as v;
+
+.footer {
+  background: var(--color-background-secondary);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  transition: background var(--transition-normal), border-color var(--transition-normal);
+}
+
+// =====================================================
+// CONTENEDOR PRINCIPAL — grid responsive
+// =====================================================
+
+.footer__container {
+  width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
+  padding-block: v.$spacing-24;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: v.$spacing-16;
+
+  @media (max-width: v.$breakpoint-md) {
+    width: min(100% - 2rem, v.$container-max-width);
+    grid-template-columns: 1fr 1fr;
+    padding-block: v.$spacing-16;
+
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: v.$breakpoint-sm) {
+    width: min(100% - 1.5rem, v.$container-max-width);
+    grid-template-columns: 1fr;
+    padding-block: v.$spacing-12;
+    gap: v.$spacing-12;
+  }
+}
+
+// =====================================================
+// MARCA
+// =====================================================
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-weight: 700;
+
+    img {
+      height: 32px;
+      width: auto;
+    }
+  }
+
+  .footer__description {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    max-width: 32ch;
+  }
+}
+
+// =====================================================
+// COLUMNAS (Navegación / Contacto)
+// =====================================================
+
+.footer__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem;
+  }
+
+  nav,
+  address {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-style: normal;
+  }
+
+  a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+}
+
+// =====================================================
+// BARRA INFERIOR
+// =====================================================
+
+.footer__bottom {
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  padding-block: v.$spacing-12;
+
+  p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+}

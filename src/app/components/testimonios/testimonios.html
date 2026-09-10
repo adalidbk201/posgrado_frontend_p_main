@@ -1,0 +1,45 @@
+<section id="testimonios" class="testimonios">
+  <div class="container">
+
+    <h2 class="testimonios__title">
+      Testimonios de Nuestros Graduantes en Posgrado UPEA
+    </h2>
+
+    <div id="testimoniosCarousel" class="carousel slide testimonios__carousel" data-ride="carousel">
+
+      <!-- Imagen principal -->
+      <div class="carousel-inner">
+        @for (foto of fotos; track foto.src; let i = $index) {
+          <div class="carousel-item" [class.active]="i === 0">
+            <img [src]="foto.src" [alt]="foto.alt" class="d-block w-100" />
+          </div>
+        }
+      </div>
+
+      <!-- Flechas prev/next -->
+      <a class="carousel-control-prev" href="#testimoniosCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Anterior</span>
+      </a>
+      <a class="carousel-control-next" href="#testimoniosCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Siguiente</span>
+      </a>
+
+      <!-- Miniaturas como indicadores -->
+      <ol class="testimonios__thumbs">
+        @for (foto of fotos; track foto.src; let i = $index) {
+          <li
+            [attr.data-target]="'#testimoniosCarousel'"
+            [attr.data-slide-to]="i"
+            [class.active]="i === 0"
+          >
+            <img [src]="foto.src" [alt]="'Miniatura: ' + foto.alt" />
+          </li>
+        }
+      </ol>
+
+    </div>
+
+  </div>
+</section>

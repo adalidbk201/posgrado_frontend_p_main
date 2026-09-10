@@ -1,0 +1,366 @@
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+    <!-- nro_documento -->
+    <div class="nro_documento">
+
+        <div class="form-group row">
+
+            <label for="nro_documento" class="col-sm-3 col-form-label">Nro Documento</label>
+
+            <div class="col-sm-9">
+                 <input type="text"
+                class="form-control "
+                id="nro_documento"
+                formControlName="nro_documento"
+                placeholder="Ingrese documento">
+
+                @if (formulario.controls.nro_documento.invalid &&
+                     formulario.controls.nro_documento.touched) {
+
+                    <div class="class-error">
+
+                        @if (formulario.controls.nro_documento.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El nro documento es obligatorio</div>
+                            <!-- <span>El nro documento es obligatorio</span> -->
+                        }
+                        @if (formulario.controls.nro_documento.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">El nro documento debe tener al menos 3 caracteres</div>
+                            <!-- <span>El nro documento debe tener al menos 3 caracteres</span> -->
+                        }
+                        @if (formulario.controls.nro_documento.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">El nro documento no debe superar los 30 caracteres</div>
+                            <!-- <span>El nro documento no debe superar los 30 caracteres</span> -->
+                        }
+                    </div>
+
+                }
+
+            </div>
+           
+        </div>
+        
+
+    </div>
+
+    <!-- nombres -->
+    <div class="nombres">
+
+        <div class="form-group row">
+            <label for="nombres" class="col-sm-3 col-form-label">Nombres</label>
+
+            <div class="col-sm-9">
+
+                <input type="text"
+                class="form-control"
+                id="nombres"
+                formControlName="nombres"
+                placeholder="Ingrese su nombre"> 
+
+                @if (formulario.controls.nombres.invalid &&
+                    formulario.controls.nombres.touched) {
+                    <div class="class-error">
+                        @if (formulario.controls.nombres.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">Nombre es  obligatorio</div>
+                            <!-- <span>Nombre es  obligatorio</span> -->
+                        }
+                        @if (formulario.controls.nombres.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">Nombre debe tener minimo 3 caracteres</div>
+                            <!-- <span>Nombre debe tener minimo 3 caracteres</span> -->
+                        }
+                        @if (formulario.controls.nombres.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">Nombre no debe superar los 100 caracteres</div>
+                            <!-- <span>Nombre no debe superar los 100 caracteres</span> -->
+                        }
+                    </div>
+                }
+
+            </div>
+
+            
+        </div>
+        
+
+    </div>
+
+    <!-- primer_apellido -->
+     <div class="primer_apellido">
+
+        <div class="form-group row">
+            
+            <label for="primer_apellido" class="col-sm-3 col-form-label">Primer Apellido</label>
+
+            <div class="col-sm-9">
+                <input type="text"
+                class="form-control"
+                id="primer_apellido"
+                formControlName="primer_apellido"
+                placeholder="Primer apellido">
+
+                @if (formulario.controls.primer_apellido.invalid &&
+                    formulario.controls.primer_apellido.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.primer_apellido.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">Primer apellido es obligatorio</div>
+                            <!-- <span>Primer apellido es obligatorio</span> -->
+                        }
+                        @if (formulario.controls.primer_apellido.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">Primer apellido debe tener minimo 3 caracteres</div>
+                            <!-- <span>Primer apellido debe tener minimo 3 caracteres</span> -->
+                        }
+                        @if (formulario.controls.primer_apellido.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">Primer apellido no debe superar los 50 caracteres</div>
+                            <!-- <span>Primer apellido no debe superar los 50 caracteres</span> -->
+                        }
+                    </div>
+                }
+            </div>
+            
+        </div>
+        
+     </div>
+
+     <!-- Segundo apelllido -->
+      <div class="segundo_apellido">
+
+        <div class="form-group row">
+            <label for="segundo_apellido" class="col-sm-3 col-form-label">Segundo Apellido</label>
+
+            <div class="col-sm-9">
+                <input type="text"
+                class="form-control"
+                id="segundo_apellido"
+                formControlName="segundo_apellido"
+                placeholder="Segundo apellido">
+                 @if (formulario.controls.segundo_apellido.invalid &&
+                    formulario.controls.segundo_apellido.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.segundo_apellido.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">Segundo apellido es obligatorio</div>
+                            <!-- <span>Segundo apellido es obligatorio</span> -->
+                        }
+                        @if (formulario.controls.segundo_apellido.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">Segundo apellido debe tener al menos 3 caracteres</div>
+                            <!-- <span>Segundo apellido debe tener al menos 3 caracteres</span> -->
+                        }
+                        @if (formulario.controls.segundo_apellido.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">Segundo apellido no debe superar los 50 caracteres</div>
+                            <!-- <span>Segundo apellido no debe superar los 50 caracteres</span> -->
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+        
+      </div>
+       
+
+      <!-- Expedido -->
+      <div class="expedido">
+
+        <div class="form-group row">
+            <label for="expedido"class="col-sm-3 col-form-label">Expedido</label>
+
+            <div class="col-sm-9">
+                <input type="text"
+                id="expedido"
+                class="form-control sm"
+                formControlName="expedido"
+                placeholder="Expedido">
+                @if (formulario.controls.expedido.invalid &&
+                    formulario.controls.expedido.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.expedido.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">Expedido es obligatorio</div>
+                            <!-- <span>Expedido es obligatorio</span> -->
+                        }
+                        @if (formulario.controls.expedido.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">Expedido debe tener al menos 3 caracteres</div>
+                            <!-- <span>Expedido debe tener al menos 3 caracteres</span> -->
+                        }
+                        @if (formulario.controls.expedido.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">Expedido no debe superar los 30 caracteres</div>
+                            <!-- <span>Expedido no debe superar los 30 caracteres</span> -->
+                        }
+                    </div>
+                }
+            </div>
+            
+        </div>
+        
+      </div>
+
+      <!-- genero -->
+       <div class="genero">
+
+        <div class="form-group row">
+            <label for="genero"class="col-sm-3 col-form-label">Genero</label>
+            <div class="col-sm-9">
+                <select name="genero" id="genero"
+                    class="form-control sm"
+                    formControlName="genero">
+                    <option value="">Selecciona Genero</option>
+                    <option value="MASCULINO">MASCULINO</option>
+                    <option value="FEMENINO">FEMENINO</option>
+                </select>
+                @if (formulario.controls.genero.invalid &&
+                    formulario.controls.genero.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.genero.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El Genero es obligatorio</div>
+                            <!-- <span>El Genero es obligatorio</span> -->
+                        }
+                    </div>
+                }
+            </div>
+            
+        </div>
+        
+
+       </div>
+
+       <!-- celular -->
+        <div class="celular">
+
+            <div class="form-group row">
+                <label for="celular" class="col-sm-3 col-form-label">Celular</label>
+
+                <div class="col-sm-9">
+                    <input type="number" 
+                    id="celular"
+                    class="form-control sm"
+                    formControlName="celular"
+                    placeholder="Ingrese celular">
+                    @if (formulario.controls.celular.invalid &&
+                        formulario.controls.celular.touched) {
+
+                        <div class="class-error">
+                            @if (formulario.controls.celular.errors?.['required']) {
+                                <div class="alert alert-danger" role="alert">Celular es obligatrio</div>
+                                <!-- <span>Celular es obligatrio</span> -->
+                            }
+                            @if (formulario.controls.celular.errors?.['minlength']) {
+                                <div class="alert alert-danger" role="alert">Celular debe tener al menos 3 caracteres</div>
+                                <!-- <span>Celular debe tener al menos 3 caracteres</span> -->
+                            }
+                            @if (formulario.controls.celular.errors?.['maxlength']) {
+                                <div class="alert alert-danger" role="alert">Celular no debe superar los 20 caracteres</div>
+                                <!-- <span>Celular no debe superar los 20 caracteres</span> -->
+                            }
+                        </div>
+                    }
+                </div>
+                
+            </div>
+            
+
+        </div>
+
+        <!--  codigo_verificacion -->
+          <div class="codigo_verificacion">
+
+            <div class="form-group row">
+                <label for="codigo_verificacion"class="col-sm-3 col-form-label">Codigo Verificación</label>
+
+                <div class="col-sm-9">
+                    <input type="text"
+                    id="codigo_verificacion"
+                    class="form-control sm"
+                    formControlName="codigo_verificacion"
+                    placeholder="Codigo de Verificacion">
+                    @if (formulario.controls.codigo_verificacion.invalid &&
+                        formulario.controls.codigo_verificacion.touched) {
+                        
+                        <div class="class-error">
+                            @if (formulario.controls.codigo_verificacion.errors?.['required']) {
+                                <div class="alert alert-danger" role="alert">Codigo de verificacion obligatorio</div>
+                                <!-- <span>Codigo de verificacion obligatorio</span> -->
+                            }
+                            @if (formulario.controls.codigo_verificacion.errors?.['minlength']) {
+                                <div class="alert alert-danger" role="alert">Codigo de verificaion debe tener al menos 3 caracteres</div>
+                                <!-- <span>Codigo de verificaion debe tener al menos 3 caracteres</span> -->
+                            }
+                            @if (formulario.controls.codigo_verificacion.errors?.['maxlength']) {
+                                <div class="alert alert-danger" role="alert">Codigo de verificacion no debe superar los 10 caracteres</div>
+                                <!-- <span>Codigo de verificacion no debe superar los 10 caracteres</span> -->
+                            }
+                        </div>
+                    }
+                </div>
+                
+            </div>
+            
+
+          </div>
+
+          <!-- Obervacion -->
+           <div class="observacion">
+
+            <div class="form-group row">
+                <label for="observacion"class="col-sm-3 col-form-label">Observacion</label>
+
+                <div class="col-sm-9">
+                    <input type="text"
+                    id="observacion"
+                    class="form-control sm"
+                    formControlName="observacion"
+                    placeholder="Observación">
+                    @if (formulario.controls.observacion.invalid &&
+                        formulario.controls.observacion.touched) {
+                        
+                        <div class="class-error">
+                            @if (formulario.controls.observacion.errors?.['required']) {
+                                <div class="alert alert-danger" role="alert">Observación es obligatorio</div>
+                                <!-- <span>Observación es obligatorio</span> -->
+                            }
+                            @if (formulario.controls.observacion.errors?.['minlength']) {
+                                <div class="alert alert-danger" role="alert">Observación debe tener al menos 3 caracteres</div>
+                                <!-- <span>Observación debe tener al menos 3 caracteres</span> -->
+                            }
+                            @if (formulario.controls.observacion.errors?.['maxlength']) {
+                                <div class="alert alert-danger" role="alert">Observación no debe superar los 255 caracteres</div>
+                                <!-- <span>Observación no debe superar los 255 caracteres</span> -->
+                            }
+                        </div>
+                    }
+                </div>
+                
+            </div>
+            
+           </div>
+
+           <!-- fecha nacimiento -->
+           <div class="fecha_nacimiento">
+
+            <div class="form-group row">
+                <label for="fecha_nacimiento"class="col-sm-3 col-form-label">Fecha Nacimiento</label>
+
+                <div class="col-sm-9">
+                    <input type="date"
+                    id="fecha_nacimiento"
+                    formControlName="fecha_nacimiento"
+                    class="form-control sm"
+                    placeholder="Fecha de Nacimiento">
+                    @if (formulario.controls.fecha_nacimiento.invalid &&
+                        formulario.controls.fecha_nacimiento.touched) {
+                        
+                        <div class="class-error">
+                            @if (formulario.controls.fecha_nacimiento.errors?.['required']) {
+                                <div class="alert alert-danger" role="alert">Fecha de nacimiento obligatorio</div>
+                                <!-- <span>Fecha de nacimiento obligatorio</span> -->
+                            }
+                        
+                        </div>
+                    }
+                </div>
+                
+            </div>
+          
+           </div>
+    <button class="btn btn-success">Guardar</button>
+
+</form>

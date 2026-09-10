@@ -1,0 +1,52 @@
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+    
+  <div class="nombre_sala">
+
+    <div class="form-group row">
+
+        <label for="nombre_sala" class="col-sm-3 col-form-label">
+        Nombre de la sala
+      </label>
+
+      <div class="col-sm-9">
+          <input
+            class="form-control sm"
+            id="nombre_sala"
+            type="text"
+            formControlName="nombre_sala"
+            placeholder="Ejemplo: Sala 101"
+          />
+          @if (formulario.controls.nombre_sala.invalid &&
+               formulario.controls.nombre_sala.touched)
+          {
+              <div class="error">
+                @if (formulario.controls.nombre_sala.errors?.['required']) {
+                  <!-- <span>El nombre de la sala es obligatorio.</span> -->
+                  <div class="alert alert-danger sm" role="alert"> El nombre de la sala es obligatorio.</div>
+                }
+
+                @if (formulario.controls.nombre_sala.errors?.['minlength']) {
+                  <div class="alert alert-danger" role="alert">El nombre debe tener al menos 3 caracteres.</div>
+                  <!-- <span>El nombre debe tener al menos 3 caracteres.</span> -->
+                }
+
+                @if (formulario.controls.nombre_sala.errors?.['maxlength']) {
+                  <div class="alert alert-danger" role="alert">El nombre no puede superar los 150 caracteres.</div>
+                  <!-- <span>El nombre no puede superar los 150 caracteres.</span> -->
+                }
+              </div>
+            }
+      </div>
+      
+    </div>
+    
+
+    
+  </div>
+
+  <button  class="btn btn-success" >
+    Guardar
+  </button>
+
+
+</form>

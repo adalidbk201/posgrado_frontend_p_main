@@ -1,0 +1,60 @@
+@use './variables' as v;
+
+
+// =====================================================
+// CONTENEDOR PRINCIPAL
+// =====================================================
+
+.container {
+  width: min(
+    100% - (v.$container-padding * 2),
+    v.$container-max-width
+  );
+
+  margin-inline: auto;
+}
+
+
+// =====================================================
+// SECCIONES
+// =====================================================
+
+.section {
+  padding-block: v.$spacing-24;
+}
+
+
+// =====================================================
+// TABLET
+// =====================================================
+
+@media (max-width: v.$breakpoint-md) {
+  .container {
+    width: min(
+      100% - 2rem,
+      v.$container-max-width
+    );
+  }
+
+  .section {
+    padding-block: v.$spacing-16;
+  }
+}
+
+
+// =====================================================
+// MÓVIL
+// =====================================================
+
+@media (max-width: v.$breakpoint-sm) {
+  .container {
+    width: min(
+      100% - 1.5rem,
+      v.$container-max-width
+    );
+  }
+
+  .section {
+    padding-block: v.$spacing-12;
+  }
+}

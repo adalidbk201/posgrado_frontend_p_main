@@ -1,0 +1,38 @@
+<section class="">
+    <h1>Programas : {{ listProgramas().length}}</h1>
+    <p>Total de registros: {{ totalProgramas() }}</p>
+    
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Nombre del Programa</th>
+                <th scope="col">Grado Académico</th>
+                <th scope="col">Fecha Creación</th>
+            </tr>
+        </thead>
+        <tbody>
+             @for (programa of listProgramas(); track programa.id; let idx= $index) {
+                <tr>
+                    <th scope="row">{{ idx + 1 }}</th>
+                    <td>{{ programa.id }}</td>
+                    <td>{{ programa.estado }}</td>
+                    <td>{{ programa.nombre_programa }}</td>
+                    <td>{{ programa.grado_academico }}</td>
+                    <td>{{ programa.fecha_creacion }}</td>
+                    
+                </tr>
+            }
+        </tbody>
+        
+       
+    </table>
+</section>

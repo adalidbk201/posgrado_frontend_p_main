@@ -1,0 +1,35 @@
+<section class="">
+    <h1>Asistencias : {{ listAsist().length}}</h1>
+    <p>Total de registros: {{ totalAsistencias() }}</p>
+    
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Transacción</th>
+                <th scope="col">Asistencia</th>
+            </tr>
+        </thead>
+        <tbody>
+             @for (asistencia of listAsist(); track asistencia.id; let idx= $index) {
+                <tr>
+                    <th scope="row">{{ idx + 1 }}</th>
+                    <td>{{ asistencia.id }}</td>
+                    <td>{{ asistencia.estado }}</td>
+                    <td>{{ asistencia.transaccion }}</td>
+                    <td>{{ asistencia.asistencia }}</td>
+                </tr>
+            }
+        </tbody>
+        
+       
+    </table>
+</section>

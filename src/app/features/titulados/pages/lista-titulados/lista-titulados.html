@@ -1,0 +1,38 @@
+<section class="">
+    <h1>Titulados : {{ listTitulados().length}}</h1>
+    <p>Total de registros: {{ totalTitulados() }}</p>
+    
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Fecha Titulación</th>
+                <th scope="col">Grado PosGraduante</th>
+                <th scope="col">Mension</th>
+                <th scope="col">Serie</th>
+            </tr>
+        </thead>
+        <tbody>
+             @for (titulado of listTitulados(); track titulado.id; let idx= $index) {
+                <tr>
+                    <th scope="row">{{ idx + 1 }}</th>
+                    <td>{{ titulado.id }}</td>
+                    <td>{{ titulado.estado }}</td>
+                    <td>{{ titulado.fecha_titulacion }}</td>
+                    <td>{{ titulado.grado_posgraduante }}</td>
+                    <td>{{ titulado.mension }}</td>
+                    <td>{{ titulado.serie }}</td>
+                </tr>
+            }
+        </tbody>
+        
+       
+    </table>
+</section>

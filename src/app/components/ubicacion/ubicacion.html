@@ -1,0 +1,47 @@
+<!-- components/ubicacion/ubicacion.html -->
+<section id="ubicacion" class="ubicacion">
+  <div class="ubicacion__container">
+
+    <h2 class="ubicacion__title">Nuestras Ubicaciones Para la Colación</h2>
+
+    <div class="ubicacion__grid">
+      @for (lugar of ubicaciones; track lugar.nombre) {
+        <article class="ubicacion-card">
+
+          <div class="ubicacion-card__mapa">
+            <iframe
+              [src]="lugar.mapaEmbedUrl"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              [title]="'Mapa de ' + lugar.nombre"
+            ></iframe>
+          </div>
+
+          <div class="ubicacion-card__body">
+            <h3>
+              <span class="ubicacion-card__pin">📍</span>
+              {{ lugar.nombre }}
+            </h3>
+            <p>{{ lugar.descripcion }}</p>
+
+            <a 
+              [href]="lugar.mapaLinkUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ubicacion-card__boton"
+            >
+              Ver en Google Maps
+            </a>
+          </div>
+
+        </article>
+      }
+    </div>
+
+    <p class="ubicacion__tip">
+      Consejo: Puedes usar el botón "Ver en Google Maps" para obtener la ruta
+      exacta desde tu ubicación actual hasta el Auditorio o el Paraninfo.
+    </p>
+
+  </div>
+</section>
