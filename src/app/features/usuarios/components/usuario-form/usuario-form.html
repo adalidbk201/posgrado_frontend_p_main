@@ -1,0 +1,16 @@
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+    <!-- nombre_usuario -->
+    <div class="nombre_usuario">
+        <div class="form-group row">
+            <label for="nombre_usuario" class="col-sm-3 col-form-label">Nombre Usuario</label>
+
+            <div class="col-sm-9">
+                <input type="text"
+                class="form-control "
+                id="nombre_usuario"
+                formControlName="nombre_usuario"
+                placeholder="Nombre Usuario">
+            </div>
+        </div>
+    </div>
+</form>

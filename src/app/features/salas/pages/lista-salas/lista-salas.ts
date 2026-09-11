@@ -3,6 +3,9 @@ import { SalasService } from '../../services/salas.service';
 import { Sala } from '../../models/sala.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+
+
+
 @Component({
   imports: [],
   selector: 'app-lista-salas',
