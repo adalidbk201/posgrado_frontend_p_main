@@ -1,4 +1,4 @@
-<section class="">
+<section class="lista-titulados">
     <h1>Titulados : {{ listTitulados().length}}</h1>
     <p>Total de registros: {{ totalTitulados() }}</p>
     
@@ -21,7 +21,7 @@
         </thead>
         <tbody>
              @for (titulado of listTitulados(); track titulado.id; let idx= $index) {
-                <tr>
+                <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <td>{{ titulado.id }}</td>
                     <td>{{ titulado.estado }}</td>

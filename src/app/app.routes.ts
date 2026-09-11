@@ -74,10 +74,24 @@ export const routes: Routes = [
                 path:'asignaciones',
                 loadComponent:()=>import('./features/asignaciones/pages/lista-asignaciones/lista-asignaciones').then((m)=>m.ListaAsignaciones),
             },
+
+
+
             {
                 path:'usuarios',
                 loadComponent:()=>import('./features/usuarios/pages/lista-usuarios/lista-usuarios').then((m)=>m.ListaUsuarios),
             },
+            {
+                path:'usuarios/crear',
+                loadComponent:()=>import('./features/usuarios/pages/crear-usuario/crear-usuario').then((m)=>m.CrearUsuario),
+            },
+            {
+                path:'usuarios/editar/:id',
+                loadComponent:()=>import('./features/usuarios/pages/editar-usuario/editar-usuario').then((m)=>m.EditarUsuario),
+            },
+
+
+
             {
                 path:'**',
                 redirectTo:'asistencias'

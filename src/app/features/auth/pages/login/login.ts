@@ -3,11 +3,13 @@ import { AuthApiService} from '../../services/auth-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '../../models/login-response.interface';
 
+import { RouterLink } from '@angular/router';
+
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   selector: 'app-login',
   styleUrl: './login.scss',
   templateUrl: './login.html',
@@ -52,13 +54,7 @@ export class Login {
     );
 
   }
-
-  // Metodo volver
-  volver(): void {
-
-    window.history.back();
-
-  }
+ 
 
   // metodo ejecua cuando se envia el formulario
   realizarLogin(): void {

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit  } from '@angular/core';
+import { Component  } from '@angular/core';
 
 declare var $: any; // jQuery cargado globalmente vía CDN en index.html
 interface FotoGraduado {

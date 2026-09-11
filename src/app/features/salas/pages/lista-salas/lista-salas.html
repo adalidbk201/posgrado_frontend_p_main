@@ -1,4 +1,4 @@
-<section class="">
+<section class="lista-sala">
     <h1>Salas : {{ listSalas().length}}</h1>
     <p>Total de registros: {{ totalSalas() }}</p>
     
@@ -24,7 +24,7 @@
         </thead>
         <tbody>
              @for (sala of listSalas(); track sala.fecha_modificacion; let idx= $index) {
-                <tr>
+                <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <!-- <td>{{ sala.id }}</td> -->
                     <td>{{ sala.estado }}</td>

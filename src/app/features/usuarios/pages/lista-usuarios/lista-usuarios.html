@@ -1,1 +1,68 @@
-<p>usuarios works!</p>
+<section class="lista-usuario">
+    <h1>Usuarios : {{ listUsuarios().length}}</h1>
+    <p>Total de registros: {{ totalUsuarios() }}</p>
+    
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+    <button type="button" class="btn btn-primary" (click)="crearUsuario()">
+        + Nuevo usuario
+    </button>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                 
+                <th scope="col">Nombre Sala</th>
+                <th scope="col">Correo Electronico</th>
+          
+                <th scope="col">Foto</th>
+                <th scope="col">Fecha Creación</th>
+                <th scope="col">Acciones</th>
+                 
+            </tr>
+        </thead>
+        <tbody>
+             @for (usuario of listUsuarios(); track usuario.fecha_modificacion; let idx= $index) {
+                <tr class="contenido">
+                    <th scope="row">{{ idx + 1 }}</th>
+                    <!-- <td>{{ sala.id }}</td> -->
+                 
+                    <td>{{ usuario.nombre_usuario }}</td>
+                    <td>{{ usuario.correo_electronico }}</td>
+                  
+                    <td>{{ usuario.url_foto }}</td>
+                    <td>{{ usuario.fecha_creacion }}</td>
+
+                    <td>
+                        <button
+                            type="button" class="btn btn-warning"
+                            (click)="editarUsuario(usuario.id)"
+                                                >
+                            Editar
+                        </button>
+
+                        <button
+                        type="button"
+                        class="btn btn-danger "
+                        data-toggle="modal"
+                        data-target="#modalEliminar"
+                        (click)="seleccionarUsuarioEliminar(usuario.id)"
+                        >
+                        Eliminar
+                        </button>
+
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        
+       
+    </table>
+
+</section>
