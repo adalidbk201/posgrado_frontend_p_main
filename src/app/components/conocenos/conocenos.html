@@ -1,4 +1,4 @@
-<section id="conocenos" class="conocenos">
+<section id="conocenos" class="conocenos"data-aos="fade-up">
   <div class="conocenos__container">
 
     <h2 class="conocenos__title">Conócenos</h2>
@@ -8,7 +8,7 @@
       <!-- =========================================================
            COLUMNA IZQUIERDA: MISIÓN / VISIÓN / PROPÓSITO
            ========================================================= -->
-      <div class="conocenos__cards">
+      <div class="conocenos__cards"data-aos="fade-right">
 
         <article class="info-card">
           <h3>Misión</h3>
@@ -56,8 +56,8 @@
 
         <h3 class="conocenos__autoridades-title">Nuestras Autoridades</h3>
 
-        @for (autoridad of autoridades; track autoridad.nombre) {
-          <article class="autoridad-card">
+        @for (autoridad of autoridades; track autoridad.nombre; let i = $index) {
+          <article class="autoridad-card hover-lift" data-aos="fade-left" [attr.data-aos-delay]="i * 100">
             <img [src]="autoridad.foto" [alt]="autoridad.nombre" class="autoridad-card__foto" />
 
             <div class="autoridad-card__info">

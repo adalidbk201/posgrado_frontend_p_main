@@ -1,4 +1,4 @@
-<section class="">
+<section class="lista-asistencia">
     <h1>Asistencias : {{ listAsist().length}}</h1>
     <p>Total de registros: {{ totalAsistencias() }}</p>
     
@@ -20,7 +20,7 @@
         </thead>
         <tbody>
              @for (asistencia of listAsist(); track asistencia.id; let idx= $index) {
-                <tr>
+                <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <td>{{ asistencia.id }}</td>
                     <td>{{ asistencia.estado }}</td>

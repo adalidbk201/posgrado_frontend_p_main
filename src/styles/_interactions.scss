@@ -1,0 +1,48 @@
+// styles/_interactions.scss
+
+.hover-lift {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.hover-scale {
+  transition: transform var(--transition-fast);
+
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+
+// Accesibilidad: outline visible solo para navegación con teclado
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// Botones con leve "press" al hacer click
+.btn,
+button,
+a[class*='boton'],
+a[class*='btn'] {
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

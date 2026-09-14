@@ -5,8 +5,8 @@
     <h2 class="ubicacion__title">Nuestras Ubicaciones Para la Colación</h2>
 
     <div class="ubicacion__grid">
-      @for (lugar of ubicaciones; track lugar.nombre) {
-        <article class="ubicacion-card">
+      @for (lugar of ubicaciones; track lugar.nombre;let i = $index) {
+        <article class="ubicacion-card"data-aos="zoom-in" [attr.data-aos-delay]="i * 150">
 
           <div class="ubicacion-card__mapa">
             <iframe
