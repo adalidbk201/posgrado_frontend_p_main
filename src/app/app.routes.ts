@@ -20,17 +20,12 @@ export const routes: Routes = [
         canActivateChild: [authGuard],
 
         children:[
-            {
-                path:'asistencias',
-                loadComponent:()=>import('./features/asistencias/pages/lista-asistencias/lista-asistencias').then((m)=>m.ListaAsistencias)
-            },
-
-            
+            /** Personas */
             {
                 path:'personas',
                 loadComponent:()=>import('./features/personas/pages/lista-personas/lista-personas').then((m)=>m.ListaPersonas)
             },
-            {
+             {
                 path:'personas/crear',
                 loadComponent:()=>import('./features/personas/pages/crear-persona/crear-persona').then((m)=>m.CrearPersona),
             },
@@ -38,18 +33,57 @@ export const routes: Routes = [
                 path:'personas/editar/:id',
                 loadComponent:()=>import('./features/personas/pages/editar-persona/editar-persona').then((m)=>m.EditarPersona),
             },
+
+
+
+            /** Usuarios */
+            {
+                path:'usuarios',
+                loadComponent:()=>import('./features/usuarios/pages/lista-usuarios/lista-usuarios').then((m)=>m.ListaUsuarios),
+            },
+            {
+                path:'usuarios/crear',
+                loadComponent:()=>import('./features/usuarios/pages/crear-usuario/crear-usuario').then((m)=>m.CrearUsuario),
+            },
+            {
+                path:'usuarios/editar/:id',
+                loadComponent:()=>import('./features/usuarios/pages/editar-usuario/editar-usuario').then((m)=>m.EditarUsuario),
+            },
+
+
+
+            /** Roles */
+            {
+                path:'roles',
+                loadComponent:()=>import('./features/roles/pages/lista-roles/lista-roles').then((m)=>m.ListaRoles),
+            },
             
 
+
+            /** Grados Academicos */
+            {
+                path:'grados',
+                loadComponent:()=>import('./features/grados/pages/lista-grados/lista-grados').then((m)=>m.ListaGrados),
+            },
+
+
+
+            /** Menciones */
+            {
+                path:'menciones',
+                loadComponent:()=>import('./features/menciones/pages/lista-menciones/lista-menciones').then((m)=>m.ListaMenciones),
+            },
+
+
+            /** Programas */
             {
                 path:'programas',
                 loadComponent:()=>import('./features/programas/pages/lista-programas/lista-programas').then((m)=>m.ListaProgramas)
             },
-            {
-                path:'titulados',
-                loadComponent:()=>import('./features/titulados/pages/lista-titulados/lista-titulados').then((m)=>m.ListaTitulados)
-            },
 
 
+
+            /** Salas */
             {
                 path:'salas',
                 loadComponent:()=>import('./features/salas/pages/lista-salas/lista-salas').then((m)=>m.ListaSalas),
@@ -70,6 +104,44 @@ export const routes: Routes = [
             },
 
 
+
+
+            /** Niveles */
+            {
+                path:'niveles',
+                loadComponent:()=>import('./features/niveles/pages/lista-niveles/lista-niveles').then((m)=>m.ListaNiveles),
+            },
+
+
+
+            /** Butacas */
+            {
+                path:'butacas',
+                loadComponent:()=>import('./features/butacas/pages/lista-butacas/lista-butacas').then((m)=>m.ListaButacas),
+            },
+
+
+
+            /** Titulados */
+            {
+                path:'titulados',
+                loadComponent:()=>import('./features/titulados/pages/lista-titulados/lista-titulados').then((m)=>m.ListaTitulados)
+            },
+
+
+
+
+            /** Colaciones */
+            {
+                path:'colaciones',
+                loadComponent:()=>import('./features/colaciones/pages/lista-colaciones/lista-colaciones').then((m)=>m.ListaColaciones),
+            },
+
+
+
+            
+
+            /** Asignacion Butacas */
             {
                 path:'asignaciones',
                 loadComponent:()=>import('./features/asignaciones/pages/lista-asignaciones/lista-asignaciones').then((m)=>m.ListaAsignaciones),
@@ -77,24 +149,24 @@ export const routes: Routes = [
 
 
 
+            /** Asistencias */
             {
-                path:'usuarios',
-                loadComponent:()=>import('./features/usuarios/pages/lista-usuarios/lista-usuarios').then((m)=>m.ListaUsuarios),
+                path:'asistencias',
+                loadComponent:()=>import('./features/asistencias/pages/lista-asistencias/lista-asistencias').then((m)=>m.ListaAsistencias)
             },
+
+
+            /** Comunicados */
             {
-                path:'usuarios/crear',
-                loadComponent:()=>import('./features/usuarios/pages/crear-usuario/crear-usuario').then((m)=>m.CrearUsuario),
-            },
-            {
-                path:'usuarios/editar/:id',
-                loadComponent:()=>import('./features/usuarios/pages/editar-usuario/editar-usuario').then((m)=>m.EditarUsuario),
+                path:'comunicados',
+                loadComponent:()=>import('./features/comunicados/pages/lista-comunicados/lista-comunicados').then((m)=>m.ListaComunicados),
             },
 
 
 
             {
                 path:'**',
-                redirectTo:'asistencias'
+                redirectTo:'personas'
             }
         ]
     },

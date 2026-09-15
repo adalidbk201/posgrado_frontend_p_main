@@ -8,12 +8,14 @@ interface ItemMenu {
   label: string;
   ruta: string;
   icono: string;
+   
 }
 
 interface CategoriaMenu {
   id: string;
   titulo: string;
   items: ItemMenu[];
+  collapse:string;
 }
 
 
@@ -68,6 +70,7 @@ export class Dashboard {
         { label: 'Menciones', ruta: '/dashboard/menciones', icono: '📚' },
         { label: 'Programas', ruta: '/dashboard/programas', icono: '📘' },
       ],
+      collapse:'show',
     },
     {
       id: 'salas',
@@ -77,6 +80,7 @@ export class Dashboard {
         { label: 'Niveles', ruta: '/dashboard/niveles', icono: '▤' },
         { label: 'Butacas', ruta: '/dashboard/butacas', icono: '💺' },
       ],
+      collapse:'',
     },
     {
       id: 'academica',
@@ -85,6 +89,7 @@ export class Dashboard {
         { label: 'Titulados', ruta: '/dashboard/titulados', icono: '📜' },
         { label: 'Colaciones', ruta: '/dashboard/colaciones', icono: '🎓' },
       ],
+      collapse:'',
     },
     {
       id: 'evento',
@@ -94,6 +99,7 @@ export class Dashboard {
         { label: 'Asistencia', ruta: '/dashboard/asistencias', icono: '✓' },
         { label: 'Comunicados', ruta: '/dashboard/comunicados', icono: '📢' },
       ],
+      collapse:'',
     },
     {
       id: 'seguridad',
@@ -101,6 +107,7 @@ export class Dashboard {
       items: [
         { label: 'Módulos', ruta: '/dashboard/modulos', icono: '🧩' },
       ],
+      collapse:'',
     },
   ];
   

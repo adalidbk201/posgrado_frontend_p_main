@@ -90,7 +90,7 @@
 
             <div
               [id]="'cat-' + categoria.id"
-              class="collapse show"
+              [class]="'collapse '+ categoria.collapse"
               [attr.data-parent]="'#menuAccordion'"
             >
               @for (item of categoria.items; track item.ruta) {
