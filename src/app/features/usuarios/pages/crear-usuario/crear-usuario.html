@@ -1,1 +1,14 @@
-<p>crear-usuario works!</p>,
+<section class="crear-usuario">
+  <div class="encabezado">
+    <h1>Crear Usuario</h1>
+
+    <p>
+      Registra un nuevo usuario en el sistema.
+    </p>
+  </div>
+
+  <app-usuario-form
+    (guardar)="crearUsuario($event)"
+  />
+  
+</section>

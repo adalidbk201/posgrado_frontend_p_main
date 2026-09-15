@@ -250,6 +250,31 @@
 .logout-btn:hover {
   opacity: 0.85;
 }
+
+/* MENU DESPLEGABLE*/
+.menu-title--toggle {
+  width: 98%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: inherit;   // hereda el padding que ya tenga tu .menu-title actual
+  font: inherit;       // hereda tipografía/tamaño actuales
+  color: inherit;
+  text-align: left;
+
+  .chevron {
+    transition: transform var(--transition-fast);
+    font-size: 1.2rem;
+  }
+
+  &[aria-expanded='false'] .chevron {
+    transform: rotate(-90deg);
+  }
+}
+
 /* =========================
    FOOTER
 ========================= */

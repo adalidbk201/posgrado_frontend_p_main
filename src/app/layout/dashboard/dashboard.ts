@@ -2,6 +2,20 @@ import { Component, signal, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';  
+/** INTERFACE PARA EL MENU */
+
+interface ItemMenu {
+  label: string;
+  ruta: string;
+  icono: string;
+}
+
+interface CategoriaMenu {
+  id: string;
+  titulo: string;
+  items: ItemMenu[];
+}
+
 
 @Component({
   imports: [RouterLink, RouterLinkActive, RouterOutlet],
@@ -9,6 +23,9 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
 })
+
+
+
 export class Dashboard {
    // Inyectar Router
   private readonly router = inject(Router);
@@ -36,5 +53,55 @@ export class Dashboard {
     this.router.navigate(['/login'],{replaceUrl: true,});
   }
 
+
+  /** CONFIGURACION DEL MENU  */
+  // dentro de la clase:
+  readonly categorias: CategoriaMenu[] = [
+    {
+      id: 'administracion',
+      titulo: 'Administración',
+      items: [
+        { label: 'Personas', ruta: '/dashboard/personas', icono: '👤' },
+        { label: 'Cuentas', ruta: '/dashboard/usuarios', icono: '👥' },
+        { label: 'Roles', ruta: '/dashboard/roles', icono: '🔐' },
+        { label: 'Grados académicos', ruta: '/dashboard/grados', icono: '🎓' },
+        { label: 'Menciones', ruta: '/dashboard/menciones', icono: '📚' },
+        { label: 'Programas', ruta: '/dashboard/programas', icono: '📘' },
+      ],
+    },
+    {
+      id: 'salas',
+      titulo: 'Configuración de Salas',
+      items: [
+        { label: 'Salas', ruta: '/dashboard/salas', icono: '🏛' },
+        { label: 'Niveles', ruta: '/dashboard/niveles', icono: '▤' },
+        { label: 'Butacas', ruta: '/dashboard/butacas', icono: '💺' },
+      ],
+    },
+    {
+      id: 'academica',
+      titulo: 'Gestión Académica',
+      items: [
+        { label: 'Titulados', ruta: '/dashboard/titulados', icono: '📜' },
+        { label: 'Colaciones', ruta: '/dashboard/colaciones', icono: '🎓' },
+      ],
+    },
+    {
+      id: 'evento',
+      titulo: 'Gestión del Evento',
+      items: [
+        { label: 'Asignación de butacas', ruta: '/dashboard/asignaciones', icono: '▦' },
+        { label: 'Asistencia', ruta: '/dashboard/asistencias', icono: '✓' },
+        { label: 'Comunicados', ruta: '/dashboard/comunicados', icono: '📢' },
+      ],
+    },
+    {
+      id: 'seguridad',
+      titulo: 'Seguridad',
+      items: [
+        { label: 'Módulos', ruta: '/dashboard/modulos', icono: '🧩' },
+      ],
+    },
+  ];
   
 }
