@@ -57,6 +57,14 @@ export const routes: Routes = [
                 path:'roles',
                 loadComponent:()=>import('./features/roles/pages/lista-roles/lista-roles').then((m)=>m.ListaRoles),
             },
+            {
+                path:'roles/crear',
+                loadComponent:()=>import('./features/roles/pages/crear-rol/crear-rol').then((m)=>m.CrearRol),
+            },
+            {
+                path:'roles/editar/:id',
+                loadComponent:()=>import('./features/roles/pages/editar-rol/editar-rol').then((m)=>m.EditarRol),
+            },
             
 
 

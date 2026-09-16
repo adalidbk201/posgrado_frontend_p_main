@@ -1,1 +1,36 @@
-<p>lista-roles works!</p>,
+<section class="lista-rol">
+    <h1>Roles : {{ listRoles().length}}</h1>
+    <p>Total de registros: {{ totalRoles() }}</p>
+
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+    <button type="button" class="btn btn-primary" (click)="crearRol()">
+        + Nuevo Rol
+    </button>
+
+    <table id="example" class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Rol</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripcion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (rol of listRoles(); track rol.fecha_modificacion; let idx= $index) {
+            <tr class="contenido"> 
+                <th scope="row">{{ idx + 1 }}</th>
+                <th>{{ rol.rol }}</th>
+                <th>{{ rol.nombre }}</th>
+                <th>{{ rol. descripcion }}</th>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+</section>

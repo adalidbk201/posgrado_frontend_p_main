@@ -56,8 +56,7 @@ export class PersonaForm {
       '',
       [
         Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(30),
+        
       ]
     ],
     genero:[

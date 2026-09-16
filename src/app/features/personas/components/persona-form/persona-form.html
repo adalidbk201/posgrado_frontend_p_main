@@ -164,11 +164,21 @@
             <label for="expedido"class="col-sm-3 col-form-label">Expedido</label>
 
             <div class="col-sm-9">
-                <input type="text"
-                id="expedido"
-                class="form-control sm"
-                formControlName="expedido"
-                placeholder="Expedido">
+                <select name="expedido"  id="expedido"
+                class="form-control"
+                formControlName="expedido">
+                    <option value="">Selecione un departamento...</option>
+                    <option value="LP">La Paz (LP)</option>
+                    <option value="SC">Santa Cruz (SC)</option>
+                    <option value="CB">Cochabamba (CB)</option>
+                    <option value="OR">Oruro (OR)</option>
+                    <option value="PT">Potosi (PT)</option>
+                    <option value="CH">Chuquisaca (CH)</option>
+                    <option value="TJ">Tarija (TJ)</option>
+                    <option value="BE">Beni (BE)</option>
+                    <option value="PD">Pando (PD)</option>
+                </select>
+                 
                 @if (formulario.controls.expedido.invalid &&
                     formulario.controls.expedido.touched) {
                     
@@ -177,14 +187,7 @@
                             <div class="alert alert-danger" role="alert">Expedido es obligatorio</div>
                             <!-- <span>Expedido es obligatorio</span> -->
                         }
-                        @if (formulario.controls.expedido.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">Expedido debe tener al menos 3 caracteres</div>
-                            <!-- <span>Expedido debe tener al menos 3 caracteres</span> -->
-                        }
-                        @if (formulario.controls.expedido.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">Expedido no debe superar los 30 caracteres</div>
-                            <!-- <span>Expedido no debe superar los 30 caracteres</span> -->
-                        }
+                         
                     </div>
                 }
             </div>
@@ -200,7 +203,7 @@
             <label for="genero"class="col-sm-3 col-form-label">Genero</label>
             <div class="col-sm-9">
                 <select name="genero" id="genero"
-                    class="form-control sm"
+                    class="form-control"
                     formControlName="genero">
                     <option value="">Selecciona Genero</option>
                     <option value="MASCULINO">MASCULINO</option>

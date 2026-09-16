@@ -1,1 +1,100 @@
-<p>rol-form works!</p>,
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+    <!-- rol -->
+    <div class="rol">
+        <div class="form-grop row">
+            <label for="rol"class="col-sm-3 col-form-label">Rol</label>
+            
+            <div class="col-sm-9">
+                <input type="text"
+                nombre="rol"
+                id="rol"
+                class="form-control"
+                formControlName="rol"
+                placeholder="Ingrese rol" >
+                @if (formulario.controls.rol.invalid &&
+                     formulario.controls.rol.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.rol.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo rol es obligatorio</div>
+                        }
+                        @if (formulario.controls.rol.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">El rol debe deter al menos 3 caracteres</div>
+                        }
+                        @if (formulario.controls.rol.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">El rol no debe superar los 50 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- nombre -->
+    <div class="nombre">
+        <div class="form-group row">
+            <label for="nombre"class="col-sm-3 col-form-label">Nombre</label>
+
+            <div class="col-sm-9">
+                <input type="text" 
+                name="nombre" 
+                id="nombre"
+                class="form-control"
+                formControlName="nombre"
+                placeholder="Ingrese nombre">
+                @if (formulario.controls.nombre.invalid &&
+                     formulario.controls.nombre.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.nombre.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo nombre es obligatorio</div>
+                        }
+                        @if (formulario.controls.nombre.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">El nombre debe tener al menos 3 caracteres</div>
+                        }
+                        @if (formulario.controls.nombre.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">El nombre no debe superar los 100 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <!-- descripcion -->
+    <div class="descripcion">
+        <div class="form-group row">
+            <label for="descripcion"class="col-sm-3 col-form-label">Descripción</label>
+            <div class="col-sm-9">
+                <input type="text" 
+                name="descripcion" 
+                id="descripcion"
+                class="form-control"
+                formControlName="descripcion"
+                placeholder="Ingrese descripción">
+                @if (formulario.controls.descripcion.invalid &&
+                     formulario.controls.descripcion.touched) {
+                        
+                    <div class="class-error">
+                        @if (formulario.controls.descripcion.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">La descripción es obligatoria</div>
+                        }
+                        @if (formulario.controls.descripcion.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">La descripción debe tener al menos 5 caracteres </div>
+                        }
+                        @if (formulario.controls.descripcion.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">La descripción no debe superar los 255 caracteres</div>
+                        }
+                    </div>    
+                }
+            </div>
+        </div>
+    </div>
+
+    <button  class="btn btn-success" >
+        Guardar
+    </button>
+
+</form>
