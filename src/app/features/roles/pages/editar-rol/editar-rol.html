@@ -1,1 +1,26 @@
-<p>editar-rol works!</p>,
+<section class="editar-sala">
+
+  <div class="encabezado">
+     <h1>Editar rol</h1>
+
+    <p>
+      Editar rol en el sistema.
+    </p>
+  </div>
+
+    @if (rol()) {
+
+      <app-rol-form
+        [rol1]="rol()"
+        (guardar)="actualizarRol($event)"
+      />
+
+    } @else {
+
+      <p>Cargando rol...</p>
+
+    }
+
+</section>
+
+

@@ -1,1 +1,14 @@
-<p>crear-rol works!</p>,
+<section class="crear-rol">
+  <div class="encabezado">
+    <h1>Crear rol</h1>
+
+    <p>
+      Registra un nuevo rol en el sistema.
+    </p>
+  </div>
+
+  <app-rol-form
+    (guardar)="crearRol($event)"
+  />
+  
+</section>

@@ -87,7 +87,7 @@ export class ListaRoles {
     this.router.navigate(['/dashboard/roles/crear']);
   }
 
-  editarRol(id: string): void {
+  editarRol(id: number): void {
 
     // Navegar a la página de edición
     // Enviamos el ID de la rol en la URL
