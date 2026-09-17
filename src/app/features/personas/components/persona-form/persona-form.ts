@@ -94,6 +94,14 @@ export class PersonaForm {
       [
         Validators.required
       ]
+    ],
+    pais_documento:[
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+      ]
     ]
   })
 
@@ -118,6 +126,7 @@ export class PersonaForm {
           codigo_verificacion:PersonaActual.codigo_verificacion,
           observacion:PersonaActual.observacion,
           fecha_nacimiento:PersonaActual.fecha_nacimiento,
+          pais_documento:PersonaActual.pais_documento,
 
         })
       }
@@ -134,6 +143,7 @@ export class PersonaForm {
           codigo_verificacion:'',
           observacion:'',
           fecha_nacimiento:'',
+          pais_documento:'',
         })
       }
     })

@@ -16,5 +16,6 @@ export interface Persona{
     fecha_nacimiento:string,
     usuario_creacion:string,
     usuario_modificacion:string | null,
+    pais_documento:string,
 
 }

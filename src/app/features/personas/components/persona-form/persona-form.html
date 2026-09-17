@@ -196,6 +196,36 @@
         
       </div>
 
+      <!-- pais documento -->
+      <div class="pais_documento">
+        <div class="form-group row">
+            <label for="pais_documento" class="col-sm-3 col-form-label">País Docuemnto</label>
+
+            <div class="col-sm-9">
+                <input type="text" 
+                name="pais_documento" 
+                id="pais_documento"
+                class="form-control"
+                formControlName="pais_documento"
+                placeholder="Ingrese pais">
+                @if (formulario.controls.pais_documento.invalid &&
+                     formulario.controls.pais_documento.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.pais_documento.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">País Documento es obligatorio</div>
+                        }
+                        @if (formulario.controls.pais_documento.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">País Documento debe tener al menos 3 caracteres</div>
+                        }
+                        @if (formulario.controls.pais_documento.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">País Documento no debe superar los 50 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+      </div>
       <!-- genero -->
        <div class="genero">
 

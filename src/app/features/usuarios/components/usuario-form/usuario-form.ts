@@ -49,51 +49,51 @@ export class UsuarioForm {
         Validators.email,
       ]
     ],
-    intentos:[
-      '',
-      [
-        Validators.required,
-        Validators.pattern('^[0-9]*$')
-      ],
-    ],
-    codigo_desbloqueo:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(100),
-      ],
-    ],
-    codigo_recuperacion:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(100),
-      ],
-    ],
-    codigo_transaccion:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(100),
-      ],
-    ],
-    codigo_activacion:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(100),
-      ],
-    ],
-    fecha_bloqueo:[
-      '',
-      [
-        Validators.required
-      ]
-    ],
+    // intentos:[
+    //   '',
+    //   [
+    //     Validators.required,
+    //     Validators.pattern('^[0-9]*$')
+    //   ],
+    // ],
+    // codigo_desbloqueo:[
+    //   '',
+    //   [
+    //     Validators.required,
+    //     Validators.minLength(6),
+    //     Validators.maxLength(100),
+    //   ],
+    // ],
+    // codigo_recuperacion:[
+    //   '',
+    //   [
+    //     Validators.required,
+    //     Validators.minLength(6),
+    //     Validators.maxLength(100),
+    //   ],
+    // ],
+    // codigo_transaccion:[
+    //   '',
+    //   [
+    //     Validators.required,
+    //     Validators.minLength(6),
+    //     Validators.maxLength(100),
+    //   ],
+    // ],
+    // codigo_activacion:[
+    //   '',
+    //   [
+    //     Validators.required,
+    //     Validators.minLength(6),
+    //     Validators.maxLength(100),
+    //   ],
+    // ],
+    // fecha_bloqueo:[
+    //   '',
+    //   [
+    //     Validators.required
+    //   ]
+    // ],
     url_foto:[
       '',
       [
@@ -120,11 +120,11 @@ export class UsuarioForm {
           nombre_usuario: usuarioActual.nombre_usuario,
           contrasena:usuarioActual.contrasena,
           correo_electronico:usuarioActual.correo_electronico,
-          codigo_desbloqueo:usuarioActual.codigo_desbloqueo,
-          codigo_recuperacion:usuarioActual.codigo_recuperacion,
-          codigo_transaccion:usuarioActual.codigo_transaccion,
-          codigo_activacion:usuarioActual.codigo_activacion,
-          fecha_bloqueo:usuarioActual.fecha_bloqueo,
+          // codigo_desbloqueo:usuarioActual.codigo_desbloqueo,
+          // codigo_recuperacion:usuarioActual.codigo_recuperacion,
+          // codigo_transaccion:usuarioActual.codigo_transaccion,
+          // codigo_activacion:usuarioActual.codigo_activacion,
+          // fecha_bloqueo:usuarioActual.fecha_bloqueo,
           url_foto:usuarioActual.url_foto,
           persona:usuarioActual.persona, 
         });
@@ -133,11 +133,11 @@ export class UsuarioForm {
             nombre_usuario: '',
             contrasena:'',
             correo_electronico:'',
-            codigo_desbloqueo:'',
-            codigo_recuperacion:'',
-            codigo_transaccion:'',
-            codigo_activacion:'',
-            fecha_bloqueo:'',
+            // codigo_desbloqueo:'',
+            // codigo_recuperacion:'',
+            // codigo_transaccion:'',
+            // codigo_activacion:'',
+            // fecha_bloqueo:'',
             url_foto:'',
             persona:'' 
           });

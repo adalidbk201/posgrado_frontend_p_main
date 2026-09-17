@@ -80,7 +80,7 @@ export class EditarPersona {
     }
 
     // Actualizamos la sala.
-    this.personasService.actualizarPersona(this.id, datos).subscribe({
+    this.personasService.actualizarParcialPersona(this.id, datos).subscribe({
 
       // Si la actualización fue correcta.
       next: () => {

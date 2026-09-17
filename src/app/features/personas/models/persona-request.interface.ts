@@ -9,5 +9,5 @@ export interface PersonaRequest{
     codigo_verificacion:string,
     observacion:string,
     fecha_nacimiento:string,
-
+    pais_documento:string,
 }
