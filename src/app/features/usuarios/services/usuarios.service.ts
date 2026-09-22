@@ -42,9 +42,9 @@ export class UsuariosService {
       }
     
     // =========================
-    // PUT - ACTALIZAR
+    // PUT - ACTUALIZAR
     actualizarUsuario(id:string, datos:UsuarioRequest):Observable<Usuario>{
-      return this.http.put<Usuario>(`{this.api}/${id}`,datos)
+      return this.http.put<Usuario>(`${this.api}${id}/`,datos)
     }
 
      // =========================

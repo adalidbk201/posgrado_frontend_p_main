@@ -10,6 +10,14 @@ import { RouterLink } from '@angular/router';
 export class Navbar {
   readonly themeService = inject(ThemeService);
 
+  //Cambiar logo 
+  get logoSrc(): string {
+    return this.themeService.theme() === 'dark'
+      ? '/img/logo-dark.png'
+      : '/img/logo.png';
+  }
+
+
   // Metodo del themeService
   toggleTheme(): void {
     this.themeService.toggle();

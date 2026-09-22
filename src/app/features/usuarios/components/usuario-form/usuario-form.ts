@@ -17,7 +17,7 @@ import { RouterLink } from '@angular/router';
 })
 export class UsuarioForm {
   // recibe un usuario cuando estamos editando
-  readonly usuario = input<UsuarioRequest | null>(null);
+  readonly usuario = input<Usuario | null>(null);
   
   // enviar los datos al componente padre
   readonly guardar = output<UsuarioRequest>();
@@ -118,7 +118,7 @@ export class UsuarioForm {
       if (usuarioActual) {
         this.formulario.patchValue({
           nombre_usuario: usuarioActual.nombre_usuario,
-          contrasena:usuarioActual.contrasena,
+          contrasena:'',
           correo_electronico:usuarioActual.correo_electronico,
           // codigo_desbloqueo:usuarioActual.codigo_desbloqueo,
           // codigo_recuperacion:usuarioActual.codigo_recuperacion,

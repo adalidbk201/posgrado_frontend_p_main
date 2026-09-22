@@ -6,7 +6,7 @@ import { UsuarioRequest } from '../../models/usuario.request.interface';
 import { UsuarioForm } from '../../components/usuario-form/usuario-form';
 @Component({
   selector: 'app-editar-usuario',
-  imports: [],
+  imports: [UsuarioForm],
   templateUrl: './editar-usuario.html',
   styleUrl: './editar-usuario.scss',
 })
@@ -26,7 +26,7 @@ export class EditarUsuario {
   // Creamos un signal que inicialmente no contiene ninguna sala.
   readonly usuario = signal<Usuario | null>(null)
 
-
+ 
   constructor() {
 
     // verificar si existe el id
