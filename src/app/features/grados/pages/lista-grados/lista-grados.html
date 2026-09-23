@@ -1,1 +1,140 @@
-<p>lista-grados works!</p>,
+ 
+
+
+<section class="lista-grado">
+    <h1>Grados : {{ listGrados().length}}</h1>
+    <p>Total de registros: {{ totalGrados() }}</p>
+    
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+    <button type="button" class="btn btn-primary" (click)="crearGrado()">
+        + Nueva sala
+    </button>
+
+    <table id="example" class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <!-- <th scope="col">ID</th> -->
+                <th scope="col">Grado</th>
+                <th scope="col">Jerarquia</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+             @for (grado of listGrados(); track grado.id; let idx= $index) {
+                <tr class="contenido">
+                    <th scope="row">{{ idx + 1 }}</th>
+                    <!-- <td>{{ sala.id }}</td> -->
+                    <td>{{ grado.grado_academico }}</td>
+                    <td>{{ grado.jerarquia }}</td>
+                    <td>
+                        <button
+                            type="button" class="btn btn-warning"
+                            (click)="editarGrado(grado.id)"
+                        >
+                            Editar
+                        </button>
+                        <button
+  type="button"
+  class="btn btn-danger "
+  data-toggle="modal"
+  data-target="#modalEliminar"
+  (click)="seleccionarGradoEliminar(grado.id)"
+>
+  Eliminar
+</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        
+       
+    </table>
+</section>
+
+
+
+
+<!-- Modal para confirmar eliminación -->
+<div
+  class="modal fade"
+  id="modalEliminar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalEliminarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalEliminarTitulo"
+        >
+          Confirmar eliminación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de eliminar este grado?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarEliminacion()"
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+ 

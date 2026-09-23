@@ -16,7 +16,7 @@ export class UsuariosService {
     // inyectar HttpClient para realizar petcioines http
     private http=inject(HttpClient);
 
-    // url de la api usuarios
+    // url de la api usuarios 
     private api=`${environment.API}/usuarios/`;
 
     // Obtener todos los usuarios

@@ -24,6 +24,13 @@ export class PersonasService {
         return this.http.get<RespuestaApi<PaginacionResponse<Persona>>>(this.apiUrl);
     }
 
+    // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
+    getPersonas(pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Persona>>> {
+      return this.http.get<RespuestaApi<PaginacionResponse<Persona>>>(
+        `${this.apiUrl}?pagina=${pagina}&limite=${limite}`
+      );
+    }
+
     //metodo para buscar personas por termino
     getBuscarPersonas(termino: string): Observable<RespuestaApi<PaginacionResponse<Persona>>> {
         return this.http.get<RespuestaApi<PaginacionResponse<Persona>>>(`${this.apiUrl}?q=${encodeURIComponent(termino)}/`);
