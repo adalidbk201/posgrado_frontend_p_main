@@ -89,12 +89,29 @@ export const routes: Routes = [
                 path:'menciones',
                 loadComponent:()=>import('./features/menciones/pages/lista-menciones/lista-menciones').then((m)=>m.ListaMenciones),
             },
+            {
+                path:'menciones/crear',
+                loadComponent:()=>import('./features/menciones/pages/crear-mencion/crear-mencion').then((m)=>m.CrearMencion),
+
+            },
+            {
+                path:'menciones/editar/:id',
+                loadComponent:()=>import('./features/menciones/pages/editar-mencion/editar-mencion').then((m)=>m.EditarMencion),
+            },
 
 
             /** Programas */
             {
                 path:'programas',
                 loadComponent:()=>import('./features/programas/pages/lista-programas/lista-programas').then((m)=>m.ListaProgramas)
+            },
+            {
+                path:'programas/crear',
+                loadComponent:()=>import('./features/programas/pages/crear-programa/crear-programa').then((m)=>m.CrearPrograma),
+            },
+            {
+                path:'programas/editar/:id',
+                loadComponent:()=>import('./features/programas/pages/editar-programa/editar-programa').then((m)=>m.EditarPrograma),
             },
 
 

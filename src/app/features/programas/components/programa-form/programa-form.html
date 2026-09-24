@@ -1,0 +1,145 @@
+ <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+    <!-- nombre_programa -->
+    <div class="nombre_programa">
+        <div class="form-group row">
+            <label for="nombre_programa" class="col-sm-3 col-form-label">Nombre Programa</label>
+
+            <div class="col-sm-9">
+                <input 
+                type="text"
+                name="nombre_programa"
+                id="nombre_programa"
+                class="form-control"
+                formControlName="nombre_programa"
+                placeholder="Ingrese nombre del programa">
+                @if (formulario.controls.nombre_programa.invalid &&
+                     formulario.controls.nombre_programa.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.nombre_programa.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El nombre es obligatorio</div>
+                        }
+                        @if (formulario.controls.nombre_programa.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">El nombre debe tener al menos 3 caracteres</div>
+                        }
+                        @if (formulario.controls.nombre_programa.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">El nombre no debe superar los 100 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- grado_academico -->
+    <div class="grado_academico">
+        <div class="form-group row">
+            <label for="grado_academico" class="col-sm-3 col-form-label">Grado Academico</label>
+
+            <div class="col-sm-9">
+
+                <!-- buscador -->
+                 <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre o jerarquia..."
+                    [value]="busquedaGrado()"
+                    (input)="busquedaGrado.set($any($event.target).value)"> 
+
+                <!-- select -->
+                <select
+                    id="grado_academico"
+                    name="grado_academico"
+                    formControlName="grado_academico"
+                    class="form-control">
+
+                    <option value="" disabled>Selecciona un grado</option>
+
+                    @for (grado of gradosFiltradas(); track grado.id) {
+                        <option [value]="grado.id">
+                            {{ grado.id }} {{ grado.grado_academico }}  
+                        </option>
+                    }
+                </select>
+
+                @if (formulario.controls.grado_academico.invalid &&
+                    formulario.controls.grado_academico.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.grado_academico.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo grado  es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaGrado()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasGrados()"
+                        [disabled]="cargandoMasGrados()">
+                        {{ cargandoMasGrados() ? 'Cargando...' : 'Cargar más grados' }}
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <!-- mencion -->
+    <div class="mencion">
+        <div class="form-group row">
+            <label for="mencion" class="col-sm-3 col-form-label">Mención</label>
+            
+            <div class="col-sm-9">
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre..."
+                    [value]="busquedaMencion()"
+                    (input)="busquedaMencion.set($any($event.target).value)">
+
+                <!-- select -->
+                 <select
+                    id="mencion"
+                    name="mencion"
+                    formControlName="mencion"
+                    class="form-control">
+
+                    <option value="" disabled>Selecciona una mención</option>
+
+                    @for (mencion of mencionesFiltradas(); track mencion.id) {
+                        <option [value]="mencion.id">
+                            {{ mencion.id }} {{ mencion.mencion }} 
+                        </option>
+                    }
+                </select>
+
+                @if (formulario.controls.mencion.invalid &&
+                    formulario.controls.mencion.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.mencion.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo mencion es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaMencion()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasMenciones()"
+                        [disabled]="cargandoMasMenciones()">
+                        {{ cargandoMasMenciones() ? 'Cargando...' : 'Cargar más menciones' }}
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-success">Guardar</button>
+ </form>

@@ -1,0 +1,29 @@
+<section class="editar-programa">
+
+  <div class="encabezado">
+     <h1>Editar programa</h1>
+
+    <p>
+      Editar programa en el sistema.
+    </p>
+  </div>
+
+    @if (programa()) {
+
+      <app-programa-form
+        [programa]="programa()"
+        (guardar)="actualizarPrograma($event)"
+      />
+
+    } @else {
+
+      <p>Cargando sala...</p>
+
+    }
+
+</section>
+
+
+
+
+ 

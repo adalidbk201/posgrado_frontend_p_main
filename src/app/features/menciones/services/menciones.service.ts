@@ -51,7 +51,7 @@ export class MencionesService {
 
     // =========================
     // PUT - ACTUALIZAR
-    actualizarMencion(id: number,datos: MencionRequest): Observable<Mencion> {
+    actualizarMencion(id: string,datos: MencionRequest): Observable<Mencion> {
     return this.http.put<Mencion>(`${this.apiUrl}${id}/`,datos);
     }
 

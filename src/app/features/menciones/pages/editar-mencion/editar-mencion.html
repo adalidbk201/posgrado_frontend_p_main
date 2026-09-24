@@ -1,1 +1,27 @@
-<p>editar-mencion works!</p>,
+<section class="editar-mencion">
+
+  <div class="encabezado">
+     <h1>Editar mencion</h1>
+
+    <p>
+      Editar mencion en el sistema.
+    </p>
+  </div>
+
+    @if (mencion()) {
+
+      <app-mencion-form
+        [mencion]="mencion()"
+        (guardar)="actualizarMencion($event)"
+      />
+
+    } @else {
+
+      <p>Cargando Mención...</p>
+
+    }
+
+</section>
+
+
+

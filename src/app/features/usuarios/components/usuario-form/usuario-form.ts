@@ -136,7 +136,7 @@ export class UsuarioForm {
       });
     }
 
-
+ 
 
   constructor() {
     // cargar la primera página de personas al iniciar el formulario

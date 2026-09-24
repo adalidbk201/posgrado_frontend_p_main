@@ -21,7 +21,7 @@ export class EditarGrado {
   private readonly router = inject(Router);
 
    // obtener el id de la URL
-  private readonly id = this.route.snapshot.paramMap.get('id');
+  private readonly id = Number(this.route.snapshot.paramMap.get('id'));
 
    // Creamos un signal que inicialmente no contiene ninguna sala.
  readonly grado = signal<Grado | null>(null)
@@ -46,7 +46,7 @@ export class EditarGrado {
 
 
   // metodo obtenerSala
-  obtenerGrado(id: string): void {
+  obtenerGrado(id: number): void {
 
     // llamamos al metodo getGradoPorId
     // usamos subscribe para recibir la respuesta HTTP GET

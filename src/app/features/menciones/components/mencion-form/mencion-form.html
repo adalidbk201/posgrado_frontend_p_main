@@ -1,1 +1,33 @@
-<p>mencion-form works!</p>,
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+    <div class="mencion">
+        <div class="form-group row">
+            <label for="mencion" class="col-sm-3 col-form-label">Mención</label>
+            <div class="col-sm-9">
+                <input 
+                type="text"
+                class="form-control"
+                name="mencion"
+                formControlName="mencion"
+                placeholder="Ingrese mención"
+                id="mencion">
+                @if (formulario.controls.mencion.invalid &&
+                     formulario.controls.mencion.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.mencion.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">La mención es obligatoria</div>  
+                        }
+                        @if (formulario.controls.mencion.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">La mención debe tener al menos 3 caracteres</div>
+                        }
+                        @if (formulario.controls.mencion.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">La mención no debe superar los 150 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-success">Guardar</button>
+</form> 

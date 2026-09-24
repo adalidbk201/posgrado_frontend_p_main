@@ -39,7 +39,7 @@ export class GradosService {
 
     // =========================
     // GET - POR ID
-    getGradoPorId(id: string): Observable<RespuestaApi<Grado>> {
+    getGradoPorId(id: number): Observable<RespuestaApi<Grado>> {
     return this.http.get<RespuestaApi<Grado>>(`${this.api}${id}/`);
     }
 
@@ -57,7 +57,7 @@ export class GradosService {
 
     // =========================
     // PATCH - ACTUALIZAR PARCIALMENTE
-    actualizarParcialGrado(id: string,datos: Partial<GradoRequest>): Observable<Grado> {
+    actualizarParcialGrado(id: number,datos: Partial<GradoRequest>): Observable<Grado> {
         return this.http.patch<Grado>(`${this.api}${id}/`,datos);
     }
 

@@ -79,7 +79,7 @@ export class EditarPersona {
       return;
     }
 
-    // Actualizamos la sala.
+    // Actualizamos la persona.
     this.personasService.actualizarParcialPersona(this.id, datos).subscribe({
 
       // Si la actualización fue correcta.
