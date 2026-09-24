@@ -1,1 +1,26 @@
-<p>editar-grado works!</p>,
+<section class="editar-grado">
+
+  <div class="encabezado">
+     <h1>Editar grado</h1>
+
+    <p>
+      Editar grado en el sistema.
+    </p>
+  </div>
+
+    @if (grado()) {
+
+      <app-grado-form
+        [grado]="grado()"
+        (guardar)="actualizarGrado($event)"
+      />
+
+    } @else {
+
+      <p>Cargando grado...</p>
+
+    }
+
+</section>
+
+

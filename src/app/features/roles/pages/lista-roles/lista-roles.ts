@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { RolesService } from '../../services/roles.service';
 import { Rol } from '../../models/rol.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -11,144 +11,158 @@ import { Router } from '@angular/router';
   styleUrl: './lista-roles.scss',
 })
 export class ListaRoles {
-  // consumir la api de roles
+  // inyectar rolesService
+  private readonly rolesService = inject(RolesService);
 
-  // inyectar el servicio de roles
-  private readonly rolesService = inject(RolesService)
-
-  // crear señal para almacenar las roles
-  readonly listRoles= signal<Rol[]>([]);
-
-  // total de roles
-  readonly totalRoles= signal(0);
-
-  // llamar metodo getRoles del servicio de roles
-  readonly getRoles= rxResource({
-    stream:()=>this.rolesService.getRoles(),
-  })
-
-  // crear señal terminoBusqeda para almacenar el termino de busqueda
-  readonly terminoBusqueda= signal('');
-
-  // llmar metodo getSalaBusqueda del servicio de salas
-  readonly getRolBusqueda= rxResource({
-    // asingar termino en parmas
-    params:()=>({
-      // guardar señal en termino
-      termino: this.terminoBusqueda().trim(),
-    }),
-
-    stream:({params})=>{
-      // verificar si termino es vacio
-      if(params.termino.length===0){
-        // retornar lista de salas
-        return this.rolesService.getRoles();
-      }
-      // retornar rol por termino de busqueda
-      return this.rolesService.getRolBusqueda(params.termino);
-    }
-  })
-
-  // metodo para ejecutar la busqueda
-  ejecutarBusqueda(termino:string):void{
-    // actualizar señal terminoBusqueda
-    this.terminoBusqueda.set(termino)
-  }
-
-  constructor(){
-    // verificar cambio de señal
-    effect(()=>{
-      //verificar si getSalas tiene datos
-      if(this.getRoles.hasValue()){
-        // asignar datos a la señal listRoles
-        this.listRoles.set(this.getRoles.value().Data.filas);
-        // asignar total de salas
-        this.totalRoles.set(this.getRoles.value().Data.total);
-      }
-    })
-
-    // verificar cambio de señal
-    effect(()=>{
-      //verificar si getRolBusqueda tiene datos
-      if(this.getRolBusqueda.hasValue()){
-        // asignar datos a la señal listRoles
-        this.listRoles.set(this.getRolBusqueda.value().Data.filas);
-        // asignar total de roles
-        this.totalRoles.set(this.getRolBusqueda.value().Data.total);
-      }
-    })
-  }
-
-  // Inyectamos Router para navegar entre páginas
+  // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
 
-  // Navegar a la página para crear una rol
+  // =========================
+  // Cargar y filtrar
+  // =========================
+
+  // todas los roles cargados desde el backend (paginado, acumulativo)
+  readonly roles = signal<Rol[]>([]);
+
+  // página actual cargada
+  readonly paginaActual = signal(1);
+
+  // total real de registros que reporta el backend (para saber si hay más páginas)
+  readonly totalBackend = signal(0);
+
+  // indica si se está trayendo una página adicional
+  readonly cargando = signal(false);
+
+  // texto del buscador
+  readonly terminoBuscar = signal('');
+
+
+  // lista final que se muestra en la tabla, filtrada en el cliente
+  // computed crea un signal derivado - resultado depende de terminoBuscar y roles
+  readonly listRoles = computed(() => {
+
+    // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
+    const termino = this.terminoBuscar().trim().toLowerCase();
+
+    // si no escribio nada devuelve todas los roles
+    if (!termino) return this.roles();
+
+    // filter recorre todas los roles y decide cuales deben permanecer
+    return this.roles().filter(r =>
+
+      // construye un texto con los datos del rol para buscar por cualquiera de esos datos
+      `${r.rol} ${r.nombre} ${r.descripcion}`
+        // convierte los datos en minuscula
+        .toLowerCase()
+        // true si encontro el termino , false si no encontro el termino
+        .includes(termino)
+    );
+
+  });
+
+  
+
+  // se llama directo desde el (input), sin debounce — el filtro es en memoria, no HTTP
+  ejecutarBusqueda(termino: string): void {
+    this.terminoBuscar.set(termino);
+  }
+
+
+  // calcula qué número mostrar como total de roles.
+  readonly totalRoles = computed(() =>
+    this.terminoBuscar().trim() 
+    // si hay texto en buscador
+    ? this.listRoles().length 
+    // si no hay texto en buscador
+    : this.totalBackend()
+  );
+
+
+  constructor() {
+    // cargar la primera pagina
+    this.cargarRoles(1);
+  }
+
+  private cargarRoles(pagina: number): void {
+    // cuando empieza la peticion -> true 
+    this.cargando.set(true);
+
+    // Solicitar datos a Django-Como getPersonas() devuelve un Observable, necesitas suscribirte:
+    this.rolesService.getRoles(pagina, 100).subscribe({
+
+      next: (respuesta) => {
+
+        // obtener roles
+        const nuevas = respuesta.Data.filas;
+
+        // actualizar señal roles -> Angular te entrega el valor actual mediante: actual
+        this.roles.update(actual => {
+
+          //          crea un conjunto de los IDs extraidos.
+          const idsExistentes = new Set(actual.map(p => p.id));
+
+          // De los roles nuevos, quédate solamente con aquellas cuyo ID todavía no existe en roles.
+          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.id));
+
+          // Agregar las nuevos roles
+          return [...actual, ...sinDuplicar];
+        });
+
+        // Guardar el total real de Django
+        this.totalBackend.set(respuesta.Data.total);
+        // Guardar la página actual
+        this.paginaActual.set(pagina);
+        // Terminar la carga
+        this.cargando.set(false);
+      },
+      error: () => this.cargando.set(false),
+    });
+  }
+
+
+  cargarMasRoles(): void {
+    this.cargarRoles(this.paginaActual() + 1);
+  }
+
+  
+
+  // =========================
+  // NAVEGACIÓN Y ELIMINACIÓN —  
+  // =========================
+
   crearRol(): void {
     this.router.navigate(['/dashboard/roles/crear']);
   }
 
   editarRol(id: number): void {
-
-    // Navegar a la página de edición
-    // Enviamos el ID de la rol en la URL
     this.router.navigate(['/dashboard/roles/editar', id]);
-
   }
 
 
-
-
-
-  // Metodo Eliminar Rol
-  // Signal que almacena el ID del rol seleccionado para eliminar.
+  /** Eliminar rol */
   readonly rolEliminarId = signal<string | null>(null);
-    // Método que selecciona el rol que se quiere eliminar.
+
   seleccionarRolEliminar(id: string): void {
-
-    // Guardamos el ID en el signal.
     this.rolEliminarId.set(id);
-
   }
 
-  // Método que confirma y ejecuta la eliminación.
   confirmarEliminacion(): void {
-
-    // Obtenemos el ID almacenado.
     const id = this.rolEliminarId();
+    if (!id) return;
 
-    // Verificamos que exista un ID.
-    if (!id) {
-      return;
-    }
-
-    // Llamamos al servicio para eliminar el rol.
     this.rolesService.eliminarRol(id).subscribe({
-
-      // Se ejecuta cuando la eliminación fue correcta.
       next: () => {
-
-        // Mostramos mensaje de éxito.
         console.log('Rol eliminado correctamente');
-
-        // Recargamos la lista.
-        this.getRoles.reload();
-
-        // Recargamos la búsqueda.
-        this.getRolBusqueda.reload();
-
-        // Limpiamos el ID seleccionado.
+        // recarga desde el inicio para reflejar el borrado
+        this.roles.set([]);
+        this.paginaActual.set(0);
+        this.cargarRoles(1);
         this.rolEliminarId.set(null);
       },
-
-      // Se ejecuta cuando ocurre un error.
       error: (error) => {
-
-        // Mostramos el error.
         console.error('Error al eliminar el rol:', error);
       },
     });
   }
-
-
 
 }

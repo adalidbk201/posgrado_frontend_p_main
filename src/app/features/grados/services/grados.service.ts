@@ -21,8 +21,15 @@ export class GradosService {
     private api =`${environment.API}/grados/`
 
     // obtener todos los grados
-    getGrados():Observable<RespuestaApi<PaginacionResponse<Grado>>> {
+    getAllGrados():Observable<RespuestaApi<PaginacionResponse<Grado>>> {
         return this.http.get<RespuestaApi<PaginacionResponse<Grado>>>(this.api);
+    }
+
+    // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
+    getGrados(pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Grado>>> {
+        return this.http.get<RespuestaApi<PaginacionResponse<Grado>>>(
+        `${this.api}?pagina=${pagina}&limite=${limite}`
+        );
     }
 
     // obtener una sala por terminos de busqueda

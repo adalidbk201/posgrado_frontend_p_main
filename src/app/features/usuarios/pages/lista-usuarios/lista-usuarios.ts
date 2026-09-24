@@ -1,4 +1,4 @@
-import { Component, effect, signal, inject } from '@angular/core';
+import { Component, effect, signal, inject, computed } from '@angular/core';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Usuario } from '../../models/usuario.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -11,136 +11,158 @@ import { Router } from '@angular/router';
   templateUrl: './lista-usuarios.html',
 })
 export class ListaUsuarios {
-  // consumir la api usuarios
+  // inyectar usuariosService
+  private readonly usuariosService = inject(UsuariosService);
 
-  // inyectar el servicio de usuarios
-  private readonly usuariosService= inject(UsuariosService)
-
-  // crear señal para almacenar Usuarios
-  readonly listUsuarios=signal<Usuario[]>([])
-
-  // total de Usuarios
-  readonly totalUsuarios=signal(0)
-
-  // llamar metodo getUsuarios del servicio Usuario
-  readonly getUsuarios=rxResource({
-    stream:()=>this.usuariosService.getUsuarios()
-  })
-
-  // crear señal termino busqueda para alamcenar el termino de busqueda
-  readonly terminoBusqueda=signal('')
-
-  // llamar al metodo getUsuarioBsqueda del servicio usuario
-  readonly getUsuarioBusqueda= rxResource({
-    // asignar termino en params
-    params:()=>({
-      // guardar señal en termino
-      termino :this.terminoBusqueda().trim(),
-    }),
-
-    stream:({params})=>{
-      // verificar si termino es vacio
-      if(params.termino.length === 0){
-        // retorna lista usuarios
-        return this.usuariosService.getUsuarios()
-      }
-      return this.usuariosService.getUsuarioBusqueda(params.termino)
-    }
-  })
-
-  // metodo para ejecutar la busqueda
-  ejecutarBusqueda(termino:string):void{
-    //actualizar señal termino busqueda
-    this.terminoBusqueda.set(termino)
-  }
-
-  constructor(){
-    // verificar cambio de señal
-    effect(()=>{
-      // verificar si getUsuarios tiene datos
-      if(this.getUsuarios.hasValue()){
-        // actualizar señal 
-        this.listUsuarios.set(this.getUsuarios.value().Data.filas)
-        this.totalUsuarios.set(this.getUsuarios.value().Data.total)
-      }
-    })
-
-    // verificar cambio de señal
-    effect(()=>{
-      // verificar si getUsuariosBusqueda tiene datos
-      if(this.getUsuarioBusqueda.hasValue()){
-        // actualizar señal
-        this.listUsuarios.set(this.getUsuarioBusqueda.value().Data.filas)
-        this.totalUsuarios.set(this.getUsuarioBusqueda.value().Data.total)
-      }
-    })
-  }
-
-  // Inyectamos Router para navegar entre paginas
+  // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
 
-  // navegar a la pagina crear usuario
-  crearUsuario():void{
-    this.router.navigate(['/dashboard/usuarios/crear'])
+  // =========================
+  // Cargar y filtrar
+  // =========================
+
+  // todas los usuarios cargados desde el backend (paginado, acumulativo)
+  readonly usuarios = signal<Usuario[]>([]);
+
+  // página actual cargada
+  readonly paginaActual = signal(1);
+
+  // total real de registros que reporta el backend (para saber si hay más páginas)
+  readonly totalBackend = signal(0);
+
+  // indica si se está trayendo una página adicional
+  readonly cargando = signal(false);
+
+  // texto del buscador
+  readonly terminoBuscar = signal('');
+
+
+  // lista final que se muestra en la tabla, filtrada en el cliente
+  // computed crea un signal derivado - resultado depende de terminoBuscar y usuarios
+  readonly listUsuarios = computed(() => {
+
+    // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
+    const termino = this.terminoBuscar().trim().toLowerCase();
+
+    // si no escribio nada devuelve todos los usuarios
+    if (!termino) return this.usuarios();
+
+    // filter recorre todos los usuarios y decide cuales deben permanecer
+    return this.usuarios().filter(u =>
+
+      // construye un texto con los datos del usuario para buscar por cualquiera de esos datos
+      `${u.nombre_usuario} ${u.correo_electronico}`
+        // convierte los datos en minuscula
+        .toLowerCase()
+        // true si encontro el termino , false si no encontro el termino
+        .includes(termino)
+    );
+
+  });
+
+  
+
+  // se llama directo desde el (input), sin debounce — el filtro es en memoria, no HTTP
+  ejecutarBusqueda(termino: string): void {
+    this.terminoBuscar.set(termino);
   }
 
-  editarUsuario(id:string):void{
-    // navegar a la pagina de edicion
-    // enviamos el id del usuario en la url
-    this.router.navigate(['/dashboard/usuarios/editar', id])
+
+  // calcula qué número mostrar como total de usuarios.
+  readonly totalUsuarios = computed(() =>
+    this.terminoBuscar().trim() 
+    // si hay texto en buscador
+    ? this.listUsuarios().length 
+    // si no hay texto en buscador
+    : this.totalBackend()
+  );
+
+
+  constructor() {
+    // cargar la primera pagina
+    this.cargarUsuarios(1);
+  }
+
+  private cargarUsuarios(pagina: number): void {
+    // cuando empieza la petiicon -> true 
+    this.cargando.set(true);
+
+    // Solicitar datos a Django-Como getUsuarios() devuelve un Observable, necesitas suscribirte:
+    this.usuariosService.getUsuarios(pagina, 100).subscribe({
+
+      next: (respuesta) => {
+
+        // obtener usuarios
+        const nuevas = respuesta.Data.filas;
+
+        // actualizar señal usuarios -> Angular te entrega el valor actual mediante: actual
+        this.usuarios.update(actual => {
+
+          //          crea un conjunto de los IDs extraidos.
+          const idsExistentes = new Set(actual.map(p => p.id));
+
+          // De las personas nuevas, quédate solamente con aquellas cuyo ID todavía no existe en personas.
+          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.id));
+
+          // Agregar las nuevas personas
+          return [...actual, ...sinDuplicar];
+        });
+
+        // Guardar el total real de Django
+        this.totalBackend.set(respuesta.Data.total);
+        // Guardar la página actual
+        this.paginaActual.set(pagina);
+        // Terminar la carga
+        this.cargando.set(false);
+      },
+      error: () => this.cargando.set(false),
+    });
   }
 
 
+  cargarMasUsuarios(): void {
+    this.cargarUsuarios(this.paginaActual() + 1);
+  }
 
-  // Metodo Eliminar usuario
-  // Signal que almacena el ID del usuario seleccionada para eliminar.
+  
+
+  // =========================
+  // NAVEGACIÓN Y ELIMINACIÓN —  
+  // =========================
+
+  crearUsuario(): void {
+    this.router.navigate(['/dashboard/usuarios/crear']);
+  }
+
+  editarUsuario(id: string): void {
+    this.router.navigate(['/dashboard/usuarios/editar', id]);
+  }
+
+
+  /** Eliminar usuario */
   readonly usuarioEliminarId = signal<string | null>(null);
-  // Método que selecciona el usuario que se quiere eliminar.
+
   seleccionarUsuarioEliminar(id: string): void {
-
-    // Guardamos el ID en el signal.
     this.usuarioEliminarId.set(id);
-
   }
 
-  // Método que confirma y ejecuta la eliminación.
   confirmarEliminacion(): void {
-
-    // Obtenemos el ID almacenado.
     const id = this.usuarioEliminarId();
+    if (!id) return;
 
-    // Verificamos que exista un ID.
-    if (!id) {
-      return;
-    }
-
-    // Llamamos al servicio para eliminar la usuario.
     this.usuariosService.eliminarUsuario(id).subscribe({
-
-      // Se ejecuta cuando la eliminación fue correcta.
       next: () => {
-
-        // Mostramos mensaje de éxito.
-        console.log('Sala eliminada correctamente');
-
-        // Recargamos la lista.
-        this.getUsuarios.reload();
-
-        // Recargamos la búsqueda.
-        this.getUsuarioBusqueda.reload();
-
-        // Limpiamos el ID seleccionado.
+        console.log('Usuario eliminado correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.usuarios.set([]);
+        this.paginaActual.set(0);
+        this.cargarUsuarios(1);
         this.usuarioEliminarId.set(null);
       },
-
-      // Se ejecuta cuando ocurre un error.
       error: (error) => {
-
-        // Mostramos el error.
         console.error('Error al eliminar el usuario:', error);
       },
     });
   }
-
 
 }

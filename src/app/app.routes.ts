@@ -73,6 +73,14 @@ export const routes: Routes = [
                 path:'grados',
                 loadComponent:()=>import('./features/grados/pages/lista-grados/lista-grados').then((m)=>m.ListaGrados),
             },
+            {
+                path:'grados/crear',
+                loadComponent:()=>import('./features/grados/pages/crear-grado/crear-grado').then((m)=>m.CrearGrado),
+            },
+            {
+                path:'grados/editar/:id',
+                loadComponent:()=>import('./features/grados/pages/editar-grado/editar-grado').then((m)=>m.EditarGrado),
+            },
 
 
 

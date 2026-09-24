@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { PersonasService } from '../../services/personas.service';
 import { Persona } from '../../models/persona.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -11,141 +11,157 @@ import { Router } from '@angular/router';
   templateUrl: './lista-personas.html',
 })
 export class ListaPersonas {
-  // consumir la api de personas
-
-  //injectar el servicio de personas
+  // inyectar personasService
   private readonly personasService = inject(PersonasService);
 
-  //crear señal para almacenar los datos de personas
-  readonly listPersonas =signal<Persona[]>([]);
+  // inyectar Roter para navegacion entre paginas
+  private readonly router = inject(Router);
 
-  // total personas
-  readonly totalPersonas = signal(0);
+  // =========================
+  // Cargar y filtrar
+  // =========================
 
-  // metodo para obtener todas las personas
-  readonly getPersonas =rxResource({
-    stream:()=> this.personasService.getAllPersonas(),
-  })
+  // todas las personas cargadas desde el backend (paginado, acumulativo)
+  readonly personas = signal<Persona[]>([]);
 
-  // crear señal para almacenar el termino de busqueda
+  // página actual cargada
+  readonly paginaActual = signal(1);
+
+  // total real de registros que reporta el backend (para saber si hay más páginas)
+  readonly totalBackend = signal(0);
+
+  // indica si se está trayendo una página adicional
+  readonly cargando = signal(false);
+
+  // texto del buscador
   readonly terminoBuscar = signal('');
 
-  // metodo para buscar personas por termino
-  readonly getPersonasBuscar = rxResource({
-    params: () => ({
-      termino: this.terminoBuscar().trim(),
-    }),
-    stream: ({ params }) => {
-      if (params.termino.length === 0) {
-        return this.personasService.getAllPersonas();
-      }
-      return this.personasService.getBuscarPersonas(params.termino);
-    },
+
+  // lista final que se muestra en la tabla, filtrada en el cliente
+  // computed crea un signal derivado - resultado depende de terminoBuscar y personas
+  readonly listPersonas = computed(() => {
+
+    // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
+    const termino = this.terminoBuscar().trim().toLowerCase();
+
+    // si no escribio nada devuelve todas las personas
+    if (!termino) return this.personas();
+
+    // filter recorre todas las personas y decide cuales deben permanecer
+    return this.personas().filter(p =>
+
+      // construye u ntexto con los datos de la persona para buscar por cualquiera de esos datos
+      `${p.nombres} ${p.primer_apellido} ${p.segundo_apellido} ${p.nro_documento}`
+        // convierte los datos en minuscula
+        .toLowerCase()
+        // true si encontro el termino , false si no encontro el termino
+        .includes(termino)
+    );
+
   });
 
-  // metodo para ejecutar la busqueda
-  ejecutarBusqueda(termino:string):void{
-    // actualizar señal terminoBuscar
-    this.terminoBuscar.set(termino)
-  }
-
-
-  constructor(){
-    // verificar cambio de señal
-    effect(()=>{
-      // veriifcar valor de getPersonas
-      if(this.getPersonas.hasValue()){
-        // actualizar señal listPersonas con los datos obtenidos
-        const respuesta = this.getPersonas.value();
-
-        console.log('RESPUESTA COMPLETA:', respuesta);
-        console.log('FILAS:', respuesta.Data.filas);
-        console.log('TOTAL:', respuesta.Data.total);
-
-        this.listPersonas.set(this.getPersonas.value().Data.filas)
-        this.totalPersonas.set(this.getPersonas.value().Data.total)
-      }
-    })
-
-    // verificar cambio de señal
-    effect(()=>{
-      // verificar valor de getPersonasBuscar
-      if(this.getPersonasBuscar.hasValue()){
-        // actualizar señal listPersonas con los datos obtenidos
-        this.listPersonas.set(this.getPersonasBuscar.value().Data.filas)
-        this.totalPersonas.set(this.getPersonasBuscar.value().Data.total)
-      }
-    })
-  }
-
-
-   // Inyectamos Router para navegar entre páginas
-  private readonly router = inject(Router);
   
-  // Navegar a la página para crear una Persona
+
+  // se llama directo desde el (input), sin debounce — el filtro es en memoria, no HTTP
+  ejecutarBusqueda(termino: string): void {
+    this.terminoBuscar.set(termino);
+  }
+
+
+  // calcula qué número mostrar como total de personas.
+  readonly totalPersonas = computed(() =>
+    this.terminoBuscar().trim() 
+    // si hay texto en buscador
+    ? this.listPersonas().length 
+    // si no hay texto en buscador
+    : this.totalBackend()
+  );
+
+
+  constructor() {
+    // cargar la primera pagina
+    this.cargarPersonas(1);
+  }
+
+  private cargarPersonas(pagina: number): void {
+    // cuando empieza la petiicon -> true 
+    this.cargando.set(true);
+
+    // Solicitar datos a Django-Como getPersonas() devuelve un Observable, necesitas suscribirte:
+    this.personasService.getPersonas(pagina, 100).subscribe({
+
+      next: (respuesta) => {
+
+        // obtener personas
+        const nuevas = respuesta.Data.filas;
+
+        // actualizar señal personas -> Angular te entrega el valor actual mediante: actual
+        this.personas.update(actual => {
+
+          //          crea un conjunto de los IDs extraidos.
+          const idsExistentes = new Set(actual.map(p => p.id));
+
+          // De las personas nuevas, quédate solamente con aquellas cuyo ID todavía no existe en personas.
+          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.id));
+
+          // Agregar las nuevas personas
+          return [...actual, ...sinDuplicar];
+        });
+
+        // Guardar el total real de Django
+        this.totalBackend.set(respuesta.Data.total);
+        // Guardar la página actual
+        this.paginaActual.set(pagina);
+        // Terminar la carga
+        this.cargando.set(false);
+      },
+      error: () => this.cargando.set(false),
+    });
+  }
+
+
+  cargarMasPersonas(): void {
+    this.cargarPersonas(this.paginaActual() + 1);
+  }
+
+  
+
+  // =========================
+  // NAVEGACIÓN Y ELIMINACIÓN —  
+  // =========================
+
   crearPersona(): void {
     this.router.navigate(['/dashboard/personas/crear']);
   }
 
   editarPersona(id: string): void {
-
-    // Navegar a la página de edición
-    // Enviamos el ID de la Persona en la URL
     this.router.navigate(['/dashboard/personas/editar', id]);
-
   }
 
-  // Metodo Eliminar Persona
-  // signal que almacena el ID de la Persona para eliminar
+
+  /** Eliminar persona */
   readonly personaEliminarId = signal<string | null>(null);
 
-  // metodo que selecciona la persona a eliminar
-   seleccionarPersonaEliminar(id: string): void {
-
-    // Guardamos el ID en el signal.
+  seleccionarPersonaEliminar(id: string): void {
     this.personaEliminarId.set(id);
-
   }
 
-  // metodo que conifrma y ejecuta la eliminacion
   confirmarEliminacion(): void {
-
-    // Obtenemos el ID almacenado.
     const id = this.personaEliminarId();
+    if (!id) return;
 
-    // Verificamos que exista un ID.
-    if (!id) {
-      return;
-    }
-
-    // Llamamos al servicio para eliminar la sala.
     this.personasService.eliminarPersona(id).subscribe({
-
-      // Se ejecuta cuando la eliminación fue correcta.
       next: () => {
-
-        // Mostramos mensaje de éxito.
-        console.log('Sala eliminada correctamente');
-
-        // Recargamos la lista.
-        this.getPersonas.reload();
-
-        // Recargamos la búsqueda.
-        this.getPersonasBuscar.reload();
-
-        // Limpiamos el ID seleccionado.
+        console.log('Persona eliminada correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.personas.set([]);
+        this.paginaActual.set(0);
+        this.cargarPersonas(1);
         this.personaEliminarId.set(null);
       },
-
-      // Se ejecuta cuando ocurre un error.
       error: (error) => {
-
-        // Mostramos el error.
         console.error('Error al eliminar la persona:', error);
       },
     });
   }
-
-
-
 }

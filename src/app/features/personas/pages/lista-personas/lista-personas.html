@@ -28,7 +28,7 @@
             </tr>
         </thead>
         <tbody>
-             @for (persona of listPersonas(); track persona.id; let idx= $index) {
+             @for (persona of listPersonas(); track persona.fecha_creacion; let idx= $index) {
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <!-- <td>{{ persona.id }}</td> -->
@@ -44,15 +44,17 @@
                         >
                             Editar
                         </button>
+
                         <button
-  type="button"
-  class="btn btn-danger "
-  data-toggle="modal"
-  data-target="#modalEliminar"
-  (click)="seleccionarPersonaEliminar(persona.id)"
->
-  Eliminar
-</button>
+                        type="button"
+                        class="btn btn-danger "
+                        data-toggle="modal"
+                        data-target="#modalEliminar"
+                        (click)="seleccionarPersonaEliminar(persona.id)"
+                      >
+                        Eliminar
+                      </button>
+                      
                     </td>
                 </tr>
             }

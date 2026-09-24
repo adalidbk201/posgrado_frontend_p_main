@@ -94,7 +94,7 @@ export class UsuarioForm {
       );
     });
 
-    // Metodo cargarPErsonas
+    // Metodo cargarPersonas
      // trae una página de personas y la agrega a la lista, sin duplicar
     private cargarPersonas(pagina: number): void {
       this.cargandoMasPersonas.set(true);
@@ -187,5 +187,5 @@ export class UsuarioForm {
       
       this.guardar.emit(datos);
     }
-
+    
 }

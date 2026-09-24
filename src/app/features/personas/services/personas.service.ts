@@ -32,8 +32,9 @@ export class PersonasService {
     }
 
     //metodo para buscar personas por termino
+    // AHORA
     getBuscarPersonas(termino: string): Observable<RespuestaApi<PaginacionResponse<Persona>>> {
-        return this.http.get<RespuestaApi<PaginacionResponse<Persona>>>(`${this.apiUrl}?q=${encodeURIComponent(termino)}/`);
+        return this.http.get<RespuestaApi<PaginacionResponse<Persona>>>(`${this.apiUrl}?q=${encodeURIComponent(termino)}`);
     }
 
     // =========================

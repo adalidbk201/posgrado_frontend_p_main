@@ -20,9 +20,17 @@ export class RolesService {
     private url=`${environment.API}/roles/`
 
     // obtener todos los roles
-    getRoles():Observable<RespuestaApi<PaginacionResponse<Rol>>> {
+    getAllRoles():Observable<RespuestaApi<PaginacionResponse<Rol>>> {
         return this.http.get<RespuestaApi<PaginacionResponse<Rol>>>(this.url);
     }
+
+     // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
+    getRoles(pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Rol>>> {
+        return this.http.get<RespuestaApi<PaginacionResponse<Rol>>>(
+        `${this.url}?pagina=${pagina}&limite=${limite}`
+        );
+    }
+    
 
     // obtener un rol por terminos de busqueda
     getRolBusqueda(termino: string):Observable<RespuestaApi<PaginacionResponse<Rol>>> {

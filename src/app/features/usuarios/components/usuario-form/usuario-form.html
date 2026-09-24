@@ -122,26 +122,58 @@
     </div>
 
     <!-- persona -->
+    <!-- persona -->
     <div class="persona">
         <div class="form-group row">
-            <label for="persona"class="col-sm-3 col-form-label">Persona</label>
-            
+            <label for="persona" class="col-sm-3 col-form-label">Persona</label>
+
             <div class="col-sm-9">
-                <input type="text"
-                name="persona"
-                id="persona"
-                formControlName="persona"
-                class="form-control"
-                placeholder="Persona">
+
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre o documento..."
+                    [value]="busquedaPersona()"
+                    (input)="busquedaPersona.set($any($event.target).value)">
+
+                <!-- select -->
+                <select
+                    id="persona"
+                    name="persona"
+                    formControlName="persona"
+                    class="form-control">
+
+                    <option value="" disabled>Selecciona una persona</option>
+
+                    @for (persona of personasFiltradas(); track persona.id) {
+                        <option [value]="persona.id">
+                            {{ persona.nombres }} {{ persona.primer_apellido }} {{ persona.segundo_apellido }}
+                            — {{ persona.nro_documento }}
+                        </option>
+                    }
+                </select>
+
                 @if (formulario.controls.persona.invalid &&
-                     formulario.controls.persona.touched) {
-                    
+                    formulario.controls.persona.touched) {
+
                     <div class="class-error">
                         @if (formulario.controls.persona.errors?.['required']) {
                             <div class="alert alert-danger" role="alert">El campo persona es obligatorio</div>
                         }
                     </div>
                 }
+
+                @if (!busquedaPersona()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasPersonas()"
+                        [disabled]="cargandoMasPersonas()">
+                        {{ cargandoMasPersonas() ? 'Cargando...' : 'Cargar más personas' }}
+                    </button>
+                }
+
             </div>
         </div>
     </div>

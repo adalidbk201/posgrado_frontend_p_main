@@ -20,9 +20,17 @@ export class UsuariosService {
     private api=`${environment.API}/usuarios/`;
 
     // Obtener todos los usuarios
-    getUsuarios():Observable<RespuestaApi<PaginacionResponse<Usuario>>>{
+    getAllUsuarios():Observable<RespuestaApi<PaginacionResponse<Usuario>>>{
         return this.http.get<RespuestaApi<PaginacionResponse<Usuario>>>(this.api);
     }
+
+    // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
+    getUsuarios(pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Usuario>>> {
+      return this.http.get<RespuestaApi<PaginacionResponse<Usuario>>>(
+        `${this.api}?pagina=${pagina}&limite=${limite}`
+      );
+    }
+
 
     // Obtener Usuario por termino de busqueda
     getUsuarioBusqueda(termino:string):Observable<RespuestaApi<PaginacionResponse<Usuario>>>{
