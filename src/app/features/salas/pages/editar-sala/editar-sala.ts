@@ -83,7 +83,7 @@ export class EditarSala {
     }
 
     // Actualizamos la sala.
-    this.salasService.actualizarSala(this.id, datos).subscribe({
+    this.salasService.actualizarParcialSala(this.id, datos).subscribe({
 
       // Si la actualización fue correcta.
       next: () => {

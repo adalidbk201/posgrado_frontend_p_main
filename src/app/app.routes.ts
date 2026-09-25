@@ -144,7 +144,14 @@ export const routes: Routes = [
                 path:'niveles',
                 loadComponent:()=>import('./features/niveles/pages/lista-niveles/lista-niveles').then((m)=>m.ListaNiveles),
             },
-
+            {
+                path:'niveles/crear',
+                loadComponent:()=>import('./features/niveles/pages/crear-nivel/crear-nivel').then((m)=>m.CrearNivel),
+            },
+            {
+                path:'niveles/editar/:id',
+                loadComponent:()=>import('./features/niveles/pages/editar-nivel/editar-nivel').then((m)=>m.EditarNivel),
+            },
 
 
             /** Butacas */
@@ -152,7 +159,14 @@ export const routes: Routes = [
                 path:'butacas',
                 loadComponent:()=>import('./features/butacas/pages/lista-butacas/lista-butacas').then((m)=>m.ListaButacas),
             },
-
+            {
+                path:'butacas/crear',
+                loadComponent:()=>import('./features/butacas/pages/crear-butaca/crear-butaca').then((m)=>m.CrearButaca),
+            },
+            {
+                path:'butacas/editar/:id',
+                loadComponent:()=>import('./features/butacas/pages/editar-butaca/editar-butaca').then((m)=>m.EditarButaca),
+            },
 
 
             /** Titulados */

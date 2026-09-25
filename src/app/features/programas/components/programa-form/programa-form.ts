@@ -66,7 +66,7 @@ export class ProgramaForm {
       if (!termino) return this.grados();
 
       return this.grados().filter(g =>
-        `${g.grado_academico}`
+        `${g.grado_academico} ${g.jerarquia}`
           .toLowerCase()
           .includes(termino)
       );

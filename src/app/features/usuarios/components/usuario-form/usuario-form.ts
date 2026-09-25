@@ -150,7 +150,8 @@ export class UsuarioForm {
           nombre_usuario: usuarioActual.nombre_usuario,
           contrasena:'',
           correo_electronico:usuarioActual.correo_electronico,
-          url_foto:usuarioActual.url_foto,
+          // url_foto:usuarioActual.url_foto,
+          url_foto:'null',
           persona:usuarioActual.persona, 
         });
 
@@ -163,7 +164,7 @@ export class UsuarioForm {
             nombre_usuario: '',
             contrasena:'',
             correo_electronico:'',
-            url_foto:'',
+            url_foto:'null',
             persona:'' 
           });
         }

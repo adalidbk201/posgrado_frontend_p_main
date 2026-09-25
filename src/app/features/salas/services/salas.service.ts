@@ -20,8 +20,15 @@ export class SalasService {
     private url = `${environment.API}/salas/`;
 
     // obtener todas las salas
-    getSalas():Observable<RespuestaApi<PaginacionResponse<Sala>>> {
+    getAllSalas():Observable<RespuestaApi<PaginacionResponse<Sala>>> {
         return this.http.get<RespuestaApi<PaginacionResponse<Sala>>>(this.url);
+    }
+
+    // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
+    getSalas(pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Sala>>> {
+      return this.http.get<RespuestaApi<PaginacionResponse<Sala>>>(
+        `${this.url}?pagina=${pagina}&limite=${limite}`
+      );
     }
     
     // obtener una sala por terminos de busqueda
