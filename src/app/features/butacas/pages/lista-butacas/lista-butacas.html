@@ -1,1 +1,152 @@
-<p>lista-butacas works!</p>,
+<section class="lista-butaca">
+    <h1>Butacas : {{ listButacas().length }}</h1>
+    <p>Total de registros: {{ totalButacas() }}</p>
+
+    <div class="form-group">
+        <label for="nivel">Nivel</label>
+        <select
+            id="nivel"
+            class="form-control w-25"
+            (change)="onNivelSeleccionado($any($event.target).value)">
+            <option value="">Selecciona un nivel</option>
+            @for (nivel of niveles(); track nivel.id) {
+                <option [value]="nivel.id">{{ nivel.id }} — {{ nivel.nombre_nivel }}</option>
+            }
+        </select>
+    </div>
+
+    @if (nivelSeleccionado() !== null) {
+        <input type="text"
+        class="form-control w-25"
+        #txtBuscar
+        placeholder="Buscar..."
+        (input)="ejecutarBusqueda(txtBuscar.value)">
+
+        <button type="button" class="btn btn-primary" (click)="crearButaca()">
+            + Nueva butaca
+        </button>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Codigo Butaca</th>
+                    <th scope="col">Estado Butaca</th>
+                    <th scope="col">Fila</th>
+                    <th scope="col">Columna</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (butaca of listButacas(); track butaca.id; let idx = $index) {
+                    <tr class="contenido">
+                        <th scope="row">{{ idx + 1 }}</th>
+                        <td>{{ butaca.codigo_butaca }}</td>
+                        <td>{{ butaca.estado_butaca }}</td>
+                        <td>{{ butaca.fila }}</td>
+                        <td>{{ butaca.columna }}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning" (click)="editarButaca(butaca.id)">
+                                Editar
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                data-toggle="modal"
+                                data-target="#modalEliminar"
+                                (click)="seleccionarButacaEliminar(butaca.id)">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!terminoBuscar()) {
+            <button type="button" class="btn btn-link" (click)="cargarMasButacas()" [disabled]="cargando()">
+                {{ cargando() ? 'Cargando...' : 'Cargar más butacas' }}
+            </button>
+        }
+    } @else {
+        <p class="text-muted mt-3">Selecciona un nivel para ver sus butacas.</p>
+    }
+</section>
+
+
+<!-- Modal para confirmar eliminación -->
+<div
+  class="modal fade"
+  id="modalEliminar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalEliminarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalEliminarTitulo"
+        >
+          Confirmar eliminación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de eliminar esta butaca?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarEliminacion()"
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
