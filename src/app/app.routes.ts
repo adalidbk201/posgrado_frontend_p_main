@@ -183,7 +183,14 @@ export const routes: Routes = [
                 path:'colaciones',
                 loadComponent:()=>import('./features/colaciones/pages/lista-colaciones/lista-colaciones').then((m)=>m.ListaColaciones),
             },
-
+            {
+                path:'colaciones/crear',
+                loadComponent:()=>import('./features/colaciones/pages/crear-colacion/crear-colacion').then((m)=>m.CrearColacion),
+            },
+            {
+                path:'colaciones/editar/:id',
+                loadComponent:()=>import('./features/colaciones/pages/editar-colacion/editar-colacion').then((m)=>m.EditarColacion),
+            },
 
 
             

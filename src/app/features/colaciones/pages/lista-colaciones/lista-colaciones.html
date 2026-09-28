@@ -1,1 +1,142 @@
-<p>lista-colaciones works!</p>,
+<section class="lista-colacion">
+    <h1>Colaciones : {{ listColaciones().length}}</h1>
+    <p>Total de registros: {{ totalColaciones() }}</p>
+    
+    <input type="text"
+    class="form-control w-25"
+    #txtBuscar
+    placeholder="Buscar..."
+    (input)="ejecutarBusqueda(txtBuscar.value)">
+
+      <button type="button" class="btn btn-primary" (click)="crearColacion()">
+        + Nueva Colación
+    </button>
+
+    
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr >
+                <th scope="col">#</th>
+                 
+                <th scope="col">Fecha Colación</th>
+                <th scope="col">Turno</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Sala</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+             @for (colacion of listColaciones(); track colacion.id; let idx= $index) {
+                <tr class="contenido">
+                    <th scope="row">{{ idx + 1 }}</th>
+                  
+                    <td>{{ colacion.fecha_colacion }}</td>
+                    <td>{{ colacion.turno }}</td>
+                    <td>{{ colacion.descripcion }}</td>
+                    <td>{{ colacion.sala.nombre_sala  }}</td>
+                    <td>
+                        <button
+                            type="button" class="btn btn-warning"
+                            (click)="editarColacion(colacion.id)"
+                        >
+                            Editar
+                        </button>
+
+                        <button
+                        type="button"
+                        class="btn btn-danger "
+                        data-toggle="modal"
+                        data-target="#modalEliminar"
+                        (click)="seleccionarColacionEliminar(colacion.id)"
+                      >
+                        Eliminar
+                      </button>
+                      
+                    </td>
+                </tr>
+            }
+        </tbody>
+        
+       
+    </table>
+</section>
+
+
+
+<!-- Modal para confirmar eliminación -->
+<div
+  class="modal fade"
+  id="modalEliminar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalEliminarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalEliminarTitulo"
+        >
+          Confirmar eliminación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de eliminar esta colación?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarEliminacion()"
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

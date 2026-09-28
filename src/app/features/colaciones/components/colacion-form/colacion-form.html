@@ -1,1 +1,137 @@
-<p>colacion-form works!</p>,
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+    <!-- fecha-colacion -->
+    <div class="fecha_colacion">
+        <div class="form-group row">
+            <label for="fecha_colacion" class="col-sm-3 col-form-label">Fecha Colación</label>
+            <div class="col-sm-9">
+                <input 
+                type="date"
+                id="fecha_colacion"
+                name="fecha_colacion"
+                class="form-control"
+                formControlName="fecha_colacion">
+                @if(formulario.controls.fecha_colacion.invalid &&
+                    formulario.controls.fecha_colacion.touched){
+                    
+                    <div class="class-error">
+                        @if(formulario.controls.fecha_colacion.errors?.['required']){
+                            <div class="alert alert-danger" role="alert">La fecha de Colación es obligatorio</div>
+                        }
+                        
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- turno -->
+     <div class="turno">
+        <div class="form-group row">
+            <label for="turno" class="col-sm-3 col-form-label">Turno</label>
+            <div class="col-sm-9">
+                <select name="turno" id="turno"
+                    class="form-control"
+                    formControlName="turno">
+                    <option value="">Selecciona Turno</option>
+                    <option value="TARDE">TARDE</option>
+                    <option value="MAÑANA">MAÑANA</option>
+                </select>
+                @if(formulario.controls.turno.invalid &&
+                    formulario.controls.turno.touched){
+                    
+                    <div class="class-error">
+                        @if(formulario.controls.turno.errors?.['required']){
+                            <div class="alert alert-danger" role="alert">El campo turno es obligatorio</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+     </div>
+
+    <!-- descripcion -->
+    <div class="descripcion">
+        <div class="form-group row">
+            <label for="descripcion" class="col-sm-3 col-form-label">Descripcion</label>
+            <div class="col-sm-9">
+                <input 
+                type="text"
+                id="descripcion"
+                name="descripcion"
+                class="form-control"
+                placeholder="Ingrese descripción"
+                formControlName="descripcion">
+                @if(formulario.controls.descripcion.invalid &&
+                    formulario.controls.descripcion.touched){
+                    <div class="class-error">
+                        @if(formulario.controls.descripcion.errors?.['required']){
+                            <div class="alert alert-danger" role="alert">El campo descripción es obligatorio</div>
+                        }
+                        @if(formulario.controls.descripcion.errors?.['minlength']){
+                            <div class="alert alert-danger" role="alert">La descripción debe tener al menos 3 caracteres</div>
+                        }
+                        @if(formulario.controls.descripcion.errors?.['maxlength']){
+                            <div class="alert alert-danger" role="alert">La descripción no debe superar los 150 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- sala -->
+    <div class="sala">
+        <div class="form-group row">
+            <label for="sala" class="col-sm-3 col-form-label">Sala</label>
+            
+            <div class="col-sm-9">
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre..."
+                    [value]="busquedaSala()"
+                    (input)="busquedaSala.set($any($event.target).value)">
+
+                <!-- select -->
+                 <select
+                    id="sala"
+                    name="sala"
+                    formControlName="sala"
+                    class="form-control">
+
+                    <option value="" disabled>Selecciona una sala</option>
+
+                    @for (sala of salasFiltradas(); track sala.id) {
+                        <option [value]="sala.id">
+                            {{ sala.estado }} {{ sala.nombre_sala }} 
+                        </option>
+                    }
+                </select>
+
+                @if (formulario.controls.sala.invalid &&
+                    formulario.controls.sala.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.sala.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo sala es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaSala()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasSalas()"
+                        [disabled]="cargandoMasSalas()">
+                        {{ cargandoMasSalas() ? 'Cargando...' : 'Cargar más salas' }}
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-success">Guardar</button>
+
+</form>
