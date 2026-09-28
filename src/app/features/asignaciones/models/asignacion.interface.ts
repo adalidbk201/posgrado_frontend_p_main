@@ -1,17 +1,12 @@
-export interface Titulado{
+export interface Asignacion{
     id:string,
     estado:string,
     transaccion:string,
     fecha_creacion:string,
     fecha_modificacion:string | null,
-    fecha_titulacion:string,
-    grado_posgraduante:string,
-    mencion:string,
-    serie:string,
-    nro_titulo:string,
     usuario_creacion:string,
     usuario_modificacion:string | null,
-    persona:string,
-    programa:string,
-
-};
+    colacion:string,
+    titulado:string,
+    butaca:string,
+}

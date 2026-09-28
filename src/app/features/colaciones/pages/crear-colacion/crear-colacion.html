@@ -1,1 +1,14 @@
-<p>crear-colacion works!</p>,
+<section class="crear-colacion">
+  <div class="encabezado">
+    <h1>Crear Colacion</h1>
+
+    <p>
+      Registra una nueva colacion en el sistema.
+    </p>
+  </div>
+
+  <app-colacion-form
+    (guardar)="crearColacion($event)"
+  />
+  
+</section>

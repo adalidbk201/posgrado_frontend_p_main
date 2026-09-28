@@ -1,4 +1,4 @@
-<section class="lista-titulados">
+ <section class="lista-titulado">
     <h1>Titulados : {{ listTitulados().length}}</h1>
     <p>Total de registros: {{ totalTitulados() }}</p>
     
@@ -8,27 +8,53 @@
     placeholder="Buscar..."
     (input)="ejecutarBusqueda(txtBuscar.value)">
 
+      <button type="button" class="btn btn-primary" (click)="crearTitulado()">
+        + Nuevo titulado
+    </button>
+
+    
+
     <table class="table">
         <thead class="thead-dark">
-            <tr>
+            <tr >
                 <th scope="col">#</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Fecha Titulación</th>
-                <th scope="col">Grado PosGraduante</th>
-                <th scope="col">Mension</th>
+         
+                <th scope="col">Grado Posgraduante</th>
                 <th scope="col">Serie</th>
+                <th scope="col">Nro Titulo</th>
+                <th scope="col">Fecha Titulación</th>
+              
             </tr>
         </thead>
         <tbody>
              @for (titulado of listTitulados(); track titulado.id; let idx= $index) {
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
-                    <td>{{ titulado.id }}</td>
-                    <td>{{ titulado.estado }}</td>
-                    <td>{{ titulado.fecha_titulacion }}</td>
+                    <!-- <td>{{ persona.id }}</td> -->
                     <td>{{ titulado.grado_posgraduante }}</td>
-                    <td>{{ titulado.mension }}</td>
                     <td>{{ titulado.serie }}</td>
+                    <td>{{ titulado.nro_titulo }}</td>
+                    <td>{{ titulado.fecha_titulacion }}</td>
+                     
+                    <td>
+                        <button
+                            type="button" class="btn btn-warning"
+                            (click)="editarTitulado(titulado.id)"
+                        >
+                            Editar
+                        </button>
+
+                        <button
+                        type="button"
+                        class="btn btn-danger "
+                        data-toggle="modal"
+                        data-target="#modalEliminar"
+                        (click)="seleccionarTituladoEliminar(titulado.id)"
+                      >
+                        Eliminar
+                      </button>
+                      
+                    </td>
                 </tr>
             }
         </tbody>
@@ -36,3 +62,82 @@
        
     </table>
 </section>
+
+
+
+<!-- Modal para confirmar eliminación -->
+<div
+  class="modal fade"
+  id="modalEliminar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalEliminarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalEliminarTitulo"
+        >
+          Confirmar eliminación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de eliminar al titulado?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarEliminacion()"
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

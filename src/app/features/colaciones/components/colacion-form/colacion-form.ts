@@ -129,6 +129,8 @@ export class ColacionForm {
 
 
   constructor(){
+     // cargar la primera página de grados al iniciar el formulario
+    this.cargarSalas(1);
     effect(()=>{
       // Almacenar Colacion a editar
       const ColacionActual =this.colacion();
@@ -144,6 +146,10 @@ export class ColacionForm {
           sala:ColacionActual.sala.id
 
         })
+
+        // asegura que la sala ya asignado aparezca en el select,
+        // aunque no esté dentro de la primera página cargada
+        this.asegurarSalaEnLista(ColacionActual.sala.id);
       }
       else{
         // Si no hay datos el formulario esta vacio

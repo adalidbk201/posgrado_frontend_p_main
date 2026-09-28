@@ -174,6 +174,14 @@ export const routes: Routes = [
                 path:'titulados',
                 loadComponent:()=>import('./features/titulados/pages/lista-titulados/lista-titulados').then((m)=>m.ListaTitulados)
             },
+            {
+                path:'titulados/crear',
+                loadComponent:()=>import('./features/titulados/pages/crear-titulado/crear-titulado').then((m)=>m.CrearTitulado),
+            },
+            {
+                path:'titulados/editar/:id',
+                loadComponent:()=>import('./features/titulados/pages/editar-titulado/editar-titulado').then((m)=>m.EditarTitulado),
+            },
 
 
 
@@ -200,7 +208,14 @@ export const routes: Routes = [
                 path:'asignaciones',
                 loadComponent:()=>import('./features/asignaciones/pages/lista-asignaciones/lista-asignaciones').then((m)=>m.ListaAsignaciones),
             },
-
+            {
+                path:'asignaciones/crear',
+                loadComponent:()=>import('./features/asignaciones/pages/crear-asignacion/crear-asignacion').then((m)=>m.CrearAsignacion),
+            },
+            {
+                path:'asignaciones/editar/:id',
+                loadComponent:()=>import('./features/asignaciones/pages/editar-asignacion/editar-asignacion').then((m)=>m.EditarAsignacion),
+            },
 
 
             /** Asistencias */
