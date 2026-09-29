@@ -44,18 +44,24 @@ export class ListaProgramas {
     // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
     const termino = this.terminoBuscar().trim().toLowerCase();
 
-    // si no escribio nada devuelve todas los programas
-    if (!termino) return this.programas();
+    // si no escribio nada devuelve todos los programas
+    // filter recorre todas los programas y decide cuales deben permanecer
+      const base = !termino
+    ? this.programas()
+    : this.programas().filter(p =>
 
-    // filter recorre todos los programas y decide cuales deben permanecer
-    return this.programas().filter(p =>
-
-      // construye u ntexto con los datos de la persona para buscar por cualquiera de esos datos
+      // construye un texto con los datos del programa para buscar por cualquiera de esos datos
       `${p.nombre_programa} ${p.grado.grado_academico} ${p.menciones.mencion}`
         // convierte los datos en minuscula
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.estado).getTime() - new Date(a.estado).getTime()
     );
 
   });

@@ -44,10 +44,10 @@ export class ListaMenciones {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas las menciones
-    if (!termino) return this.menciones();
-
     // filter recorre todas las menciones y decide cuales deben permanecer
-    return this.menciones().filter(m =>
+    const base = !termino
+    ? this.menciones()
+    : this.menciones().filter(m =>
 
       // construye un texto con los datos de la mencion para buscar por cualquiera de esos datos
       `${m.mencion}`
@@ -56,6 +56,13 @@ export class ListaMenciones {
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
     );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.id).getTime() - new Date(a.id).getTime()
+    );
+
 
   });
 

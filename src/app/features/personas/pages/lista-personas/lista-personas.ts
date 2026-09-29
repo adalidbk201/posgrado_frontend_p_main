@@ -45,17 +45,20 @@ export class ListaPersonas {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas las personas
-    if (!termino) return this.personas();
-
     // filter recorre todas las personas y decide cuales deben permanecer
-    return this.personas().filter(p =>
+    const base = !termino
+    ? this.personas()
+    : this.personas().filter(p =>
+        `${p.nombres} ${p.primer_apellido} ${p.segundo_apellido} ${p.nro_documento}`
+          .toLowerCase()
+          .includes(termino) 
+      );
 
-      // construye u ntexto con los datos de la persona para buscar por cualquiera de esos datos
-      `${p.nombres} ${p.primer_apellido} ${p.segundo_apellido} ${p.nro_documento}`
-        // convierte los datos en minuscula
-        .toLowerCase()
-        // true si encontro el termino , false si no encontro el termino
-        .includes(termino)
+    
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
     );
 
   });

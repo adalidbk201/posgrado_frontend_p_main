@@ -45,10 +45,10 @@ export class ListaNiveles {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas los niveles
-    if (!termino) return this.niveles();
-
     // filter recorre todas los niveles y decide cuales deben permanecer
-    return this.niveles().filter(n =>
+     const base = !termino
+    ? this.niveles()
+    : this.niveles().filter(n =>
 
       // construye u ntexto con los datos del nivel para buscar por cualquiera de esos datos
       `${n.nombre_nivel} ${n.filas} ${n.columnas}`
@@ -56,6 +56,12 @@ export class ListaNiveles {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.id).getTime() - new Date(a.id).getTime()
     );
 
   });

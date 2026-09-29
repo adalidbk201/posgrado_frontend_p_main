@@ -44,10 +44,10 @@ export class ListaColaciones {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas las colaciones
-    if (!termino) return this.colaciones();
-
     // filter recorre todas las colaciones y decide cuales deben permanecer
-    return this.colaciones().filter(c =>
+    const base = !termino
+    ? this.colaciones()
+    : this.colaciones().filter(c =>
 
       // construye u ntexto con los datos de la colacion para buscar por cualquiera de esos datos
       `${c.turno} ${c.descripcion} ${c.estado} ${c.sala.nombre_sala}`
@@ -55,6 +55,12 @@ export class ListaColaciones {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.fecha_colacion).getTime() - new Date(a.fecha_colacion).getTime()
     );
 
   });

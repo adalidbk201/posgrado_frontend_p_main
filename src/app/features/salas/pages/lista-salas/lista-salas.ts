@@ -47,10 +47,10 @@ export class ListaSalas {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas las salas
-    if (!termino) return this.salas();
-
     // filter recorre todas las salas y decide cuales deben permanecer
-    return this.salas().filter(s =>
+    const base = !termino
+    ? this.salas()
+    : this.salas().filter(s =>
 
       // construye un texto con los datos de la sala para buscar por cualquiera de esos datos
       `${s.nombre_sala}`
@@ -58,6 +58,12 @@ export class ListaSalas {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.nombre_sala).getTime() - new Date(a.nombre_sala).getTime()
     );
 
   });

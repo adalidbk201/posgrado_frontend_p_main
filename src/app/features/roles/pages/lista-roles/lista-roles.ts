@@ -44,11 +44,11 @@ export class ListaRoles {
     // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
     const termino = this.terminoBuscar().trim().toLowerCase();
 
-    // si no escribio nada devuelve todas los roles
-    if (!termino) return this.roles();
-
+    // si no escribio nada devuelve todos los roles
     // filter recorre todas los roles y decide cuales deben permanecer
-    return this.roles().filter(r =>
+    const base = !termino
+    ? this.roles()
+    : this.roles().filter(r =>
 
       // construye un texto con los datos del rol para buscar por cualquiera de esos datos
       `${r.rol} ${r.nombre} ${r.descripcion}`
@@ -56,6 +56,12 @@ export class ListaRoles {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.id).getTime() - new Date(a.id).getTime()
     );
 
   });

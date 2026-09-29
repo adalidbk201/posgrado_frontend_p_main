@@ -78,10 +78,10 @@ export class ListaAsignaciones {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas las asignaciones
-    if (!termino) return this.asignaciones();
-
     // filter recorre todas las asignaciones y decide cuales deben permanecer
-    return this.asignaciones().filter(a =>
+     const base = !termino
+    ? this.asignaciones()
+    : this.asignaciones().filter(a =>
 
       // construye un texto con los datos de la asignacion para buscar por cualquiera de esos datos
       `${a.titulado} ${a.colacion} ${a.butaca}`
@@ -89,6 +89,12 @@ export class ListaAsignaciones {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
     );
 
   });

@@ -44,11 +44,11 @@ export class ListaUsuarios {
     // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
     const termino = this.terminoBuscar().trim().toLowerCase();
 
-    // si no escribio nada devuelve todos los usuarios
-    if (!termino) return this.usuarios();
-
-    // filter recorre todos los usuarios y decide cuales deben permanecer
-    return this.usuarios().filter(u =>
+    // si no escribio nada devuelve todas los usuarios
+    // filter recorre todas los usuarios y decide cuales deben permanecer
+     const base = !termino
+    ? this.usuarios()
+    : this.usuarios().filter(u =>
 
       // construye un texto con los datos del usuario para buscar por cualquiera de esos datos
       `${u.nombre_usuario} ${u.correo_electronico}`
@@ -56,6 +56,12 @@ export class ListaUsuarios {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
     );
 
   });

@@ -45,10 +45,10 @@ export class ListaGrados {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas los grados
-    if (!termino) return this.grados();
-
-    // filter recorre todas los grados y decide cuales deben permanecer
-    return this.grados().filter(g =>
+    // filter recorre todos los grados y decide cuales deben permanecer
+    const base = !termino
+    ? this.grados()
+    : this.grados().filter(g =>
 
       // construye un texto con los datos del grado para buscar por cualquiera de esos datos
       `${g.grado_academico} ${g.jerarquia}`
@@ -56,6 +56,12 @@ export class ListaGrados {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.id).getTime() - new Date(a.id).getTime()
     );
 
   });

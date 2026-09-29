@@ -45,10 +45,10 @@ export class ListaTitulados {
     const termino = this.terminoBuscar().trim().toLowerCase();
 
     // si no escribio nada devuelve todas los titulados
-    if (!termino) return this.titulados();
-
     // filter recorre todas los titulados y decide cuales deben permanecer
-    return this.titulados().filter(t =>
+    const base = !termino
+    ? this.titulados()
+    : this.titulados().filter(t =>
 
       // construye un texto con los datos del titulado para buscar por cualquiera de esos datos
       `${t.grado_posgraduante} ${t.mencion} ${t.mencion}`
@@ -56,6 +56,12 @@ export class ListaTitulados {
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
         .includes(termino)
+    );
+
+    // ordena por fecha_creacion descendente (más reciente primero)
+    // [...base] crea una copia para no mutar el array del signal original
+    return [...base].sort((a, b) =>
+      new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
     );
 
   });
