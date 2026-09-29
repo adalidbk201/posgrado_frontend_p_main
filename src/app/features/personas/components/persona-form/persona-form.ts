@@ -1,8 +1,22 @@
-import { Component, effect,inject, input, output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { forkJoin} from 'rxjs';
 
- import { Persona } from '../../models/persona.interface';
- import { PersonaRequest } from '../../models/persona-request.interface';
+import { Persona } from '../../models/persona.interface';
+import { PersonaRequest } from '../../models/persona-request.interface';
+import { PersonasService } from '../../services/personas.service';
+
+ 
+
 @Component({
   selector: 'app-persona-form',
   imports: [ReactiveFormsModule],
@@ -17,6 +31,10 @@ export class PersonaForm {
   readonly guardar =output<PersonaRequest>();
 
   private readonly fb = inject(FormBuilder);
+  private readonly personasService = inject(PersonasService);
+  // todas las personas cargadas una vez, para comparar documentos en memoria
+  private readonly todasLasPersonas = signal<Persona[]>([]);
+
 
   // Crear Formulario con los datos
   readonly formulario=this.fb.nonNullable.group({
@@ -25,8 +43,11 @@ export class PersonaForm {
       [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(30),
-      ]
+        Validators.maxLength(30)
+      ],
+      [
+        this.validarDocumentoUnico()
+      ],
     ],
     nombres:[
       '',
@@ -106,7 +127,31 @@ export class PersonaForm {
   })
 
 
+  // valida en memoria que el nro_documento no esté repetido,
+  // ignorando a la propia persona cuando estamos editando
+  private validarDocumentoUnico(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const valor = (control.value as string)?.trim();
+      if (!valor) return of(null);
+
+      const idActual = this.persona()?.id;
+
+      const coincidencia = this.todasLasPersonas().find(
+        p => p.nro_documento === valor && p.id !== idActual
+      );
+
+      return of(coincidencia ? { documentoDuplicado: true } : null);
+    };
+  }
+
+
+ 
+
+
   constructor(){
+    // cargar personas una sola vez al iniciar el formulario
+   this.cargarTodasLasPersonas();
+
     effect(()=>{
       // Almacenar Persona a editar
       const PersonaActual =this.persona();
@@ -149,11 +194,49 @@ export class PersonaForm {
     })
   }
 
+  //pide la página 1 para "descubrir" cuántas páginas hay en total, 
+  // y si hace falta más de una, pide todas las restantes a la vez (no una por una) 
+  // y las junta en un solo array antes de guardarlas.
+  private cargarTodasLasPersonas(): void {
+    const tamañoPagina = 200; // tamaño por request; ajusta si tu backend tiene su propio máximo
+
+    // pide la PRIMERA página. Esta respuesta trae, además de los datos,
+    // el "total" real de personas que existen — ese dato es la clave
+    // para saber cuántas páginas MÁS hacen falta pedir.
+    this.personasService.getPersonas(1, tamañoPagina).pipe(
+      switchMap(primeraRespuesta => {
+        const primeraTanda = primeraRespuesta.Data.filas;
+        const total = primeraRespuesta.Data.total;
+        const totalPaginas = Math.ceil(total / tamañoPagina);
+
+        // si con la primera página ya alcanza para cubrir el total, no pide más
+        if (totalPaginas <= 1) {
+          return of(primeraTanda);
+        }
+
+        // arma un request por cada página restante (2, 3, 4...) y las junta todas
+        const restoDePaginas = Array.from({ length: totalPaginas - 1 }, (_, i) =>
+          this.personasService.getPersonas(i + 2, tamañoPagina)
+        );
+
+        return forkJoin(restoDePaginas).pipe(
+          map(respuestas => [
+            ...primeraTanda,
+            ...respuestas.flatMap(r => r.Data.filas),
+          ])
+        );
+      })
+    ).subscribe({
+      next: (todas) => this.todasLasPersonas.set(todas),
+      error: (error) => console.error('Error al cargar personas para validar documento:', error),
+    });
+  }
+
+
   // Metodo Enviar Formulario
   enviarFormulario():void{
     // verificar formulario
-    if(this.formulario.invalid){
-      // Marcar todos los campos del formulario
+    if (this.formulario.invalid || this.formulario.pending) {
       this.formulario.markAllAsTouched();
       return;
     }

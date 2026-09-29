@@ -6,6 +6,12 @@
       Registra una nueva persona en el sistema.
     </p>
   </div>
+  
+    @if (errorMensaje()) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMensaje() }}
+    </div>
+  }
 
   <app-persona-form
     (guardar)="crearPersona($event)"

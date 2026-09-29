@@ -31,8 +31,15 @@
                             <div class="alert alert-danger" role="alert">El nro documento no debe superar los 30 caracteres</div>
                             <!-- <span>El nro documento no debe superar los 30 caracteres</span> -->
                         }
+                        @if (formulario.controls.nro_documento.errors?.['documentoDuplicado']) {
+                            <div class="alert alert-danger" role="alert">Este número de documento ya está registrado</div>
+                        }
                     </div>
 
+                }
+
+                @if (formulario.controls.nro_documento.pending) {
+                    <small class="text-muted d-block mt-1">Verificando documento...</small>
                 }
 
             </div>
