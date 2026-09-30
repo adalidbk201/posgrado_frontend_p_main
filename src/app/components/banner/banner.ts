@@ -7,9 +7,10 @@ import {
 } from '@angular/core';
 import { interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-banner',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './banner.html',
   styleUrl: './banner.scss',
 })
@@ -28,6 +29,8 @@ export class Banner {
     '/img/fondo1.png',
     '/img/fondo2.png',
     '/img/fondo3.png',
+    '/img/fondo4.png',
+    '/img/fondo5.png',
   ];
 
 

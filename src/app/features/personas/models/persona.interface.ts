@@ -1,3 +1,4 @@
+// definir y tipar los datos recibidos por el backend
 export interface Persona{
     id:string,
     estado:string,

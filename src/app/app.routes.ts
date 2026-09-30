@@ -231,6 +231,7 @@ export const routes: Routes = [
                 path:'asistencias/editar/:id',
                 loadComponent:()=>import('./features/asistencias/pages/editar-asistencia/editar-asistencia').then((m)=>m.EditarAsistencia),
             },
+            
 
             /** Comunicados */
             {

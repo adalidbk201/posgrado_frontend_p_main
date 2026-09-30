@@ -1,3 +1,4 @@
+// definir y tipar los datos enviados por http
 export interface PersonaRequest{
     nro_documento:string,
     nombres:string,
