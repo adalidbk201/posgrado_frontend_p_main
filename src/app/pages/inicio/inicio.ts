@@ -6,9 +6,10 @@ import { Conocenos } from '../../components/conocenos/conocenos';
 import { Ubicacion } from '../../components/ubicacion/ubicacion';
 import { Testimonios } from '../../components/testimonios/testimonios';
 import { Hero } from '../../components/hero/hero';
+import { Banner } from '../../components/banner/banner';
 @Component({
   selector: 'app-inicio',
-  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero],
+  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero,Banner],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
 })

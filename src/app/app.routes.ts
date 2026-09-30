@@ -223,12 +223,27 @@ export const routes: Routes = [
                 path:'asistencias',
                 loadComponent:()=>import('./features/asistencias/pages/lista-asistencias/lista-asistencias').then((m)=>m.ListaAsistencias)
             },
-
+            {
+                path:'asistencias/crear',
+                loadComponent:()=>import('./features/asistencias/pages/crear-asistencia/crear-asistencia').then((m)=>m.CrearAsistencia),
+            },
+            {
+                path:'asistencias/editar/:id',
+                loadComponent:()=>import('./features/asistencias/pages/editar-asistencia/editar-asistencia').then((m)=>m.EditarAsistencia),
+            },
 
             /** Comunicados */
             {
                 path:'comunicados',
                 loadComponent:()=>import('./features/comunicados/pages/lista-comunicados/lista-comunicados').then((m)=>m.ListaComunicados),
+            },
+            {
+                path:'comunicados/crear',
+                loadComponent:()=>import('./features/comunicados/pages/crear-comunicado/crear-comunicado').then((m)=>m.CrearComunicado),
+            },
+            {
+                path:'comunicados/editar/:id',
+                loadComponent:()=>import('./features/comunicados/pages/editar-comunicado/editar-comunicado').then((m)=>m.EditarComunicado),
             },
 
 

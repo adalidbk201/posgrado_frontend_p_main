@@ -163,121 +163,60 @@
 }
 
 
-/* =========================================================
-   GALERÍA HERO
-   ========================================================= */
-
-.hero__gallery {
-  position: relative;
-
-  width: 100%;
-  min-height: 480px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-}
-
-
-/* =========================================================
-   IMAGEN PRINCIPAL
-   ========================================================= */
-
-.hero__image--one {
-  position: relative;
-  
-  z-index: 2;
-
-  width: 100%;
-  max-width: 570px;
-
-  padding: 10px;
-
-  border: 1px solid var(--color-border);
-
-  border-radius: 22px;
-
-  background: var(--color-surface);
-
+// =====================================================
+// CARRUSEL VERTICAL (override del comportamiento horizontal de Bootstrap)
+// =====================================================
+#heroCarousel {
+  border-radius: 1rem;
+  border: 3px solid var(--color-primary); // o el valor que ya tuvieras
   box-shadow: var(--shadow-xl);
-
-  overflow: hidden;
+  overflow: hidden; // imprescindible: recorta el desborde de las imágenes al animar
 }
+.carousel-vertical {
+  height: 100%;
 
-.hero__image--one img {
-  display: block;
+  .carousel-inner,
+  .carousel-item {
+    height: 100%;
+  }
 
-  width: 100%;
-  height: auto;
-  background-size: cover;
-  border-radius: 14px;
+  .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+  }
 
-  object-fit: cover;
+  // Bootstrap anima con translateX por defecto — lo sobreescribimos a translateY
+  .carousel-item-next:not(.carousel-item-left),
+  .active.carousel-item-right {
+    transform: translateY(100%);
+  }
+
+  .carousel-item-prev:not(.carousel-item-right),
+  .active.carousel-item-left {
+    transform: translateY(-100%);
+  }
+
+  // versión con aceleración por GPU (translate3d), para navegadores que la soportan
+  @media all and (transform-3d), (-webkit-transform-3d) {
+    .carousel-item-next.carousel-item-left,
+    .active.carousel-item-left {
+      transform: translate3d(0, -100%, 0);
+    }
+
+    .carousel-item-prev.carousel-item-right,
+    .active.carousel-item-right {
+      transform: translate3d(0, 100%, 0);
+    }
+
+    .carousel-item-next,
+    .carousel-item-prev {
+      transform: translate3d(0, 0, 0);
+    }
+  }
 }
-
-
-/* =========================================================
-   IMÁGENES SECUNDARIAS
-   ========================================================= */
-
-// .hero__image--two,
-// .hero__image--three,
-// .hero__image--four {
-//   position: absolute;
-
-//   z-index: 3;
-
-//   display: flex;
-
-//   align-items: center;
-//   justify-content: center;
-
-//   width: 100px;
-//   height: 100px;
-
-//   padding: 12px;
-
-//   border: 1px solid var(--color-border);
-
-//   border-radius: 18px;
-
-//   background: var(--color-surface);
-
-//   box-shadow: var(--shadow-lg);
-
-//   overflow: hidden;
-// }
-
-// .hero__image--two img,
-// .hero__image--three img,
-// .hero__image--four img {
-//   width: 100%;
-//   height: 100%;
-
-//   object-fit: contain;
-// }
-
-
-/* =========================================================
-   POSICIONES DE LAS IMÁGENES
-   ========================================================= */
-
-.hero__image--two {
-  top: 15px;
-  right: 10px;
-}
-
-.hero__image--three {
-  bottom: 15px;
-  left: 5px;
-}
-
-.hero__image--four {
-  bottom: 25px;
-  right: 25px;
-}
-
 
 /* =========================================================
    INDICADOR DE SCROLL

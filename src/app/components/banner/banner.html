@@ -1,0 +1,46 @@
+<section
+  class="banner"
+  aria-label="Posgrado UPEA"
+>
+
+  <!-- =========================================================
+       CAPA 1
+       ========================================================= -->
+  <div
+    class="banner__slide"
+    [class.banner__slide--active]="capaActiva() === 0"
+    [style.background-image]="'url(' + imagenCapa1() + ')'"
+  ></div>
+
+
+  <!-- =========================================================
+       CAPA 2
+       ========================================================= -->
+  <div
+    class="banner__slide"
+    [class.banner__slide--active]="capaActiva() === 1"
+    [style.background-image]="'url(' + imagenCapa2() + ')'"
+  ></div>
+
+
+  <!-- =========================================================
+       CAPA OSCURA
+       ========================================================= -->
+  <div class="banner__overlay"></div>
+
+
+   
+
+
+  <!-- =========================================================
+       INDICADOR
+       ========================================================= -->
+  <a
+    class="banner__scroll"
+    href="#conocenos"
+    aria-label="Desplazarse hacia abajo"
+  >
+    <span></span>
+  </a>
+
+</section>

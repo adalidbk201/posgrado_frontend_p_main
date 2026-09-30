@@ -1,0 +1,296 @@
+/* =========================================================
+   BANNER
+   ========================================================= */
+
+.banner {
+  position: relative;
+
+  width: 100%;
+
+  /*
+   * Mantiene la proporción del banner
+   * independientemente del ancho de pantalla.
+   */
+  aspect-ratio: 16 / 7;
+
+  overflow: hidden;
+
+  isolation: isolate;
+}
+
+
+/* =========================================================
+   IMÁGENES
+   ========================================================= */
+
+.banner__slide {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  /*
+   * La imagen ocupa completamente
+   * el espacio disponible.
+   */
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
+
+  /*
+   * Inicialmente invisible.
+   */
+  opacity: 0;
+
+  /*
+   * Desvanecimiento lento.
+   */
+  transition: opacity 2.5s ease-in-out;
+
+  z-index: -3;
+}
+
+
+/* =========================================================
+   IMAGEN ACTIVA
+   ========================================================= */
+
+.banner__slide--active {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
+.banner__overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.60) 0%,
+      rgba(0, 0, 0, 0.35) 45%,
+      rgba(0, 0, 0, 0.10) 100%
+    );
+
+  z-index: -2;
+}
+
+
+ 
+
+/* =========================================================
+   BOTÓN
+   ========================================================= */
+
+.banner__button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 46px;
+
+  padding: 0 26px;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #1d4ed8;
+
+  text-decoration: none;
+
+  font-size: 0.95rem;
+
+  font-weight: 600;
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+.banner__button:hover {
+  transform: translateY(-2px);
+
+  background: #1d4ed8;
+
+  color: #ffffff;
+}
+
+
+.banner__button:focus-visible {
+  outline: 3px solid #ffffff;
+
+  outline-offset: 4px;
+}
+
+
+/* =========================================================
+   INDICADOR SCROLL
+   ========================================================= */
+
+.banner__scroll {
+  position: absolute;
+
+  z-index: 5;
+
+  left: 50%;
+
+  bottom: 3%;
+
+  width: clamp(42px, 4vw, 58px);
+
+  height: clamp(42px, 4vw, 58px);
+
+  transform: translateX(-50%);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
+}
+
+
+.banner__scroll:hover {
+  transform: translateX(-50%) translateY(-4px);
+
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   FLECHA
+   ========================================================= */
+
+.banner__scroll span {
+  width: 12px;
+
+  height: 12px;
+
+  border-right: 4px solid #1f2937;
+
+  border-bottom: 4px solid #1f2937;
+
+  transform:
+    rotate(45deg)
+    translateY(-3px);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+  .banner__content {
+    width: 88%;
+  }
+
+  .banner__content h1 {
+    max-width: 650px;
+  }
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+  .banner {
+    /*
+     * Mantenemos la misma proporción.
+     *
+     * No ponemos min-height porque queremos
+     * que el banner siga el ancho de la pantalla.
+     */
+    aspect-ratio: 16 / 8;
+  }
+
+
+  .banner__overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.40) 0%,
+        rgba(0, 0, 0, 0.65) 100%
+      );
+  }
+
+
+  .banner__content {
+    width: 88%;
+  }
+
+
+  .banner__subtitle {
+    margin-bottom: 8px;
+
+    font-size: 0.7rem;
+  }
+
+
+  .banner__content h1 {
+    margin-bottom: 12px;
+
+    font-size: clamp(1.7rem, 7vw, 2.3rem);
+  }
+
+
+  .banner__content p {
+    margin-bottom: 18px;
+
+    font-size: 0.85rem;
+
+    line-height: 1.4;
+  }
+
+
+  .banner__button {
+    min-height: 40px;
+
+    padding: 0 18px;
+
+    font-size: 0.85rem;
+  }
+}
+
+
+/* =========================================================
+   ACCESIBILIDAD
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .banner__slide {
+    transition: none;
+  }
+
+  .banner__button,
+  .banner__scroll {
+    transition: none;
+  }
+}
