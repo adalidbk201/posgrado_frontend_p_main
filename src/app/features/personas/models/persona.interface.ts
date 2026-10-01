@@ -19,4 +19,4 @@ export interface Persona{
     usuario_modificacion:string | null,
     pais_documento:string,
 
-}
+} 

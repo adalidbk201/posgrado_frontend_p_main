@@ -52,12 +52,13 @@
       <!-- =========================================================
            COLUMNA DERECHA: AUTORIDADES
            ========================================================= -->
-      <div class="conocenos__autoridades">
+      <div class="conocenos__autoridades" data-aos="fade-up"
+     data-aos-duration="3000">
 
         <h3 class="conocenos__autoridades-title">Nuestras Autoridades</h3>
 
         @for (autoridad of autoridades; track autoridad.nombre; let i = $index) {
-          <article class="autoridad-card hover-lift" data-aos="fade-left" [attr.data-aos-delay]="i * 100">
+          <article class="autoridad-card  " data-aos="fade-left" [attr.data-aos-delay]="i * 100">
             <img [src]="autoridad.foto" [alt]="autoridad.nombre" class="autoridad-card__foto" />
 
             <div class="autoridad-card__info">

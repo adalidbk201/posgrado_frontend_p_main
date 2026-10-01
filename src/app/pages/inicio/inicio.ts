@@ -8,9 +8,10 @@ import { Testimonios } from '../../components/testimonios/testimonios';
 import { Hero } from '../../components/hero/hero';
 import { Banner } from '../../components/banner/banner';
 import { ScrollToTop } from '../../components/scroll-to-top/scroll-to-top';
+import { ProgramasPosgrado } from '../../components/programas-posgrado/programas-posgrado';
 @Component({
   selector: 'app-inicio',
-  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero,Banner,ScrollToTop],
+  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero,Banner,ScrollToTop,ProgramasPosgrado],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
 })

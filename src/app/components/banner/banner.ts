@@ -31,6 +31,7 @@ export class Banner {
     '/img/fondo3.png',
     '/img/fondo4.png',
     '/img/fondo5.png',
+    '/img/fondo6.png',
   ];
 
 

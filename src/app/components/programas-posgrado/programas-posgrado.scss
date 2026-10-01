@@ -1,0 +1,343 @@
+/* =========================================================
+   PROGRAMAS DE POSGRADO
+   ========================================================= */
+
+.programas-section {
+  width: 100%;
+  padding: 6rem 1.5rem;
+
+  background: var(--bg-primary);
+
+  scroll-margin-top: 80px;
+}
+
+
+/* =========================================================
+   CONTENEDOR
+   ========================================================= */
+
+.programas-container {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.section-header {
+  max-width: 760px;
+
+  margin: 0 auto 3.5rem;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   ETIQUETA
+   ========================================================= */
+
+.section-label {
+  display: inline-block;
+
+  margin-bottom: 0.75rem;
+
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: var(--primary-color);
+}
+
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.section-header h2 {
+  margin: 0 0 1rem;
+
+  font-size: clamp(2rem, 4vw, 2.8rem);
+
+  line-height: 1.15;
+
+  font-weight: 700;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   DESCRIPCIÓN
+   ========================================================= */
+
+.section-header p {
+  max-width: 680px;
+
+  margin: 0 auto;
+
+  font-size: 1rem;
+
+  line-height: 1.7;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.programas-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 1.5rem;
+}
+
+
+/* =========================================================
+   TARJETA
+   ========================================================= */
+
+.programa-card {
+  overflow: hidden;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 1rem;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.programa-card:hover {
+  transform: translateY(-6px);
+
+  border-color: var(--primary-color);
+
+  box-shadow:
+    0 16px 35px rgb(0 0 0 / 10%);
+}
+
+
+/* =========================================================
+   IMAGEN
+   ========================================================= */
+
+.programa-image {
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  background: var(--bg-secondary);
+}
+
+
+.programa-image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.4s ease;
+}
+
+
+/* Zoom suave */
+
+.programa-card:hover .programa-image img {
+  transform: scale(1.05);
+}
+
+
+/* =========================================================
+   CONTENIDO
+   ========================================================= */
+
+.programa-content {
+  position: relative;
+
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+
+/* =========================================================
+   NÚMERO
+   ========================================================= */
+
+.programa-number {
+  display: block;
+
+  margin-bottom: 0.5rem;
+
+  font-size: 0.75rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  color: var(--primary-color);
+}
+
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.programa-content h3 {
+  margin: 0 0 0.65rem;
+
+  font-size: 1.35rem;
+
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   DESCRIPCIÓN
+   ========================================================= */
+
+.programa-content p {
+  margin: 0 0 1.25rem;
+
+  font-size: 0.92rem;
+
+  line-height: 1.65;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   ENLACE
+   ========================================================= */
+
+.programa-link {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.45rem;
+
+  font-size: 0.9rem;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  color: var(--primary-color);
+
+  transition:
+    gap 0.25s ease,
+    opacity 0.25s ease;
+}
+
+
+.programa-link:hover {
+  gap: 0.7rem;
+
+  opacity: 0.8;
+}
+
+
+.programa-link span {
+  font-size: 1.1rem;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .programas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .programas-section {
+    padding: 4.5rem 1rem;
+  }
+
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+
+  .section-header h2 {
+    font-size: 2rem;
+  }
+
+
+  .section-header p {
+    font-size: 0.95rem;
+  }
+
+
+  .programas-grid {
+    grid-template-columns: 1fr;
+
+    gap: 1.25rem;
+  }
+
+}
+
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .programa-content {
+    padding: 1.25rem;
+  }
+
+
+  .programa-content h3 {
+    font-size: 1.2rem;
+  }
+
+
+  .programa-content p {
+    font-size: 0.88rem;
+  }
+
+}

@@ -11,4 +11,4 @@ export interface PersonaRequest{
     observacion:string,
     fecha_nacimiento:string,
     pais_documento:string,
-}
+} 
