@@ -73,19 +73,19 @@ export class PersonaForm {
         Validators.maxLength(50),
       ]
     ],
-    expedido:[
-      '',
-      [
-        Validators.required,
+     expedido:[
+       '',
+       [
+         Validators.required,
         
-      ]
-    ],
-    genero:[
-      '',
-      [
-        Validators.required
-      ]
-    ],
+       ]
+     ],
+     genero:[
+       '',
+       [
+         Validators.required
+       ]
+     ],
     celular:[
       '',
       [
@@ -123,7 +123,16 @@ export class PersonaForm {
         Validators.minLength(3),
         Validators.maxLength(50),
       ]
-    ]
+    ],
+    correo_electronico:[
+      '',
+      [
+        Validators.required,
+        Validators.email,
+      ]
+    ],
+
+     
   })
 
 
