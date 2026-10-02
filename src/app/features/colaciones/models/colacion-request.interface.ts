@@ -3,5 +3,6 @@ export interface ColacionRequest{
     turno:string,
     descripcion:string,
     sala:string,
+    programa:string,
     
 }

@@ -1,14 +1,19 @@
 // definir y tipar los datos enviados por http
 export interface PersonaRequest{
-    nro_documento:string,
-    nombres:string,
-    primer_apellido:string,
-    segundo_apellido:string,
-    expedido:string,
-    genero:string,
-    celular:string,
-    codigo_verificacion:string,
-    observacion:string,
-    fecha_nacimiento:string,
-    pais_documento:string,
+    persona:{
+        pais_documento:string,
+        nro_documento:string,
+        nombres:string,
+        primer_apellido:string,
+        segundo_apellido:string,
+        celular:string,
+        observacion:string,
+        fecha_nacimiento:string,
+        correo_electronico:string,
+    },
+    id_mencion:string,
+    id_rol:string,
+    fecha_fin:string,
+    
+
 } 

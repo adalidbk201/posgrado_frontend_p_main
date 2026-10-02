@@ -132,6 +132,63 @@
             </div>
         </div>
     </div>
+    <!-- programa -->
+    <div class="programa">
+        <div class="form-group row">
+            <label for="programa" class="col-sm-3 col-form-label">Programa</label>
+            <div class="col-sm-9">
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre..."
+                    [value]="busquedaPrograma()"
+                    (input)="busquedaPrograma.set($any($event.target).value)">
+
+                <!-- select -->
+                 <select
+                    id="programa"
+                    name="programa"
+                    formControlName="programa"
+                    class="form-control">
+
+                    <option value="" disabled>Selecciona un programa</option>
+
+                    @for (programa of programasFiltradas(); track programa.id) {
+                        <option [value]="programa.id">
+                            {{ programa.nombre_programa }}  
+                        </option>
+                    }
+                </select>
+
+                @if (formulario.controls.programa.invalid &&
+                    formulario.controls.programa.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.programa.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo programa es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaPrograma()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasProgramas()"
+                        [disabled]="cargandoMasProgramas()">
+                        {{ cargandoMasProgramas() ? 'Cargando...' : 'Cargar más programas' }}
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
     <button class="btn btn-success">Guardar</button>
 
 </form>

@@ -1,11 +1,25 @@
 export interface Colacion{
-    id:string,
-    fecha_colacion:string,
-    turno:string,
-    descripcion:string,
-    estado:string,
-    sala:{
+   id:string,
+   fecha_colacion:string,
+   turno:string,
+   descripcion:string,
+   estado:string,
+   sala:{
         id:string,
         nombre_sala:string,
-    }
+   },
+   programa:{
+        estado:string,
+        id:string,
+        nombre_programa:string,
+        grado:{
+            id:number,
+            grado_academico:string,
+            jerarquia:number,
+        }
+        menciones:{
+            id:number,
+            mencion:string,
+        }
+   }
 }

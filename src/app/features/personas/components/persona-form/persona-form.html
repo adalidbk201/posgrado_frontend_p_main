@@ -1,5 +1,35 @@
 <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
 <!-- buscador de nro_documento input -->
+    <!-- pais documento -->
+      <div class="pais_documento">
+        <div class="form-group row">
+            <label for="pais_documento" class="col-sm-3 col-form-label">País Docuemnto</label>
+
+            <div class="col-sm-9">
+                <input type="text" 
+                name="pais_documento" 
+                id="pais_documento"
+                class="form-control"
+                formControlName="pais_documento"
+                placeholder="Ingrese pais">
+                @if (formulario.controls.pais_documento.invalid &&
+                     formulario.controls.pais_documento.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.pais_documento.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">País Documento es obligatorio</div>
+                        }
+                        @if (formulario.controls.pais_documento.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">País Documento debe tener al menos 3 caracteres</div>
+                        }
+                        @if (formulario.controls.pais_documento.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">País Documento no debe superar los 50 caracteres</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+      </div>
     <!-- nro_documento -->
     <div class="nro_documento">
 
@@ -163,105 +193,9 @@
         
       </div>
        
+ 
 
-      <!-- Expedido -->
-      <div class="expedido">
-
-        <div class="form-group row">
-            <label for="expedido"class="col-sm-3 col-form-label">Expedido</label>
-
-            <div class="col-sm-9">
-                <select name="expedido"  id="expedido"
-                class="form-control"
-                formControlName="expedido">
-                    <option value="">Selecione un departamento...</option>
-                    <option value="LP">La Paz (LP)</option>
-                    <option value="SC">Santa Cruz (SC)</option>
-                    <option value="CB">Cochabamba (CB)</option>
-                    <option value="OR">Oruro (OR)</option>
-                    <option value="PT">Potosi (PT)</option>
-                    <option value="CH">Chuquisaca (CH)</option>
-                    <option value="TJ">Tarija (TJ)</option>
-                    <option value="BE">Beni (BE)</option>
-                    <option value="PD">Pando (PD)</option>
-                </select>
-                 
-                @if (formulario.controls.expedido.invalid &&
-                    formulario.controls.expedido.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.expedido.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">Expedido es obligatorio</div>
-                            <!-- <span>Expedido es obligatorio</span> -->
-                        }
-                         
-                    </div>
-                }
-            </div>
-            
-        </div>
-        
-      </div>
-
-      <!-- pais documento -->
-      <div class="pais_documento">
-        <div class="form-group row">
-            <label for="pais_documento" class="col-sm-3 col-form-label">País Docuemnto</label>
-
-            <div class="col-sm-9">
-                <input type="text" 
-                name="pais_documento" 
-                id="pais_documento"
-                class="form-control"
-                formControlName="pais_documento"
-                placeholder="Ingrese pais">
-                @if (formulario.controls.pais_documento.invalid &&
-                     formulario.controls.pais_documento.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.pais_documento.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">País Documento es obligatorio</div>
-                        }
-                        @if (formulario.controls.pais_documento.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">País Documento debe tener al menos 3 caracteres</div>
-                        }
-                        @if (formulario.controls.pais_documento.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">País Documento no debe superar los 50 caracteres</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-      </div>
-      <!-- genero -->
-       <div class="genero">
-
-        <div class="form-group row">
-            <label for="genero"class="col-sm-3 col-form-label">Genero</label>
-            <div class="col-sm-9">
-                <select name="genero" id="genero"
-                    class="form-control"
-                    formControlName="genero">
-                    <option value="">Selecciona Genero</option>
-                    <option value="MASCULINO">MASCULINO</option>
-                    <option value="FEMENINO">FEMENINO</option>
-                </select>
-                @if (formulario.controls.genero.invalid &&
-                    formulario.controls.genero.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.genero.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El Genero es obligatorio</div>
-                            <!-- <span>El Genero es obligatorio</span> -->
-                        }
-                    </div>
-                }
-            </div>
-            
-        </div>
-        
-
-       </div>
+     
 
        <!-- celular -->
         <div class="celular">
@@ -300,44 +234,8 @@
 
         </div>
 
-        <!--  codigo_verificacion -->
-          <div class="codigo_verificacion">
 
-            <div class="form-group row">
-                <label for="codigo_verificacion"class="col-sm-3 col-form-label">Codigo Verificación</label>
-
-                <div class="col-sm-9">
-                    <input type="text"
-                    id="codigo_verificacion"
-                    class="form-control sm"
-                    formControlName="codigo_verificacion"
-                    placeholder="Codigo de Verificacion">
-                    @if (formulario.controls.codigo_verificacion.invalid &&
-                        formulario.controls.codigo_verificacion.touched) {
-                        
-                        <div class="class-error">
-                            @if (formulario.controls.codigo_verificacion.errors?.['required']) {
-                                <div class="alert alert-danger" role="alert">Codigo de verificacion obligatorio</div>
-                                <!-- <span>Codigo de verificacion obligatorio</span> -->
-                            }
-                            @if (formulario.controls.codigo_verificacion.errors?.['minlength']) {
-                                <div class="alert alert-danger" role="alert">Codigo de verificaion debe tener al menos 3 caracteres</div>
-                                <!-- <span>Codigo de verificaion debe tener al menos 3 caracteres</span> -->
-                            }
-                            @if (formulario.controls.codigo_verificacion.errors?.['maxlength']) {
-                                <div class="alert alert-danger" role="alert">Codigo de verificacion no debe superar los 10 caracteres</div>
-                                <!-- <span>Codigo de verificacion no debe superar los 10 caracteres</span> -->
-                            }
-                        </div>
-                    }
-                </div>
-                
-            </div>
-            
-
-          </div>
-
-          <!-- Obervacion -->
+        <!-- Obervacion -->
            <div class="observacion">
 
             <div class="form-group row">
@@ -373,6 +271,10 @@
             
            </div>
 
+ 
+
+          
+
            <!-- fecha nacimiento -->
            <div class="fecha_nacimiento">
 
@@ -401,6 +303,86 @@
             </div>
           
            </div>
+
+           <!-- correo electronico -->
+    <div class="correo-electronico">
+        <div class="form-group row">
+            <label for="correo_electronico" class="col-sm-3 col-form-label">Correo Electronico</label>
+
+            <div class="col-sm-9">
+                <input type="email" 
+                name="correo_electronico" 
+                id="correo_electronico"
+                formControlName="correo_electronico"
+                placeholder="Correo Electronico"
+                class="form-control"
+                >
+                @if (formulario.controls.correo_electronico.invalid &&
+                     formulario.controls.correo_electronico.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.correo_electronico.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El correo es obligatorio</div>
+                        }
+                        @if (formulario.controls.correo_electronico.errors?.['email']) {
+                            <div class="alert alert-danger" role="alert">El correo debe ser valido</div>
+                        }
+                      
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <!-- id_mencion -->
+    <div class="id-mencion">
+        <div class="form-group row">
+            <label for="id_mencion" class="col-sm-3 col-form-label">Id Mención</label>
+            <div class="col-sm-9">
+                <input type="text" 
+                name="id_mencion" 
+                id="id_mencion"
+                formControlName="id_mencion"
+                placeholder="Id Mención"
+                class="form-control"
+                >
+            </div>
+        </div>
+    </div>
+
+    <!-- id_rol -->
+    <div class="id-rol">
+        <div class="form-group row">
+            <label for="id_rol" class="col-sm-3 col-form-label">Id Rol</label>
+            <div class="col-sm-9">
+                <input type="text" 
+                name="id_rol" 
+                id="id_rol"
+                formControlName="id_rol"
+                placeholder="Id Rol"
+                class="form-control"
+                >
+            </div>
+        </div>
+    </div>
+
+    <!-- fecha_fin -->
+    <div class="fecha-fin">
+        <div class="form-group row">
+            <label for="fecha_fin" class="col-sm-3 col-form-label">Fecha Fin</label>
+            <div class="col-sm-9">
+                <input type="date" 
+                name="fecha_fin" 
+                id="fecha_fin"
+                formControlName="fecha_fin"
+                placeholder="Fecha Fin"
+                class="form-control"
+                >
+            </div>
+        </div>
+    </div>
+
     <button class="btn btn-success">Guardar</button>
 
 </form>

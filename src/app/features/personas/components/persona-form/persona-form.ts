@@ -38,6 +38,14 @@ export class PersonaForm {
 
   // Crear Formulario con los datos
   readonly formulario=this.fb.nonNullable.group({
+     pais_documento:[
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+      ]
+    ],
     nro_documento:[
       '',
       [
@@ -73,33 +81,12 @@ export class PersonaForm {
         Validators.maxLength(50),
       ]
     ],
-     expedido:[
-       '',
-       [
-         Validators.required,
-        
-       ]
-     ],
-     genero:[
-       '',
-       [
-         Validators.required
-       ]
-     ],
     celular:[
       '',
       [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(20),
-      ]
-    ],
-    codigo_verificacion:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(10),
       ]
     ],
     observacion:[
@@ -116,14 +103,6 @@ export class PersonaForm {
         Validators.required
       ]
     ],
-    pais_documento:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ]
-    ],
     correo_electronico:[
       '',
       [
@@ -132,6 +111,32 @@ export class PersonaForm {
       ]
     ],
 
+     id_mencion:[
+       '',
+       [
+         Validators.required,
+        
+       ]
+     ],
+     id_rol:[
+       '',
+       [
+         Validators.required
+       ]
+     ],
+    
+    fecha_fin:[
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(10),
+      ]
+    ],
+    
+    
+   
+    
      
   })
 
@@ -169,35 +174,35 @@ export class PersonaForm {
       if(PersonaActual){
         // Almacenar los Valores a Editar en Formulario
         this.formulario.patchValue({
-
+          pais_documento:PersonaActual.expedido,
           nro_documento: PersonaActual.nro_documento,
           nombres:PersonaActual.nombres,
           primer_apellido:PersonaActual.primer_apellido,
-          segundo_apellido:PersonaActual.segundo_apellido,
-          expedido:PersonaActual.expedido,
-          genero:PersonaActual.genero,
+          segundo_apellido:PersonaActual.segundo_apellido, 
           celular:PersonaActual.celular,
-          codigo_verificacion:PersonaActual.codigo_verificacion,
-          observacion:PersonaActual.observacion,
-          fecha_nacimiento:PersonaActual.fecha_nacimiento,
-          pais_documento:PersonaActual.pais_documento,
-
+          observacion:'', 
+          fecha_nacimiento:'',
+          correo_electronico:PersonaActual.correo_electronico,
+          id_mencion:'',
+          id_rol:'',
+          fecha_fin:'',
         })
       }
       else{
         // Si no hay datos el formulario esta vacio
         this.formulario.reset({
+          pais_documento:'',
           nro_documento: '',
           nombres:'',
           primer_apellido:'',
           segundo_apellido:'',
-          expedido:'',
-          genero:'',
           celular:'',
-          codigo_verificacion:'',
           observacion:'',
           fecha_nacimiento:'',
-          pais_documento:'',
+          correo_electronico:'',
+          id_mencion:'',
+          id_rol:'',
+          fecha_fin:'',
         })
       }
     })
@@ -251,8 +256,8 @@ export class PersonaForm {
     }
 
     // si no es invalido guardar los datos y emitirlos
-    const datos: PersonaRequest= this.formulario.getRawValue();
+    // const datos: PersonaRequest= this.formulario.getRawValue();
 
-    this.guardar.emit(datos);
+    // this.guardar.emit(datos);
   }
 }
