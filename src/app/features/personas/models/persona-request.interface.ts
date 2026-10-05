@@ -1,4 +1,3 @@
-// definir y tipar los datos enviados por http
 export interface PersonaRequest{
     persona:{
         pais_documento:string,
@@ -15,5 +14,4 @@ export interface PersonaRequest{
     id_rol:string,
     fecha_fin:string,
     
-
 } 

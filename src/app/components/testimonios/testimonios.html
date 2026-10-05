@@ -6,10 +6,13 @@
     </h2>
 
     <div class="testimonios__mosaico">
-      @for (foto of fotos; track foto.src) {
-        <div class="testimonios__tile"data-aos="flip-left"
-     data-aos-easing="ease-out-cubic"
-     data-aos-duration="2000">
+      @for (foto of fotos; track foto.src; let i = $index) {
+        <div
+          class="testimonios__tile"
+          data-aos="flip-left"
+          data-aos-easing="ease-out-cubic"
+          data-aos-duration="2000"
+          (click)="abrirLightbox(i)">
           <img [src]="foto.src" [alt]="foto.alt" />
           <div class="testimonios__overlay">
             <span>{{ foto.titulo }}</span>
@@ -19,4 +22,45 @@
     </div>
 
   </div>
+
+  <!-- =========================================================
+       LIGHTBOX
+       ========================================================= -->
+  @if (fotoActivaIndex() !== null) {
+    <div class="lightbox" (click)="cerrarLightbox()">
+
+      <button
+        type="button"
+        class="lightbox__cerrar"
+        (click)="cerrarLightbox()"
+        aria-label="Cerrar">
+        ✕
+      </button>
+
+      <button
+        type="button"
+        class="lightbox__flecha lightbox__flecha--izq"
+        (click)="anteriorFoto(); $event.stopPropagation()"
+        aria-label="Foto anterior">
+        ‹
+      </button>
+
+      <!-- stopPropagation: evita que el click en la imagen/contenido
+           "burbujee" hasta el fondo y cierre el lightbox sin querer -->
+      <div class="lightbox__contenido" (click)="$event.stopPropagation()">
+        <img [src]="fotos[fotoActivaIndex()!].src" [alt]="fotos[fotoActivaIndex()!].alt" />
+        <p class="lightbox__titulo">{{ fotos[fotoActivaIndex()!].titulo }}</p>
+        <p class="lightbox__contador">{{ fotoActivaIndex()! + 1 }} / {{ fotos.length }}</p>
+      </div>
+
+      <button
+        type="button"
+        class="lightbox__flecha lightbox__flecha--der"
+        (click)="siguienteFoto(); $event.stopPropagation()"
+        aria-label="Siguiente foto">
+        ›
+      </button>
+
+    </div>
+  }
 </section>

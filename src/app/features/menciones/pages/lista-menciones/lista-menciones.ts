@@ -10,9 +10,8 @@ import { Mencion } from '../../models/mencion.interface';
   styleUrl: './lista-menciones.scss',
 })
 export class ListaMenciones {
-   // inyectar mencionesService
+  // inyectar mencionesService
   private readonly mencionesService = inject(MencionesService);
-
   // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
 
