@@ -336,17 +336,57 @@
     </div>
 
     <!-- id_mencion -->
-    <div class="id-mencion">
+    <div class="id_mencion">
         <div class="form-group row">
-            <label for="id_mencion" class="col-sm-3 col-form-label">Id Mención</label>
+            <label for="id_mencion" class="col-sm-3 col-form-label">Mención</label>
+
             <div class="col-sm-9">
-                <input type="text" 
-                name="id_mencion" 
-                id="id_mencion"
-                formControlName="id_mencion"
-                placeholder="Id Mención"
-                class="form-control"
-                >
+
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre o documento..."
+                    [value]="busquedaMencion()"
+                    (input)="busquedaMencion.set($any($event.target).value)">
+
+                <!-- select -->
+                <select
+                    id="id_mencion"
+                    name="id_mencion"
+                    formControlName="id_mencion"
+                    class="form-control">
+
+                    <option value="" disabled>Selecciona una mención</option>
+
+                    @for (mencion of mencionesFiltradas(); track mencion.id) {
+                        <option [value]="mencion.id">
+                            {{ mencion.mencion }}
+                        </option>
+                    }       
+                      
+                </select>
+
+                @if (formulario.controls.id_mencion.invalid &&
+                    formulario.controls.id_mencion.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.id_mencion.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo mención es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaMencion()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasMenciones()"
+                        [disabled]="cargandoMasMenciones()">
+                        {{ cargandoMasMenciones() ? 'Cargando...' : 'Cargar más menciones' }}
+                    </button>
+                }
+
             </div>
         </div>
     </div>
@@ -356,13 +396,11 @@
         <div class="form-group row">
             <label for="id_rol" class="col-sm-3 col-form-label">Id Rol</label>
             <div class="col-sm-9">
-                <input type="text" 
-                name="id_rol" 
-                id="id_rol"
-                formControlName="id_rol"
-                placeholder="Id Rol"
-                class="form-control"
-                >
+                <select name="id_rol" id="id_rol" formControlName="id_rol" class="form-control">
+                    <option value="">Selecciona un rol</option>
+                    <option value="1">ADMINISTRADOR</option>
+                    <option value="2">ESTUDIANTE</option>
+                </select>
             </div>
         </div>
     </div>

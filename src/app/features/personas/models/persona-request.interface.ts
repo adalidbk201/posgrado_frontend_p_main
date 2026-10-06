@@ -10,8 +10,8 @@ export interface PersonaRequest{
         fecha_nacimiento:string,
         correo_electronico:string,
     },
-    id_mencion:string,
-    id_rol:string,
+    id_mencion:number,
+    id_rol:number,
     fecha_fin:string,
     
 } 

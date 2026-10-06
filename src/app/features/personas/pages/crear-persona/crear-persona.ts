@@ -21,11 +21,13 @@ export class CrearPersona {
 
 
    // metodo crearPersona
-    crearPersona(datos: PersonaRequest): void {
+    crearPersona(datos: Partial<PersonaRequest>): void {
       this.errorMensaje.set(null);
       
+      // en creación, el formulario garantiza que viene completo —
+      // si tu servicio exige PersonaRequest estricto, castea aquí:
       // llamamos al metodo crearPersona: usamos .susbribe para recibir la resopuesta http Post
-      this.personasService.crearPersona(datos).subscribe({
+      this.personasService.crearPersona(datos as PersonaRequest).subscribe({
         next: () => {
           console.log('Persona creada correctamente');
   

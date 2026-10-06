@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -14,6 +14,8 @@ import { forkJoin} from 'rxjs';
 import { Persona } from '../../models/persona.interface';
 import { PersonaRequest } from '../../models/persona-request.interface';
 import { PersonasService } from '../../services/personas.service';
+import { MencionesService } from '../../../menciones/services/menciones.service';
+import { Mencion } from '../../../menciones/models/mencion.interface';
 
  
 
@@ -24,220 +26,106 @@ import { PersonasService } from '../../services/personas.service';
   styleUrl: './persona-form.scss',
 })
 export class PersonaForm {
-  // Recibe una persona cuando estamos editando
-  readonly persona=input<Persona | null>(null);
-
-  // Envia los datos al componente Padre
-  readonly guardar =output<PersonaRequest>();
+   // Ya no recibe "persona" — este formulario es solo para CREAR
+  readonly guardar = output<PersonaRequest>();
 
   private readonly fb = inject(FormBuilder);
   private readonly personasService = inject(PersonasService);
-  // todas las personas cargadas una vez, para comparar documentos en memoria
+  private readonly mencionesService = inject(MencionesService);
+
   private readonly todasLasPersonas = signal<Persona[]>([]);
 
+  readonly formulario = this.fb.nonNullable.group({
+    pais_documento: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    nro_documento: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(30)],
+      [this.validarDocumentoUnico()],
+    ],
+    nombres: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    primer_apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    segundo_apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    celular: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+    correo_electronico: ['', [Validators.required, Validators.email]],
+    observacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
+    fecha_nacimiento: ['', [Validators.required]],
+    id_mencion: this.fb.control<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+    id_rol: this.fb.control<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+    fecha_fin: ['', [Validators.required]],
+  });
 
-  // Crear Formulario con los datos
-  readonly formulario=this.fb.nonNullable.group({
-     pais_documento:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ]
-    ],
-    nro_documento:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(30)
-      ],
-      [
-        this.validarDocumentoUnico()
-      ],
-    ],
-    nombres:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(100),
-      ]
-    ],
-    primer_apellido:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ]
-    ],
-    segundo_apellido:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ]
-    ],
-    celular:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-      ]
-    ],
-    observacion:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(255),
-      ]
-    ],
-    fecha_nacimiento:[
-      '',
-      [
-        Validators.required
-      ]
-    ],
-    correo_electronico:[
-      '',
-      [
-        Validators.required,
-        Validators.email,
-      ]
-    ],
+  // =========================
+  // SELECTOR DE MENCIÓN
+  // =========================
+  readonly menciones = signal<Mencion[]>([]);
+  readonly paginaMencion = signal(1);
+  readonly busquedaMencion = signal('');
+  readonly cargandoMasMenciones = signal(false);
 
-     id_mencion:[
-       '',
-       [
-         Validators.required,
-        
-       ]
-     ],
-     id_rol:[
-       '',
-       [
-         Validators.required
-       ]
-     ],
-    
-    fecha_fin:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(10),
-      ]
-    ],
-    
-    
-   
-    
-     
-  })
+  readonly mencionesFiltradas = computed(() => {
+    const termino = this.busquedaMencion().trim().toLowerCase();
+    if (!termino) return this.menciones();
+    return this.menciones().filter(m => `${m.mencion}`.toLowerCase().includes(termino));
+  });
 
+  private cargarMenciones(pagina: number): void {
+    this.cargandoMasMenciones.set(true);
+    this.mencionesService.getMenciones(pagina, 100).subscribe({
+      next: (respuesta) => {
+        const nuevas = respuesta.Data.filas;
+        this.menciones.update(actual => {
+          const idsExistentes = new Set(actual.map(m => m.id));
+          return [...actual, ...nuevas.filter(m => !idsExistentes.has(m.id))];
+        });
+        this.paginaMencion.set(pagina);
+        this.cargandoMasMenciones.set(false);
+      },
+      error: () => this.cargandoMasMenciones.set(false),
+    });
+  }
 
-  // valida en memoria que el nro_documento no esté repetido,
-  // ignorando a la propia persona cuando estamos editando
+  cargarMasMenciones(): void {
+    this.cargarMenciones(this.paginaMencion() + 1);
+  }
+
   private validarDocumentoUnico(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const valor = (control.value as string)?.trim();
       if (!valor) return of(null);
 
-      const idActual = this.persona()?.id;
-
-      const coincidencia = this.todasLasPersonas().find(
-        p => p.nro_documento === valor && p.id !== idActual
-      );
-
+      const coincidencia = this.todasLasPersonas().find(p => p.nro_documento === valor);
       return of(coincidencia ? { documentoDuplicado: true } : null);
     };
   }
 
-
- 
-
-
-  constructor(){
-    // cargar personas una sola vez al iniciar el formulario
-   this.cargarTodasLasPersonas();
-
-    effect(()=>{
-      // Almacenar Persona a editar
-      const PersonaActual =this.persona();
-
-      // verificar si hay datos en Persona Actual
-      if(PersonaActual){
-        // Almacenar los Valores a Editar en Formulario
-        this.formulario.patchValue({
-          pais_documento:PersonaActual.expedido,
-          nro_documento: PersonaActual.nro_documento,
-          nombres:PersonaActual.nombres,
-          primer_apellido:PersonaActual.primer_apellido,
-          segundo_apellido:PersonaActual.segundo_apellido, 
-          celular:PersonaActual.celular,
-          observacion:'', 
-          fecha_nacimiento:'',
-          correo_electronico:PersonaActual.correo_electronico,
-          id_mencion:'',
-          id_rol:'',
-          fecha_fin:'',
-        })
-      }
-      else{
-        // Si no hay datos el formulario esta vacio
-        this.formulario.reset({
-          pais_documento:'',
-          nro_documento: '',
-          nombres:'',
-          primer_apellido:'',
-          segundo_apellido:'',
-          celular:'',
-          observacion:'',
-          fecha_nacimiento:'',
-          correo_electronico:'',
-          id_mencion:'',
-          id_rol:'',
-          fecha_fin:'',
-        })
-      }
-    })
+  constructor() {
+    this.cargarMenciones(1);
+    this.cargarTodasLasPersonas();
   }
 
-  //pide la página 1 para "descubrir" cuántas páginas hay en total, 
-  // y si hace falta más de una, pide todas las restantes a la vez (no una por una) 
-  // y las junta en un solo array antes de guardarlas.
   private cargarTodasLasPersonas(): void {
-    const tamañoPagina = 200; // tamaño por request; ajusta si tu backend tiene su propio máximo
+    const tamañoPagina = 200;
 
-    // pide la PRIMERA página. Esta respuesta trae, además de los datos,
-    // el "total" real de personas que existen — ese dato es la clave
-    // para saber cuántas páginas MÁS hacen falta pedir.
     this.personasService.getPersonas(1, tamañoPagina).pipe(
       switchMap(primeraRespuesta => {
         const primeraTanda = primeraRespuesta.Data.filas;
         const total = primeraRespuesta.Data.total;
         const totalPaginas = Math.ceil(total / tamañoPagina);
 
-        // si con la primera página ya alcanza para cubrir el total, no pide más
-        if (totalPaginas <= 1) {
-          return of(primeraTanda);
-        }
+        if (totalPaginas <= 1) return of(primeraTanda);
 
-        // arma un request por cada página restante (2, 3, 4...) y las junta todas
         const restoDePaginas = Array.from({ length: totalPaginas - 1 }, (_, i) =>
           this.personasService.getPersonas(i + 2, tamañoPagina)
         );
 
         return forkJoin(restoDePaginas).pipe(
-          map(respuestas => [
-            ...primeraTanda,
-            ...respuestas.flatMap(r => r.Data.filas),
-          ])
+          map(respuestas => [...primeraTanda, ...respuestas.flatMap(r => r.Data.filas)])
         );
       })
     ).subscribe({
@@ -246,18 +134,31 @@ export class PersonaForm {
     });
   }
 
-
-  // Metodo Enviar Formulario
-  enviarFormulario():void{
-    // verificar formulario
+  enviarFormulario(): void {
     if (this.formulario.invalid || this.formulario.pending) {
       this.formulario.markAllAsTouched();
       return;
     }
 
-    // si no es invalido guardar los datos y emitirlos
-    // const datos: PersonaRequest= this.formulario.getRawValue();
+    const v = this.formulario.getRawValue();
 
-    // this.guardar.emit(datos);
+    const datos: PersonaRequest = {
+      persona: {
+        pais_documento: v.pais_documento,
+        nro_documento: v.nro_documento,
+        nombres: v.nombres,
+        primer_apellido: v.primer_apellido,
+        segundo_apellido: v.segundo_apellido,
+        celular: v.celular,
+        observacion: v.observacion,
+        fecha_nacimiento: v.fecha_nacimiento,
+        correo_electronico: v.correo_electronico,
+      },
+      id_mencion: Number(v.id_mencion),
+      id_rol: Number(v.id_rol),
+      fecha_fin: v.fecha_fin,
+    };
+
+    this.guardar.emit(datos);
   }
 }

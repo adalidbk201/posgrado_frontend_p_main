@@ -3,10 +3,10 @@ import { PersonaForm } from '../../components/persona-form/persona-form';
 import { PersonasService } from '../../services/personas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Persona } from '../../models/persona.interface';
-import { PersonaRequest } from '../../models/persona-request.interface';
+import {PersonaEditarForm, PersonaEditarRequest} from '../../components/persona-editar-form/persona-editar-form';
 @Component({
   selector: 'app-editar-persona',
-  imports: [PersonaForm],
+  imports: [PersonaEditarForm],
   templateUrl: './editar-persona.html',
   styleUrl: './editar-persona.scss',
 })
@@ -72,32 +72,17 @@ export class EditarPersona {
   }
 
   // Método que recibirá los datos del formulario.
-  actualizarPersona(datos: PersonaRequest): void {
+  // actualizarPersona(datos: PersonaEditarRequest): void {
+  //   if (!this.id) return;
 
-    // Verificamos que exista el ID.
-    if (!this.id) {
-      return;
-    }
-
-    // Actualizamos la persona.
-    this.personasService.actualizarParcialPersona(this.id, datos).subscribe({
-
-      // Si la actualización fue correcta.
-      next: () => {
-
-        // Mostramos mensaje de éxito.
-        console.log('Persona actualizada correctamente');
-
-        // Volvemos al listado de salas.
-        this.router.navigate(['/dashboard/personas']);
-      },
-
-      // Si ocurrió un error.
-      error: (error) => {
-        console.error('Error al actualizar la persona:', error);
-      },
-    });
-  }
+  //   this.personasService.actualizarParcialPersona(this.id, datos).subscribe({
+  //     next: () => {
+  //       console.log('Persona actualizada correctamente');
+  //       this.router.navigate(['/dashboard/personas']);
+  //     },
+  //     error: (error) => console.error('Error al actualizar la persona:', error),
+  //   });
+  // }
 
 
 
