@@ -22,7 +22,7 @@ export class CrearColacion {
     // llamamos al metodo crearColacion: usamos .susbribe para recibir la resopuesta http Post
     this.colacionesService.crearColacion(datos).subscribe({
       next: () => {
-        console.log('Colacion creada correctamente');
+        console.log('Colación creada correctamente');
 
         // Volver al listado
         this.router.navigate(['/dashboard/colaciones']);

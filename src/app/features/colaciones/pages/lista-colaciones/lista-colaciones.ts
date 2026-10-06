@@ -49,8 +49,8 @@ export class ListaColaciones {
     ? this.colaciones()
     : this.colaciones().filter(c =>
 
-      // construye u ntexto con los datos de la colacion para buscar por cualquiera de esos datos
-      `${c.turno} ${c.descripcion} ${c.estado} ${c.sala.nombre_sala}`
+      // construye un texto con los datos de la colacion para buscar por cualquiera de esos datos
+      `${c.turno} ${c.descripcion} ${c.estado} ${c.sala.nombre_sala} ${c.programa.nombre_programa}`
         // convierte los datos en minuscula
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino
