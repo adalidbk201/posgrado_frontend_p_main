@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-             @for (sala of listSalas(); track sala.fecha_modificacion; let idx= $index) {
+             @for (sala of listSalas(); track sala.id; let idx= $index) {
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <!-- <td>{{ sala.id }}</td> -->
@@ -35,7 +35,7 @@
                     <td>
                         <button
                             type="button" class="btn btn-warning"
-                            (click)="editarSala(sala.id)"
+                            (click)="editarSala(sala.id,sala.nombre_sala)"
                         >
                             Editar
                         </button>

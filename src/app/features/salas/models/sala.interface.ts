@@ -1,11 +1,16 @@
-export interface Sala{    
-  id: string;
+export interface Sala{  
   estado: string;
-  transaccion: string;
-  fecha_creacion: string;
-  fecha_modificacion: string | null;
+  id: string;
   nombre_sala: string;
-  usuario_creacion: string;
-  usuario_modificacion: string | null;
+  niveles:[
+    {
+    id: string;
+    numero_nivel: number;
+    nombre_nivel: string;
+    filas:number;
+    columnas:number;
+  }
+]
+ 
 }
 

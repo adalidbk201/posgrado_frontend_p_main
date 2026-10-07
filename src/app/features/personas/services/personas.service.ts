@@ -17,7 +17,7 @@ export class PersonasService {
     private readonly http = inject(HttpClient);
 
     // api url
-    private readonly apiUrl = `${environment.API}/personas/`;
+    private readonly apiUrl = `${environment.API}/persona/`;
     
     // metodo para obtener todas las personas
     getAllPersonas():Observable<RespuestaApi<PaginacionResponse<Persona>>> {

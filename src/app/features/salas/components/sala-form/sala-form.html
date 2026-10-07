@@ -1,5 +1,6 @@
 <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-    
+  
+  <!-- nombre_sala -->
   <div class="nombre_sala">
 
     <div class="form-group row">
@@ -42,6 +43,138 @@
     
 
     
+  </div>
+
+  <!-- niveles numero_nivel -->
+  <div class="numero_nivel">
+    <div class="form-group row">
+      <label for="numero_nivel" class="col-sm-3 col-form-label">
+        Número de nivel
+      </label>
+
+      <div class="col-sm-9">
+          <input
+            class="form-control"
+            id="numero_nivel"
+            type="number"
+            formControlName="numero_nivel"
+            placeholder="Ejemplo: 1"
+          />
+          @if (formulario.controls.numero_nivel.get('numero_nivel')?.invalid &&
+               formulario.controls.numero_nivel.get('numero_nivel')?.touched)
+          {
+              <div class="error">
+                @if (formulario.controls.numero_nivel.get('numero_nivel')?.errors?.['required']) {
+                  <div class="alert alert-danger sm" role="alert"> El número de nivel es obligatorio.</div>
+                }
+
+                @if (formulario.controls.numero_nivel.get('numero_nivel')?.errors?.['min']) {
+                  <div class="alert alert-danger" role="alert">El número de nivel debe ser al menos 1.</div>
+                }
+              </div>
+            }
+      </div>
+    </div>
+  </div>
+
+  <!-- niveles  nombre_nivel-->
+  <div class="nombre_nivel">
+    <div class="form-group row" >
+      <label for="nombre_nivel" class="col-sm-3 col-form-label">
+        Nombre del nivel
+      </label>
+
+      <div class="col-sm-9">
+          <input
+            class="form-control"
+            id="nombre_nivel"
+            type="text"
+            formControlName="nombre_nivel"
+            placeholder="Ejemplo: Planta Baja"
+          />
+          @if (formulario.controls.nombre_nivel.get('nombre_nivel')?.invalid &&
+               formulario.controls.nombre_nivel.get('nombre_nivel')?.touched)
+          {
+              <div class="error">
+                @if (formulario.controls.nombre_nivel.get('nombre_nivel')?.errors?.['required']) {
+                  <div class="alert alert-danger sm" role="alert"> El nombre del nivel es obligatorio.</div>
+                }
+
+                @if (formulario.controls.nombre_nivel.get('nombre_nivel')?.errors?.['minlength']) {
+                  <div class="alert alert-danger" role="alert">El nombre del nivel debe tener al menos 3 caracteres.</div>
+                }
+
+                @if (formulario.controls.nombre_nivel.get('nombre_nivel')?.errors?.['maxlength']) {
+                  <div class="alert alert-danger" role="alert">El nombre del nivel no puede superar los 150 caracteres.</div>
+                }
+              </div>
+            }
+      </div>
+    </div>
+  </div>
+
+  <!-- niveles  filas-->
+  <div class="filas">
+    <div class="form-group row">
+      <label for="filas" class="col-sm-3 col-form-label">
+        Número de filas
+      </label>
+
+      <div class="col-sm-9">
+          <input
+            class="form-control"
+            id="filas"
+            type="number"
+            formControlName="filas"
+            placeholder="Ejemplo: 10"
+          />
+          @if (formulario.controls.filas.get('filas')?.invalid &&
+               formulario.controls.filas.get('filas')?.touched)
+          {
+              <div class="error">
+                @if (formulario.controls.filas.get('filas')?.errors?.['required']) {
+                  <div class="alert alert-danger sm" role="alert"> El número de filas es obligatorio.</div>
+                }
+
+                @if (formulario.controls.filas.get('filas')?.errors?.['min']) {
+                  <div class="alert alert-danger" role="alert">El número de filas debe ser al menos 1.</div>
+                }
+              </div>
+            }
+      </div>
+    </div>
+  </div>
+
+  <!-- niveles  columnas-->
+  <div class="columnas">
+    <div class="form-group row">
+      <label for="columnas" class="col-sm-3 col-form-label">
+        Número de columnas
+      </label>
+
+      <div class="col-sm-9">
+          <input
+            class="form-control"
+            id="columnas"
+            type="number"
+            formControlName="columnas"
+            placeholder="Ejemplo: 10"
+          />
+          @if (formulario.controls.columnas.get('columnas')?.invalid &&
+               formulario.controls.columnas.get('columnas')?.touched)
+          {
+              <div class="error">
+                @if (formulario.controls.columnas.get('columnas')?.errors?.['required']) {
+                  <div class="alert alert-danger sm" role="alert"> El número de columnas es obligatorio.</div>
+                }
+
+                @if (formulario.controls.columnas.get('columnas')?.errors?.['min']) {
+                  <div class="alert alert-danger" role="alert">El número de columnasString.fromCharCode(10) debe ser al menos 1.</div>
+                }
+              </div>
+            }
+      </div>
+    </div>
   </div>
 
   <button  class="btn btn-success" >

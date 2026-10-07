@@ -130,7 +130,7 @@ export const routes: Routes = [
             },
             // Editar sala
             {
-                path: 'salas/editar/:id',
+                path: 'salas/editar/:id/:nombre_sala',
                 loadComponent: () =>
                     import('./features/salas/pages/editar-sala/editar-sala')
                         .then((m) => m.EditarSala),

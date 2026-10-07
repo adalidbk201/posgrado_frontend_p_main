@@ -142,8 +142,8 @@ export class ListaSalas {
     this.router.navigate(['/dashboard/salas/crear']);
   }
 
-  editarSala(id: string): void {
-    this.router.navigate(['/dashboard/salas/editar', id]);
+  editarSala(id: string, nombre_sala: string): void {
+    this.router.navigate(['/dashboard/salas/editar', id, nombre_sala]);
   }
 
 

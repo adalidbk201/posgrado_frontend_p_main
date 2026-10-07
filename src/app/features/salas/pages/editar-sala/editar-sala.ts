@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { SalaForm } from '../../components/sala-form/sala-form';
+import { SalaEditarForm } from '../../components/sala-editar-form/sala-editar-form';
 import { SalasService } from '../../services/salas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Sala } from '../../models/sala.interface';
-import { SalaRequest } from '../../models/sala-request.interface';
+import { SalaEditarRequest } from '../../models/sala-request.interface';
 @Component({
   selector: 'app-editar-sala',
-  imports: [SalaForm],
+  imports: [SalaEditarForm],
   templateUrl: './editar-sala.html',
   styleUrl: './editar-sala.scss',
 })
@@ -23,11 +23,17 @@ export class EditarSala {
   // obtener el id de la URL
   private readonly id = this.route.snapshot.paramMap.get('id');
 
+  // obtener el nombre de la sala de la URL
+   readonly nombre_sala = this.route.snapshot.paramMap.get('nombre_sala');
+  
+
   // Creamos un signal que inicialmente no contiene ninguna sala.
  readonly sala = signal<Sala | null>(null)
 
 
   constructor() {
+    console.log('ID de la sala:', this.id);
+    console.log('Nombre de la sala:', this.nombre_sala);
 
     // verificar si existe el id
     if (!this.id) {
@@ -50,7 +56,7 @@ export class EditarSala {
 
     // llamamos al metodo getSalaPorId
     // usamos subscribe para recibir la respuesta HTTP GET
-    this.salasService.getSalaPorId(id).subscribe({
+    this.salasService.getNivelesDeSala(id).subscribe({
 
       // petición correcta
       next: (respuesta) => {
@@ -75,7 +81,7 @@ export class EditarSala {
 
 
   // Método que recibirá los datos del formulario.
-  actualizarSala(datos: SalaRequest): void {
+  actualizarSala(datos: SalaEditarRequest): void {
 
     // Verificamos que exista el ID.
     if (!this.id) {

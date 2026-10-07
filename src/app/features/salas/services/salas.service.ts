@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
 import { Sala } from '../models/sala.interface';
-import { SalaRequest } from '../models/sala-request.interface';
+import { SalaEditarRequest, SalaRequest } from '../models/sala-request.interface';
 @Injectable({
     // ejecutar desde la raiz
     providedIn: 'root'
@@ -36,34 +36,40 @@ export class SalasService {
         return this.http.get<RespuestaApi<PaginacionResponse<Sala>>>(`${this.url}?q=${termino}`);
     }
 
-  // =========================
-  // GET - POR ID
-  getSalaPorId(id: string): Observable<RespuestaApi<Sala>> {
-    return this.http.get<RespuestaApi<Sala>>(`${this.url}${id}/`);
-  }
-  
-  // =========================
-  // POST - CREAR
-  crearSala(datos: SalaRequest): Observable<Sala> {
-    return this.http.post<Sala>(this.url, datos);
-  }
+    // =========================
+    // GET - POR ID
+    getSalaPorId(id: string): Observable<RespuestaApi<Sala>> {
+      return this.http.get<RespuestaApi<Sala>>(`${this.url}${id}/`);
+    }
+    
+    // =========================
+    // GET - OBTENER NIVELES DE UNA SALA
+    getNivelesDeSala(id: string): Observable<RespuestaApi<Sala>> {
+      return this.http.get<RespuestaApi<Sala>>(`${this.url}${id}/niveles/`);
+    }
+    
+    // =========================
+    // POST - CREAR
+    crearSala(datos: SalaRequest): Observable<Sala> {
+      return this.http.post<Sala>(this.url, datos);
+    }
 
-  // =========================
-  // PUT - ACTUALIZAR
-  actualizarSala(id: string,datos: SalaRequest): Observable<Sala> {
-    return this.http.put<Sala>(`${this.url}${id}/`,datos);
-  }
+    // =========================
+    // PUT - ACTUALIZAR
+    actualizarSala(id: string,datos: SalaRequest): Observable<Sala> {
+      return this.http.put<Sala>(`${this.url}${id}/`,datos);
+    }
 
-  // =========================
-  // PATCH - ACTUALIZAR PARCIALMENTE
-  actualizarParcialSala(id: string,datos: Partial<SalaRequest>): Observable<Sala> {
-    return this.http.patch<Sala>(`${this.url}${id}/`,datos);
-  }
+    // =========================
+    // PATCH - ACTUALIZAR PARCIALMENTE
+    actualizarParcialSala(id: string,datos: Partial<SalaEditarRequest>): Observable<Sala> {
+      return this.http.patch<Sala>(`${this.url}${id}/`,datos);
+    }
 
-  // =========================
-  // DELETE - ELIMINAR
-  eliminarSala(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.url}${id}/`);
-  }
+    // =========================
+    // DELETE - ELIMINAR
+    eliminarSala(id: string): Observable<void> {
+      return this.http.delete<void>(`${this.url}${id}/`);
+    }
 
 }
