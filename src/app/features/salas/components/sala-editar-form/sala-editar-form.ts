@@ -10,6 +10,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class SalaEditarForm {
   readonly sala = input<Sala | null>(null);
+  readonly nombre_sala = input<string>('');
   readonly guardar = output<SalaEditarRequest>();
 
   private readonly fb = inject(FormBuilder);
@@ -32,7 +33,7 @@ export class SalaEditarForm {
       if (!s) return;
 
       this.formulario.patchValue({
-        nombre_sala: s.nombre_sala,
+        nombre_sala: this.nombre_sala(),
       });
     });
   }

@@ -1,8 +1,8 @@
 <section class="editar-sala">
 
   <div class="encabezado">
-     <h1>Editar sala: <p></p> {{ nombre_sala }}</h1>
-
+    <h1>Editar sala:</h1>
+    <h3>{{ nombre_sala }}</h3>
     <p>
       Editar sala en el sistema.
     </p>
@@ -13,6 +13,7 @@
       <app-sala-editar-form
         [sala]="sala()"
         (guardar)="actualizarSala($event)"
+        nombre_sala="{{ nombre_sala }}"
       />
 
     } @else {

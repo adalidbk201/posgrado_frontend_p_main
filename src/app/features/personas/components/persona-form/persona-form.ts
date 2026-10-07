@@ -159,6 +159,7 @@ export class PersonaForm {
       fecha_fin: v.fecha_fin,
     };
 
+    console.log('DATOS ENVIADOS:', datos);
     this.guardar.emit(datos);
   }
 }
