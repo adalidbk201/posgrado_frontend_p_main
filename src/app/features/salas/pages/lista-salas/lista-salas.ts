@@ -3,8 +3,7 @@ import { SalasService } from '../../services/salas.service';
 import { Sala } from '../../models/sala.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-
-
+ 
 
 @Component({
   imports: [],
@@ -53,7 +52,7 @@ export class ListaSalas {
     : this.salas().filter(s =>
 
       // construye un texto con los datos de la sala para buscar por cualquiera de esos datos
-      `${s.nombre_sala}`
+      `${s.nombre_sala} ${s.estado} ${s.niveles.map(n => n.nombre_nivel).join(' ')}`
         // convierte los datos en minuscula
         .toLowerCase()
         // true si encontro el termino , false si no encontro el termino

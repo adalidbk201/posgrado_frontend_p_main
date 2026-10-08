@@ -1,106 +1,199 @@
-import { Component, effect, inject, signal } from '@angular/core';
-import { AuthApiService} from '../../services/auth-api.service';
+import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LoginResponse } from '../../models/login-response.interface';
-
-import { RouterLink } from '@angular/router';
-
-import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
+import { AuthApiService } from '../../services/auth-api.service';
+
 @Component({
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+  ],
   selector: 'app-login',
   styleUrl: './login.scss',
   templateUrl: './login.html',
 })
 export class Login {
-  // consumir l api
 
-  // injectar service
-  private readonly authApiService= inject(AuthApiService)
+  // Servicio para consumir la API de autenticación
+  private readonly authApiService = inject(AuthApiService);
 
-  // inyectar  FormBuilder para crear formularios
+  // FormBuilder para crear el formulario
   private readonly fb = inject(FormBuilder);
 
-  // injectar router para redicciones
+  // Router para realizar redirecciones
   private readonly router = inject(Router);
 
-  // crar el formulario con 2 campos 
+  // Formulario de login
   readonly loginForm = this.fb.nonNullable.group({
     usuario: ['', [Validators.required]],
     contrasena: ['', [Validators.required]],
-     recordarme: [
-      false,
-    ],
+    recordarme: [false],
   });
 
-  /** CREAR SEÑAL */
+  // Mostrar u ocultar contraseña
   readonly mostrarContrasena = signal(false);
 
+  // Indica si el login está procesándose
   readonly cargando = signal(false);
 
+  // Mensaje de error
   readonly mensajeError = signal('');
 
-
+  // Año actual
   readonly anioActual = new Date().getFullYear();
- /** ----------------------------------------- */
 
-  // Metodo Alternar Contraseña 
+  /**
+   * Alterna la visibilidad de la contraseña.
+   */
   alternarContrasena(): void {
-
     this.mostrarContrasena.update(
-      valor => !valor,
+      (valor) => !valor,
     );
-
   }
- 
 
-  // metodo ejecua cuando se envia el formulario
+  /**
+   * Ejecuta el login.
+   */
   realizarLogin(): void {
 
-    // verificar si el formulario e invalido
+    // Limpiamos mensajes anteriores
+    this.mensajeError.set('');
+
+    // Verificamos si el formulario es inválido
     if (this.loginForm.invalid) {
 
-        // marcar como touched para ver mensaje de validacion
-        this.loginForm.markAllAsTouched();
-        return;
+      this.loginForm.markAllAsTouched();
+
+      return;
     }
-    
-    // obtener los valores del formulario
+
+    // Evitamos enviar múltiples solicitudes
+    if (this.cargando()) {
+      return;
+    }
+
+    // Obtenemos los valores del formulario
     const datos = this.loginForm.getRawValue();
 
-    // llamamos al servicio metodo login , enviamos los datos
-    this.authApiService.login(datos)
+    // Activamos indicador de carga
+    this.cargando.set(true);
 
-      // suscribe nos permite recibir la respuesta
-      .subscribe({
+    // Realizamos el login
+    this.authApiService.login(datos).subscribe({
 
-        //next se ejecuta cuando la peticion fue exitosa
-        next: (respuesta) => {
-          console.log('Login correcto');
-          console.log('Respuesta del backend:', respuesta);
+      next: (respuesta) => {
 
-          // Extraemos el Access Token
-          const token = respuesta.Data.access;
+        console.log('Login correcto');
+        console.log(
+          'Respuesta del backend:',
+          respuesta,
+        );
 
-          // Guardamos el token
-          localStorage.setItem('access_token', token);
+        // Extraemos el access token
+        const token = respuesta.Data.access;
 
-          console.log('Token guardado correctamente:', token);
+        // Guardamos el access token
+        localStorage.setItem(
+          'access_token',
+          token,
+        );
 
-          // Redirigir al componente Cuenta
-          this.router.navigate(['/dashboard']);
-          
-        },
+        console.log(
+          'Token guardado correctamente:',
+          token,
+        );
 
-        error: (error: HttpErrorResponse) => {
-          console.error('Status:', error.status);
-          console.error('Mensaje:', error.message);
-          console.error('Respuesta del backend:', error.error);
-        },
-      });
+        /*
+         * Después del login solicitamos a Django
+         * que genere la cookie CSRF.
+         *
+         * Django ejecuta:
+         *
+         * get_token(request)
+         *
+         * y crea la cookie:
+         *
+         * csrftoken
+         */
+        this.authApiService.obtenerCsrfToken().subscribe({
+
+          next: () => {
+
+            console.log(
+              '✅ Token CSRF generado correctamente',
+            );
+
+            /*
+             * Ya tenemos:
+             *
+             * access_token
+             * refresh_token (HttpOnly)
+             * csrftoken
+             *
+             * Ahora podemos entrar al dashboard.
+             */
+            this.cargando.set(false);
+
+            this.router.navigate([
+              '/dashboard',
+            ]);
+          },
+
+          error: (error: HttpErrorResponse) => {
+
+            console.error(
+              '❌ Error al generar CSRF',
+              error,
+            );
+
+            /*
+             * Si no podemos preparar el CSRF,
+             * eliminamos el access token porque
+             * la sesión no quedó correctamente preparada.
+             */
+            localStorage.removeItem(
+              'access_token',
+            );
+
+            this.cargando.set(false);
+
+            this.mensajeError.set(
+              'No se pudo establecer correctamente la sesión.',
+            );
+          },
+        });
+      },
+
+      error: (error: HttpErrorResponse) => {
+
+        console.error(
+          '❌ Error en login',
+        );
+
+        console.error(
+          'Status:',
+          error.status,
+        );
+
+        console.error(
+          'Mensaje:',
+          error.message,
+        );
+
+        console.error(
+          'Respuesta del backend:',
+          error.error,
+        );
+
+        this.cargando.set(false);
+
+        this.mensajeError.set(
+          error.error?.Message ??
+          'Usuario o contraseña incorrectos.',
+        );
+      },
+    });
   }
-
-
 }

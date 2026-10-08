@@ -19,8 +19,58 @@ export class AuthApiService {
     private apiUrl =`${environment.API}/login/`;
 
     // Post Login
-    login(credentials:LoginRequest):Observable<LoginResponse>{
-        return this.http.post<LoginResponse>(this.apiUrl, credentials)
+    /**
+     * Iniciar sesión.
+     *
+     * withCredentials permite que el navegador
+     * acepte/envíe la cookie HttpOnly refresh_token.
+     */
+    login(credentials: LoginRequest): Observable<LoginResponse> {
+        return this.http.post<LoginResponse>(
+        this.apiUrl,
+        credentials,
+        {
+            withCredentials: true,
+        }
+        );
+    }
+
+    /**
+   * Solicita un nuevo access token.
+   *
+   * No enviamos el refresh token manualmente.
+   * Django lo obtiene desde la cookie HttpOnly.
+   */
+    refreshToken(): Observable<LoginResponse> {
+        return this.http.post<LoginResponse>(
+        `${environment.API}/refresh/`,
+        {},
+        {
+            withCredentials: true,
+        }
+        );
+    }
+
+
+     /**
+   * Cerrar sesión en el backend.
+   */
+    logout(): Observable<unknown> {
+        return this.http.get(
+        `${environment.API}/logout/`,
+        {
+            withCredentials: true,
+        }
+        );
+    }
+
+    obtenerCsrfToken(): Observable<unknown> {
+    return this.http.get(
+        `${environment.API}/csrf/`,
+        {
+        withCredentials: true,
+        },
+    );
     }
 
     
