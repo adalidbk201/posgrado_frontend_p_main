@@ -16,7 +16,7 @@ export class AuthApiService {
     private http=inject(HttpClient)
 
     // url api 
-    private apiUrl =`${environment.API}/login/`;
+    private readonly apiUrl = environment.API;
 
     // Post Login
     /**
@@ -27,7 +27,7 @@ export class AuthApiService {
      */
     login(credentials: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(
-        this.apiUrl,
+         `${this.apiUrl}/login/`,
         credentials,
         {
             withCredentials: true,
@@ -42,15 +42,39 @@ export class AuthApiService {
    * Django lo obtiene desde la cookie HttpOnly.
    */
     refreshToken(): Observable<LoginResponse> {
-        return this.http.post<LoginResponse>(
-        `${environment.API}/refresh/`,
-        {},
-        {
-            withCredentials: true,
-        }
-        );
-    }
+        const csrfToken = this.obtenerCookie('csrftoken');
 
+        console.log('🍪 CSRF cookie:', csrfToken);
+
+        return this.http.post<LoginResponse>(
+            `${this.apiUrl}/refresh/`,
+            {},
+            {
+            withCredentials: true,
+            headers: csrfToken
+                ? {
+                    'X-CSRFToken': csrfToken,
+                }
+                : {},
+            },
+        );
+        }
+
+        private obtenerCookie(nombre: string): string | null {
+        const cookies = document.cookie.split(';');
+
+        const cookie = cookies.find((item) =>
+            item.trim().startsWith(`${nombre}=`),
+        );
+
+        if (!cookie) {
+            return null;
+        }
+
+        return decodeURIComponent(
+            cookie.trim().substring(nombre.length + 1),
+        );
+        }
 
      /**
    * Cerrar sesión en el backend.
@@ -73,5 +97,6 @@ export class AuthApiService {
     );
     }
 
+    
     
 }
