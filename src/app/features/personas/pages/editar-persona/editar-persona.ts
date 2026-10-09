@@ -6,7 +6,7 @@ import { Persona } from '../../models/persona.interface';
 import {PersonaEditarForm, PersonaEditarRequest} from '../../components/persona-editar-form/persona-editar-form';
 @Component({
   selector: 'app-editar-persona',
-  imports: [PersonaEditarForm],
+  imports: [ ],
   templateUrl: './editar-persona.html',
   styleUrl: './editar-persona.scss',
 })

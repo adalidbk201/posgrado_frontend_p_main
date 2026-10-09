@@ -49,7 +49,7 @@ export class ListaProgramas {
       const base = !termino
       ? this.programas()
       : this.programas().filter(p =>
-          `${p.nombre_programa} ${p.grado.grado_academico} ${p.menciones.mencion}`
+          `${p.nombre_programa} ${p.grado.grado_academico} ${p.menciones}`
             .toLowerCase()
             .includes(termino) 
         );

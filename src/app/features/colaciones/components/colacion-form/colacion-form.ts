@@ -157,7 +157,7 @@ export class ColacionForm {
       if (!termino) return this.programas();
 
       return this.programas().filter(p =>
-        `${p.nombre_programa} ${p.menciones.mencion} ${p.grado.grado_academico}`
+        `${p.nombre_programa} ${p.grado.grado_academico}`
           .toLowerCase()
           .includes(termino)
       );

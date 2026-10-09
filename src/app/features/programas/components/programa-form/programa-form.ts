@@ -14,9 +14,7 @@ import { Mencion } from '../../../menciones/models/mencion.interface';
   styleUrl: './programa-form.scss',
 })
 export class ProgramaForm {
-  // Recibe un programa cuando estamos editando
-  readonly programa=input<Programa | null>(null);
-
+    // Ya no recibe "programa" — este formulario es solo para CREAR
   // Envia los datos al componente Padre
   readonly guardar =output<ProgramaRequest>();
 
@@ -36,9 +34,8 @@ export class ProgramaForm {
       Validators.required,
       Validators.min(1),
     ]),
-    mencion: this.fb.control<number | null>(null, [
+    menciones: this.fb.control<number[]>([], [
       Validators.required,
-      Validators.min(1),
     ]),
 
   })
@@ -195,53 +192,37 @@ export class ProgramaForm {
     // cargar la primera página de menciones al iniciar el formulario
     this.cargarMenciones(1);
 
-    effect(()=>{
-      // Almacenar Programa a editar
-      const ProgramaActual =this.programa();
-
-      // verificar si hay datos en Programa Actual
-      if(ProgramaActual){
-        // Almacenar los Valores a Editar en Formulario
-        this.formulario.patchValue({
-          nombre_programa:ProgramaActual.nombre_programa,
-          grado_academico:ProgramaActual.grado.id,
-          mencion:ProgramaActual.menciones.id
-          
-
-        });
-
-        // asegura que el grado ya asignado aparezca en el select,
-        // aunque no esté dentro de la primera página cargada
-        this.asegurarGradoEnLista(ProgramaActual.grado.id);
-
-        // asegura que la mencion ya asignada aparezca en el select,
-        // aunque no esté dentro de la primera página cargada
-        this.asegurarMencionEnLista(ProgramaActual.menciones.id);
-      }
-      else{
-        // Si no hay datos el formulario esta vacio
-        this.formulario.reset({
-          nombre_programa:'',
-          grado_academico:null,
-          mencion:null,
-        })
-      }
-    })
+     
   }
 
   // Metodo Enviar Formulario
-  enviarFormulario():void{
-    // verificar formulario
-    if(this.formulario.invalid){
-      // Marcar todos los campos del formulario
-      this.formulario.markAllAsTouched();
-      return;
+ 
+    // Método para enviar el formulario de programa
+    enviarFormulario(): void {
+      // Verificar si el formulario es inválido o tiene validaciones pendientes
+      if (this.formulario.invalid || this.formulario.pending) {
+        // Mostrar los errores de validación de los campos
+        this.formulario.markAllAsTouched();
+        return;
+      }
+
+      // Obtener los valores actuales del formulario
+      const v = this.formulario.getRawValue();
+
+      // Construir el objeto con el formato que espera el backend
+      const datos: ProgramaRequest = {
+        nombre_programa: v.nombre_programa.trim(),
+        grado_academico: v.grado_academico,
+        menciones: v.menciones,
+      };
+
+      // Mostrar los datos que se enviarán al componente padre
+      console.log('DATOS ENVIADOS:', datos);
+
+      // Emitir los datos para que el componente padre los envíe al backend
+      this.guardar.emit(datos);
     }
+ 
 
-    // si no es invalido guardar los datos y emitirlos
-    const datos: ProgramaRequest= this.formulario.getRawValue();
-
-    this.guardar.emit(datos);
-  }
 
 }

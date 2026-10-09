@@ -87,59 +87,83 @@
         </div>
     </div>
 
-    <!-- mencion -->
-    <div class="mencion">
+    <!-- menciones -->
+        <!-- Menciones del programa -->
+        <div class="mencion">
         <div class="form-group row">
-            <label for="mencion" class="col-sm-3 col-form-label">Mención</label>
-            
+            <label for="menciones" class="col-sm-3 col-form-label">
+            Menciones
+            </label>
+
             <div class="col-sm-9">
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre..."
-                    [value]="busquedaMencion()"
-                    (input)="busquedaMencion.set($any($event.target).value)">
 
-                <!-- select -->
-                 <select
-                    id="mencion"
-                    name="mencion"
-                    formControlName="mencion"
-                    class="form-control">
+            <!-- Buscador de menciones -->
+            <input
+                type="text"
+                class="form-control mb-2"
+                placeholder="Buscar por nombre..."
+                [value]="busquedaMencion()"
+                (input)="busquedaMencion.set($any($event.target).value)"
+            />
 
-                    <option value="" disabled>Selecciona una mención</option>
-
-                    @for (mencion of mencionesFiltradas(); track mencion.id) {
-                        <option [value]="mencion.id">
-                            {{ mencion.id }} {{ mencion.mencion }} 
-                        </option>
-                    }
-                </select>
-
-                @if (formulario.controls.mencion.invalid &&
-                    formulario.controls.mencion.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.mencion.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo mencion es obligatorio</div>
-                        }
-                    </div>
+            <!-- Selector de múltiples menciones -->
+            <select
+                id="menciones"
+                name="menciones"
+                formControlName="menciones"
+                class="form-control"
+                multiple
+                size="6"
+                [attr.aria-invalid]="
+                formulario.controls.menciones.invalid &&
+                formulario.controls.menciones.touched
+                "
+            >
+                @for (mencion of mencionesFiltradas(); track mencion.id) {
+                <option [ngValue]="mencion.id">
+                    {{ mencion.id }} - {{ mencion.mencion }}
+                </option>
                 }
+            </select>
 
-                @if (!busquedaMencion()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasMenciones()"
-                        [disabled]="cargandoMasMenciones()">
-                        {{ cargandoMasMenciones() ? 'Cargando...' : 'Cargar más menciones' }}
-                    </button>
+            <small class="form-text text-muted">
+                Mantén presionada la tecla Ctrl para seleccionar varias menciones
+                en Windows.
+            </small>
+
+            <!-- Validación -->
+            @if (
+                formulario.controls.menciones.invalid &&
+                formulario.controls.menciones.touched
+            ) {
+                @if (formulario.controls.menciones.errors?.['required']) {
+                <div class="alert alert-danger mt-2" role="alert">
+                    Debes seleccionar al menos una mención.
+                </div>
                 }
+            }
+
+            <!-- Cargar más menciones -->
+            @if (!busquedaMencion()) {
+                <button
+                type="button"
+                class="btn btn-link btn-sm mt-1 p-0"
+                (click)="cargarMasMenciones()"
+                [disabled]="cargandoMasMenciones()"
+                >
+                {{
+                    cargandoMasMenciones()
+                    ? 'Cargando...'
+                    : 'Cargar más menciones'
+                }}
+                </button>
+            }
 
             </div>
         </div>
-    </div>
+        </div>
+
+
 
     <button class="btn btn-success">Guardar</button>
  </form>

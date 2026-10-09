@@ -16,6 +16,8 @@ import { PersonaRequest } from '../../models/persona-request.interface';
 import { PersonasService } from '../../services/personas.service';
 import { MencionesService } from '../../../menciones/services/menciones.service';
 import { Mencion } from '../../../menciones/models/mencion.interface';
+import { Programa } from '../../../programas/models/programa.interface';
+import { ProgramasService } from '../../../programas/services/programas.service';
 
  
 
@@ -29,9 +31,39 @@ export class PersonaForm {
    // Ya no recibe "persona" — este formulario es solo para CREAR
   readonly guardar = output<PersonaRequest>();
 
+  // ID del programa seleccionado
+  readonly programaSeleccionadoId = signal<string | null>(null);
+
+  // Obtener únicamente las menciones del programa seleccionado
+  readonly mencionesDelPrograma = computed(() => {
+    const idPrograma = this.programaSeleccionadoId();
+
+    if (!idPrograma) {
+      return [];
+    }
+
+    const programa = this.programas().find(
+      p => p.id === idPrograma
+    );
+
+    return programa?.menciones ?? [];
+  });
+
+  // Actualizar las menciones cuando cambia el programa
+  alCambiarPrograma(): void {
+    const idPrograma = this.formulario.controls.id_programa.value;
+
+    this.programaSeleccionadoId.set(idPrograma || null);
+
+    // Limpiar la mención anterior para evitar enviar una
+    // mención que pertenezca a otro programa
+    this.formulario.controls.id_mencion.reset(null);
+  }
+
   private readonly fb = inject(FormBuilder);
   private readonly personasService = inject(PersonasService);
-  private readonly mencionesService = inject(MencionesService);
+  
+  private readonly programasService = inject(ProgramasService)
 
   private readonly todasLasPersonas = signal<Persona[]>([]);
 
@@ -43,12 +75,15 @@ export class PersonaForm {
       [this.validarDocumentoUnico()],
     ],
     nombres: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    expedido:['', [Validators.required]],
+    genero:['',[Validators.required]],
     primer_apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     segundo_apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     celular: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     correo_electronico: ['', [Validators.required, Validators.email]],
     observacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
     fecha_nacimiento: ['', [Validators.required]],
+
     id_mencion: this.fb.control<number | null>(null, [
       Validators.required,
       Validators.min(1),
@@ -58,42 +93,50 @@ export class PersonaForm {
       Validators.min(1),
     ]),
     fecha_fin: ['', [Validators.required]],
+    id_programa:['',[Validators.required]],
   });
 
-  // =========================
-  // SELECTOR DE MENCIÓN
-  // =========================
-  readonly menciones = signal<Mencion[]>([]);
-  readonly paginaMencion = signal(1);
-  readonly busquedaMencion = signal('');
-  readonly cargandoMasMenciones = signal(false);
+   
 
-  readonly mencionesFiltradas = computed(() => {
-    const termino = this.busquedaMencion().trim().toLowerCase();
-    if (!termino) return this.menciones();
-    return this.menciones().filter(m => `${m.mencion}`.toLowerCase().includes(termino));
+
+   // =========================
+  // SELECTOR DE Programa
+  // =========================
+  readonly programas = signal<Programa[]>([]);
+  readonly paginaPrograma = signal(1);
+  readonly busquedaPrograma = signal('');
+  readonly cargandoMasProgramas = signal(false);
+
+  readonly programasFiltradas = computed(() => {
+    const termino = this.busquedaPrograma().trim().toLowerCase();
+    if (!termino) return this.programas();
+    return this.programas().filter(p => `${p.nombre_programa}`.toLowerCase().includes(termino));
   });
 
-  private cargarMenciones(pagina: number): void {
-    this.cargandoMasMenciones.set(true);
-    this.mencionesService.getMenciones(pagina, 100).subscribe({
+  private cargarProgramas(pagina: number): void {
+    this.cargandoMasProgramas.set(true);
+    this.programasService.getProgramas(pagina, 100).subscribe({
       next: (respuesta) => {
         const nuevas = respuesta.Data.filas;
-        this.menciones.update(actual => {
+        this.programas.update(actual => {
           const idsExistentes = new Set(actual.map(m => m.id));
           return [...actual, ...nuevas.filter(m => !idsExistentes.has(m.id))];
         });
-        this.paginaMencion.set(pagina);
-        this.cargandoMasMenciones.set(false);
+        this.paginaPrograma.set(pagina);
+        this.cargandoMasProgramas.set(false);
       },
-      error: () => this.cargandoMasMenciones.set(false),
+      error: () => this.cargandoMasProgramas.set(false),
     });
   }
 
-  cargarMasMenciones(): void {
-    this.cargarMenciones(this.paginaMencion() + 1);
+  cargarMasProgramas(): void {
+    this.cargarProgramas(this.paginaPrograma() + 1);
   }
 
+
+
+
+  // Validar nro documento
   private validarDocumentoUnico(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const valor = (control.value as string)?.trim();
@@ -104,8 +147,15 @@ export class PersonaForm {
     };
   }
 
+
+
+
+
+
+
   constructor() {
-    this.cargarMenciones(1);
+   
+    this.cargarProgramas(1);
     this.cargarTodasLasPersonas();
   }
 
@@ -149,6 +199,8 @@ export class PersonaForm {
         nombres: v.nombres,
         primer_apellido: v.primer_apellido,
         segundo_apellido: v.segundo_apellido,
+        expedido:v.expedido,
+        genero:v.genero,
         celular: v.celular,
         observacion: v.observacion,
         fecha_nacimiento: v.fecha_nacimiento,
@@ -156,6 +208,7 @@ export class PersonaForm {
       },
       id_mencion: Number(v.id_mencion),
       id_rol: Number(v.id_rol),
+      id_programa:v.id_programa,
       fecha_fin: v.fecha_fin,
     };
 

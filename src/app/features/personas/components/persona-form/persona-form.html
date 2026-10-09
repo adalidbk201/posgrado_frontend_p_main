@@ -79,6 +79,37 @@
 
     </div>
 
+    
+    <!-- expedido -->
+    <div class="expedido">
+        <div class="form-group row">
+            <label for="expedido" class="col-sm-3 col-form-label">Expedido</label>
+            <div class="col-sm-9">
+                <select name="expedido" id="expedido" formControlName="expedido" class="form-control">
+                    <option value="" >Selecciona un departamento</option>
+                    <option value="LP">(LP)La Paz</option>
+                    <option value="BN">(BN)Beni</option>
+                    <option value="CH">(CH)Chiquisaca</option>
+                    <option value="CB">(CB)Cochabamba</option>
+                    <option value="OR">(OR)Oruro</option>
+                    <option value="PD">(PD)Pando</option>
+                    <option value="PT">(PT)Potosi</option>
+                    <option value="SC">(SC)Santa Cruz</option>
+                    <option value="TJ">(TJ)Tarija</option>
+                    
+                </select>
+                @if (formulario.controls.expedido.invalid &&
+                     formulario.controls.expedido.touched) {
+                    <div class="class-error">
+                        @if (formulario.controls.expedido.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">Expedido es obligatorio</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
     <!-- nombres -->
     <div class="nombres">
 
@@ -193,7 +224,30 @@
         
       </div>
        
- 
+      
+      <!-- genero -->
+    <div class="genero">
+        <div class="form-group row">
+            <label for="genero" class="col-sm-3 col-form-label">Genero</label>
+            <div class="col-sm-9">
+                <select name="genero" id="genero" formControlName="genero" class="form-control">
+                    <option value="" >Selecciona un Genero</option>
+                    <option value="MASCULINO">MASCULINO</option>
+                    <option value="FEMENINO">FEMENINO</option>
+                    
+                    
+                </select>
+                 @if (formulario.controls.genero.invalid &&
+                     formulario.controls.genero.touched) {
+                    <div class="class-error">
+                        @if (formulario.controls.genero.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">Genero es obligatorio</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 
      
 
@@ -335,10 +389,13 @@
         </div>
     </div>
 
-    <!-- id_mencion -->
-    <div class="id_mencion">
+   
+
+
+    <!-- id_programa -->
+    <div class="id_programa">
         <div class="form-group row">
-            <label for="id_mencion" class="col-sm-3 col-form-label">Mención</label>
+            <label for="id_programa" class="col-sm-3 col-form-label">Programa</label>
 
             <div class="col-sm-9">
 
@@ -346,50 +403,99 @@
                 <input
                     type="text"
                     class="form-control mb-2"
-                    placeholder="Buscar por nombre o documento..."
-                    [value]="busquedaMencion()"
-                    (input)="busquedaMencion.set($any($event.target).value)">
+                    placeholder="Buscar por nombre programa..."
+                    [value]="busquedaPrograma()"
+                    (input)="busquedaPrograma.set($any($event.target).value)">
 
                 <!-- select -->
                 <select
-                    id="id_mencion"
-                    name="id_mencion"
-                    formControlName="id_mencion"
-                    class="form-control">
+                    id="id_programa"
+                    name="id_programa"
+                    formControlName="id_programa"
+                    class="form-control"
+                    (change)="alCambiarPrograma()">
 
-                    <option value="" disabled>Selecciona una mención</option>
+                    <option value="" disabled>Selecciona programa</option>
 
-                    @for (mencion of mencionesFiltradas(); track mencion.id) {
-                        <option [value]="mencion.id">
-                            {{ mencion.mencion }}
+                    @for (programa of programasFiltradas(); track programa.id) {
+                        <option [value]="programa.id">
+                            {{ programa.nombre_programa }}
                         </option>
                     }       
                       
                 </select>
 
-                @if (formulario.controls.id_mencion.invalid &&
-                    formulario.controls.id_mencion.touched) {
+                @if (formulario.controls.id_programa.invalid &&
+                    formulario.controls.id_programa.touched) {
 
                     <div class="class-error">
-                        @if (formulario.controls.id_mencion.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo mención es obligatorio</div>
+                        @if (formulario.controls.id_programa.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo programa es obligatorio</div>
                         }
                     </div>
                 }
 
-                @if (!busquedaMencion()) {
+                @if (!busquedaPrograma()) {
                     <button
                         type="button"
                         class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasMenciones()"
-                        [disabled]="cargandoMasMenciones()">
-                        {{ cargandoMasMenciones() ? 'Cargando...' : 'Cargar más menciones' }}
+                        (click)="cargarMasProgramas()"
+                        [disabled]="cargandoMasProgramas()">
+                        {{ cargandoMasProgramas() ? 'Cargando...' : 'Cargar más programas' }}
                     </button>
                 }
 
             </div>
         </div>
     </div>
+
+     
+        <!-- Mención correspondiente al programa seleccionado -->
+        <div class="id_mencion">
+        <div class="form-group row">
+            <label for="id_mencion" class="col-sm-3 col-form-label">
+            Mención
+            </label>
+
+            <div class="col-sm-9">
+            <select
+                id="id_mencion"
+                name="id_mencion"
+                formControlName="id_mencion"
+                class="form-control"
+            >
+                <option [ngValue]="null" disabled>
+                Selecciona una mención
+                </option>
+
+                @for (mencion of mencionesDelPrograma(); track mencion.id) {
+                <option [ngValue]="mencion.id">
+                    {{ mencion.mencion }}
+                </option>
+                }
+            </select>
+
+            @if (!programaSeleccionadoId()) {
+                <small class="form-text text-muted">
+                Primero selecciona un programa.
+                </small>
+            }
+
+            @if (
+                formulario.controls.id_mencion.invalid &&
+                formulario.controls.id_mencion.touched
+            ) {
+                @if (formulario.controls.id_mencion.errors?.['required']) {
+                <div class="alert alert-danger mt-2" role="alert">
+                    Debes seleccionar una mención.
+                </div>
+                }
+            }
+            </div>
+        </div>
+        </div>
+ 
+
 
     <!-- id_rol -->
     <div class="id-rol">
