@@ -20,6 +20,7 @@
                 <th scope="col">Nombre del Programa</th>
                 <th scope="col">Grado Académico</th>
                 <th scope="col">Menciones</th>
+                 
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -33,6 +34,7 @@
                     <td> @for (mencion of programa.menciones; track mencion.id) 
                       { <span class="badge bg-primary me-1 mb-1 ml-1"> {{ mencion.mencion }} </span> } 
                     </td>
+                     
                     <td>
                         <button
                             type="button" class="btn btn-warning"

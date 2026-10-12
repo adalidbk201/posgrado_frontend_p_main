@@ -22,7 +22,7 @@
                 <!-- <th scope="col">ID</th> -->
                 <th scope="col">Estado</th>
                 <th scope="col">Nombre Sala</th>
-                <!-- <th scope="col">Nombre Nivel</th> -->
+                <th scope="col">Niveles</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -33,7 +33,10 @@
                     <!-- <td>{{ sala.id }}</td> -->
                     <td>{{ sala.estado }}</td>
                     <td>{{ sala.nombre_sala }}</td>
-                    <!-- <td> {{ sala.niveles }}</td> -->
+                    <td> @for (nivel of sala.niveles; track nivel.id) 
+                      { <span class="badge bg-primary me-1 mb-1 ml-1"> {{ nivel.nombre_nivel }} </span> } 
+                    </td>
+
                     <td>
                         <button
                             type="button" class="btn btn-warning"

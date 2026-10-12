@@ -1,4 +1,5 @@
 // definir y tipar los datos recibidos por el backend
+import { PersonaTitulado } from "../../titulados/models/titulado.interface";
 export interface Persona{
     usuario_id:string,
     usuario:string,
@@ -14,6 +15,6 @@ export interface Persona{
     genero:string,
     expedido:string,
     celular:string,
-    titulado:string,
+    titulado:PersonaTitulado,
 
 } 

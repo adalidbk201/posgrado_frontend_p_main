@@ -19,11 +19,13 @@
             <tr >
                 <th scope="col">#</th>
                 <!-- <th scope="col">ID</th> -->
-                <th scope="col">Estado</th>
+                <!-- <th scope="col">Estado</th> -->
                 <th scope="col">Nro Documento</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Paterno</th>
                 <th scope="col">Materno</th>
+                <th scope="col">Grado</th>
+               
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -32,11 +34,13 @@
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <!-- <td>{{ persona.id }}</td> -->
-                    <td>{{ persona.estado }}</td>
+                    <!-- <td>{{ persona.estado }}</td> -->
                     <td>{{ persona.nro_documento }}</td>
                     <td>{{ persona.nombres }}</td>
                     <td>{{ persona.primer_apellido }}</td>
                     <td>{{ persona.segundo_apellido }}</td>
+                    <td>{{ persona.titulado.grado.grado_academico}}</td>
+                     
                     <td>
                         <button
                             type="button" class="btn btn-warning"

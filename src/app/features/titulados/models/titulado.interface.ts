@@ -15,3 +15,23 @@ export interface Titulado{
     programa:string,
 
 };
+
+export interface PersonaTitulado{
+    id: string,
+    fecha_titulacion: null,
+    grado_posgraduante: "",
+    serie: string,
+    nro_titulo: string,
+    mencion: {
+    id: number,
+    mencion: string
+    },
+    programa: {
+    id: string,
+    nombre_programa: string
+    },
+    grado: {
+    id: number,
+    grado_academico: string,
+    }
+}

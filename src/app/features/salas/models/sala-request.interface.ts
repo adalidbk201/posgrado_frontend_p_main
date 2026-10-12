@@ -1,13 +1,13 @@
-export interface SalaRequest  {
+export interface NivelSalaRequest {
+  numero_nivel: number;
+  nombre_nivel: string;
+  filas: number;
+  columnas: number;
+}
+
+export interface SalaRequest {
   nombre_sala: string;
-  niveles:[
-    {
-      numero_nivel: number | null;
-      nombre_nivel: string;
-      filas:number | null;
-      columnas:number | null;
-    }
-  ]
+  niveles: NivelSalaRequest[];
 }
 
 export interface SalaEditarRequest {

@@ -1,5 +1,6 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   ReactiveFormsModule,
   Validators,
@@ -20,10 +21,43 @@ export class SalaForm {
     readonly guardar = output<SalaRequest>();
   
     private readonly fb = inject(FormBuilder);
-    private readonly personasService = inject(SalasService);
+     
    
 
   // crear formulario con dato nombre_sala
+   // Crea los controles correspondientes a un nivel.
+  private crearNivelForm() {
+    return this.fb.nonNullable.group({
+      numero_nivel: this.fb.control<number | null>(null, [
+        Validators.required,
+        Validators.min(1),
+        Validators.pattern(/^[1-9]\d*$/),
+      ]),
+
+      nombre_nivel: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(150),
+        ],
+      ],
+
+      filas: this.fb.control<number | null>(null, [
+        Validators.required,
+        Validators.min(1),
+        Validators.pattern(/^[1-9]\d*$/),
+      ]),
+
+      columnas: this.fb.control<number | null>(null, [
+        Validators.required,
+        Validators.min(1),
+        Validators.pattern(/^[1-9]\d*$/),
+      ]),
+    });
+  }
+
+  // El formulario comienza con un nivel.
   readonly formulario = this.fb.nonNullable.group({
     nombre_sala: [
       '',
@@ -33,53 +67,53 @@ export class SalaForm {
         Validators.maxLength(150),
       ],
     ],
-    numero_nivel: this.fb.control<number | null>(null, [
-      Validators.required,
-      Validators.min(1),
-    ]),
-    nombre_nivel: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(150),
-      ],
-    ],
-    filas: this.fb.control<number | null>(null, [
-      Validators.required,
-      Validators.min(1),
-    ]),
-    columnas: this.fb.control<number | null>(null, [
-      Validators.required,
-      Validators.min(1),
-    ]),
 
+    niveles: this.fb.array([this.crearNivelForm()]),
   });
+
+
+  // Acceso directo al FormArray de niveles.
+ get niveles() {
+  return this.formulario.controls.niveles;
+}
+
+  // Agrega otro nivel al formulario.
+  agregarNivel(): void {
+    this.niveles.push(this.crearNivelForm());
+  }
+
+  // Elimina un nivel sin permitir que la sala se quede sin ninguno.
+  eliminarNivel(indice: number): void {
+    if (this.niveles.length > 1) {
+      this.niveles.removeAt(indice);
+    }
+  }
+
+
 
   constructor() {
     
   }
 
-   enviarFormulario(): void {
-      if (this.formulario.invalid || this.formulario.pending) {
-        this.formulario.markAllAsTouched();
-        return;
-      }
-  
-      const v = this.formulario.getRawValue();
-  
-      const datos: SalaRequest = {
-        nombre_sala: v.nombre_sala,
-        niveles: [
-          {
-            numero_nivel: v.numero_nivel,
-            nombre_nivel: v.nombre_nivel,
-            filas: v.filas,
-            columnas: v.columnas,
-          }
-        ]
-      };
-  
-      this.guardar.emit(datos);
+  enviarFormulario(): void {
+    if (this.formulario.invalid || this.formulario.pending) {
+      this.formulario.markAllAsTouched();
+      return;
     }
+
+    const v = this.formulario.getRawValue();
+
+    const datos: SalaRequest = {
+      nombre_sala: v.nombre_sala.trim(),
+
+      niveles: v.niveles.map((nivel) => ({
+        numero_nivel: Number(nivel.numero_nivel),
+        nombre_nivel: nivel.nombre_nivel.trim(),
+        filas: Number(nivel.filas),
+        columnas: Number(nivel.columnas),
+      })),
+    };
+
+    this.guardar.emit(datos);
+  }
 }
