@@ -130,6 +130,7 @@ export class PersonaEditarForm {
 
   
     constructor() {
+      this.cargarProgramas(1);
       effect(() => {
         const p = this.persona();
         if (!p) return;
