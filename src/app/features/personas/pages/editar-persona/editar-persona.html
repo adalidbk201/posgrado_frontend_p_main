@@ -1,24 +1,26 @@
 <section class="editar-persona">
 
   <div class="encabezado">
-     <h1>Editar persona</h1>
-
+    <h1>Editar persona:</h1>
+  
     <p>
-      Editar persona en el sistema.
+      Editar sala en el sistema.
     </p>
   </div>
 
     @if (persona()) {
 
-      
+      <app-persona-editar-form
+        [persona]="persona()"
+        (guardar)="actualizarDatosPersona($event)"
+      />
 
     } @else {
 
-      <p>Cargando sala...</p>
+      <p>Cargando persona...</p>
 
     }
 
 </section>
-
 
 

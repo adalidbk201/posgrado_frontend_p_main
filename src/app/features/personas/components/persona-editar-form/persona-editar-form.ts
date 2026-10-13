@@ -1,20 +1,11 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { Persona } from '../../models/persona.interface';
+import { ActualizarPerfil, ActualizarPersona } from '../../models/persona-request.interface';
+import { Programa } from '../../../programas/models/programa.interface';
+import { ProgramasService } from '../../../programas/services/programas.service';
 
-// Lo que realmente se puede editar con los datos que devuelve getPersonaPorId.
-// Si más adelante el backend expone más campos para edición, se amplía aquí.
-export interface PersonaEditarRequest {
-  pais_documento: string;
-  nro_documento: string;
-  nombres: string;
-  primer_apellido: string;
-  segundo_apellido: string;
-  celular: string;
-  correo_electronico: string;
-}
-
+ 
 @Component({
   selector: 'app-persona-editar-form',
   imports: [ReactiveFormsModule],
@@ -22,44 +13,168 @@ export interface PersonaEditarRequest {
   styleUrl: './persona-editar-form.scss',
 })
 export class PersonaEditarForm { 
-  readonly persona = input<Persona | null>(null);
-  readonly guardar = output<PersonaEditarRequest>();
+   readonly persona = input<Persona | null>(null);
+    
+    readonly guardar = output<ActualizarPersona>();
 
-  private readonly fb = inject(FormBuilder);
+     private readonly programasService = inject(ProgramasService)
+  
+    private readonly fb = inject(FormBuilder);
+  
 
-  readonly formulario = this.fb.nonNullable.group({
-    pais_documento: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-    nro_documento: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    // Buscar menciones del programa 
+    
+    // ID del programa seleccionado
+    readonly programaSeleccionadoId = signal<string | null>(null);
+
+    // Obtener únicamente las menciones del programa seleccionado
+    readonly mencionesDelPrograma = computed(() => {
+      const idPrograma = this.programaSeleccionadoId();
+
+      if (!idPrograma) {
+        return [];
+      }
+
+      const programa = this.programas().find(
+        p => p.id === idPrograma
+      );
+
+      return programa?.menciones ?? [];
+    });
+
+    // Actualizar las menciones cuando cambia el programa
+    alCambiarPrograma(): void {
+      const idPrograma = this.formulario.controls.id_programa.value;
+
+      this.programaSeleccionadoId.set(idPrograma || null);
+
+      // Limpiar la mención anterior para evitar enviar una
+      // mención que pertenezca a otro programa
+      this.formulario.controls.id_mencion.reset(null);
+    }
+
+
+
+
+
+    readonly formulario = this.fb.nonNullable.group({
+   
+    nro_documento: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(30)],
+     
+    ],
     nombres: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    
     primer_apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     segundo_apellido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     celular: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+   
+    observacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
     correo_electronico: ['', [Validators.required, Validators.email]],
+    fecha_nacimiento: ['', [Validators.required]],
+
+     id_grado: this.fb.control<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+
+    id_mencion: this.fb.control<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+    
+    id_programa:['',[Validators.required]],
+      
+    });
+
+
+
+    
+   // =========================
+  // SELECTOR DE Programa
+  // =========================
+  readonly programas = signal<Programa[]>([]);
+  readonly paginaPrograma = signal(1);
+  readonly busquedaPrograma = signal('');
+  readonly cargandoMasProgramas = signal(false);
+
+  readonly programasFiltradas = computed(() => {
+    const termino = this.busquedaPrograma().trim().toLowerCase();
+    if (!termino) return this.programas();
+    return this.programas().filter(p => `${p.nombre_programa}`.toLowerCase().includes(termino));
   });
 
-  constructor() {
-    effect(() => {
-      const p = this.persona();
-      if (!p) return;
-
-      this.formulario.patchValue({
-        pais_documento: p.expedido,
-        nro_documento: p.nro_documento,
-        nombres: p.nombres,
-        primer_apellido: p.primer_apellido,
-        segundo_apellido: p.segundo_apellido,
-        celular: p.celular,
-        correo_electronico: p.correo_electronico,
-      });
+  private cargarProgramas(pagina: number): void {
+    this.cargandoMasProgramas.set(true);
+    this.programasService.getProgramas(pagina, 100).subscribe({
+      next: (respuesta) => {
+        const nuevas = respuesta.Data.filas;
+        this.programas.update(actual => {
+          const idsExistentes = new Set(actual.map(m => m.id));
+          return [...actual, ...nuevas.filter(m => !idsExistentes.has(m.id))];
+        });
+        this.paginaPrograma.set(pagina);
+        this.cargandoMasProgramas.set(false);
+      },
+      error: () => this.cargandoMasProgramas.set(false),
     });
   }
 
-  enviarFormulario(): void {
+  cargarMasProgramas(): void {
+    this.cargarProgramas(this.paginaPrograma() + 1);
+  }
+
+
+
+
+  
+    constructor() {
+      effect(() => {
+        const p = this.persona();
+        if (!p) return;
+  
+        this.formulario.patchValue({
+           nro_documento:p.nro_documento,
+           nombres:p.nombres,
+           primer_apellido:p.primer_apellido,
+           segundo_apellido:p.segundo_apellido,
+           celular:p.celular,
+           observacion:"",
+           fecha_nacimiento:"",
+           correo_electronico:p.correo_electronico,
+           id_grado:null,
+           id_programa:"",
+           id_mencion:null,
+
+        });
+      });
+    }
+  
+    enviarFormulario(): void {
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
     }
 
-    this.guardar.emit(this.formulario.getRawValue());
+    const valores = this.formulario.getRawValue();
+
+    const datos: ActualizarPersona = {
+      persona: {
+        nro_documento: valores.nro_documento,
+        nombres: valores.nombres,
+        primer_apellido: valores.primer_apellido,
+        segundo_apellido: valores.segundo_apellido,
+        celular: valores.celular,
+        observacion: valores.observacion,
+        fecha_nacimiento: valores.fecha_nacimiento,
+        correo_electronico: valores.correo_electronico,
+      },
+      id_grado: valores.id_grado!,
+      id_programa: valores.id_programa,
+      id_mencion: valores.id_mencion!,
+    };
+
+    this.guardar.emit(datos);
   }
 }

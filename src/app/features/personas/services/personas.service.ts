@@ -5,7 +5,7 @@ import type { Persona } from '../models/persona.interface';
 import type { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
 import type { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { Observable } from 'rxjs';
-import { PersonaRequest } from '../models/persona-request.interface';
+import { ActualizarPerfil, ActualizarPersona, PersonaRequest } from '../models/persona-request.interface';
 @Injectable({
     // ejecute desde cualquier parte de la aplicacion
     providedIn: 'root',
@@ -37,7 +37,7 @@ export class PersonasService {
         return this.http.get<RespuestaApi<PaginacionResponse<Persona>>>(`${this.apiUrl}?q=${encodeURIComponent(termino)}`);
     }
 
-    // =========================
+      // =========================
       // GET - POR ID
       getPersonaPorId(id: string): Observable<RespuestaApi<Persona>> {
         return this.http.get<RespuestaApi<Persona>>(`${this.apiUrl}${id}/`);
@@ -51,14 +51,20 @@ export class PersonasService {
 
     // =========================
       // PUT - ACTUALIZAR
-      actualizarPersona(id: string,datos: PersonaRequest): Observable<Persona> {
+      actualizarPersona(id: string,datos: ActualizarPersona): Observable<Persona> {
         return this.http.put<Persona>(`${this.apiUrl}${id}/`,datos);
       }
     
     // =========================
       // PATCH - ACTUALIZAR PARCIALMENTE
-      actualizarParcialPersona(id: string,datos: Partial<PersonaRequest>): Observable<Persona> {
+      actualizarParcialPersona(id: string,datos: Partial<ActualizarPersona>): Observable<Persona> {
         return this.http.patch<Persona>(`${this.apiUrl}${id}/`,datos);
+      }
+
+      // =========================
+      // PATCH - ACTUALIZAR PERFIL 
+      actualizarParcialPerfil(id: string,datos: Partial<ActualizarPerfil>): Observable<Persona> {
+        return this.http.patch<Persona>(`${this.apiUrl}actualizar-perfil/`,datos);
       }
 
     // =========================

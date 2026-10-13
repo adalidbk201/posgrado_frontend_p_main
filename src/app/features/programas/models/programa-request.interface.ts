@@ -3,3 +3,4 @@ export interface ProgramaRequest{
     grado_academico:number | null,
     menciones:number[] | null
 }
+
