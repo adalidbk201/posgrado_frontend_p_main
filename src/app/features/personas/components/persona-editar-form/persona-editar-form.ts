@@ -46,12 +46,34 @@ export class PersonaEditarForm {
     alCambiarPrograma(): void {
       const idPrograma = this.formulario.controls.id_programa.value;
 
+      // Actualizar el programa seleccionado
       this.programaSeleccionadoId.set(idPrograma || null);
+
+      // Buscar el programa seleccionado
+      const programa = this.programas().find(
+        p => p.id === idPrograma
+      );
+
+      // Actualizar el grado académico asociado al programa
+      this.formulario.controls.id_grado.setValue(
+        programa?.grado?.id ?? null
+      );
 
       // Limpiar la mención anterior para evitar enviar una
       // mención que pertenezca a otro programa
       this.formulario.controls.id_mencion.reset(null);
     }
+
+    // obtener nombre_grado
+    readonly nombreGradoSeleccionado = computed(() => {
+    const idPrograma = this.programaSeleccionadoId();
+
+    const programa = this.programas().find(
+      p => p.id === idPrograma
+    );
+
+    return programa?.grado?.grado_academico ?? '';
+  });
 
 
 
@@ -131,10 +153,20 @@ export class PersonaEditarForm {
   
     constructor() {
       this.cargarProgramas(1);
+      
       effect(() => {
         const p = this.persona();
         if (!p) return;
-  
+        
+        // obtener la mencion 
+        const titulado = p.titulado;
+        const idPrograma = titulado?.programa?.id ?? '';
+        const idMencion = titulado?.mencion?.id ?? null;
+        const idGrado = titulado?.grado?.id ?? null;
+        // Actualizar la señal que determina las menciones visibles
+        this.programaSeleccionadoId.set(idPrograma || null);
+
+        
         this.formulario.patchValue({
            nro_documento:p.nro_documento,
            nombres:p.nombres,
@@ -144,9 +176,9 @@ export class PersonaEditarForm {
            observacion:"",
            fecha_nacimiento:"",
            correo_electronico:p.correo_electronico,
-           id_grado:null,
-           id_programa:"",
-           id_mencion:null,
+           id_grado:p.titulado.grado.id,
+           id_programa:p.titulado.programa.id,
+           id_mencion:p.titulado.mencion.id,
 
         });
       });

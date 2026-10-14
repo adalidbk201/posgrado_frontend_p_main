@@ -49,6 +49,13 @@ export const routes: Routes = [
                 path:'usuarios/editar/:id',
                 loadComponent:()=>import('./features/usuarios/pages/editar-usuario/editar-usuario').then((m)=>m.EditarUsuario),
             },
+            // Activar usuario
+            {
+                path: 'usuarios/activar/:usuario',
+                loadComponent: () =>
+                    import('./features/usuarios/pages/activar-usuario/activar-usuario')
+                        .then((m) => m.ActivarUsuario),
+            },
 
 
 

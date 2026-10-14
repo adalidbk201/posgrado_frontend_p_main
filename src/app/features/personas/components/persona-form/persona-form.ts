@@ -184,6 +184,19 @@ export class PersonaForm {
     });
   }
 
+
+
+  // Normalizar nombres y apellidos antes de enviarlos al backend
+  private normalizarNombre(valor: string): string {
+    return valor
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toLocaleLowerCase('es')
+      .replace(/(^|[\s'-])(\p{L})/gu, (_, separador, letra) =>
+        separador + letra.toLocaleUpperCase('es')
+      );
+  }
+
   enviarFormulario(): void {
     if (this.formulario.invalid || this.formulario.pending) {
       this.formulario.markAllAsTouched();
@@ -196,9 +209,10 @@ export class PersonaForm {
       persona: {
         pais_documento: v.pais_documento,
         nro_documento: v.nro_documento,
-        nombres: v.nombres,
-        primer_apellido: v.primer_apellido,
-        segundo_apellido: v.segundo_apellido,
+         // Normalizar nombres y apellidos
+        nombres: this.normalizarNombre(v.nombres),
+        primer_apellido: this.normalizarNombre(v.primer_apellido),
+        segundo_apellido: this.normalizarNombre(v.segundo_apellido),
         expedido:v.expedido,
         genero:v.genero,
         celular: v.celular,

@@ -10,3 +10,9 @@ export interface Rol{
     usuario_creacion:string,
     usuario_modificacion:string | null,
 }
+
+export interface RolPersona{
+    id:number,
+    rol:string,
+    nombre:string,
+}

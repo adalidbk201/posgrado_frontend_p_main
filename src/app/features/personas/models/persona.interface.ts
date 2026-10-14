@@ -1,12 +1,13 @@
 // definir y tipar los datos recibidos por el backend
 import { PersonaTitulado } from "../../titulados/models/titulado.interface";
+import { RolPersona } from "../../roles/models/rol.interface";
 export interface Persona{
     usuario_id:string,
     usuario:string,
     correo_electronico:string,
     estado:string,
     fecha_creacion:string,
-    roles:string,
+    roles:[RolPersona],
     id:string,
     nombres:string,
     primer_apellido:string,

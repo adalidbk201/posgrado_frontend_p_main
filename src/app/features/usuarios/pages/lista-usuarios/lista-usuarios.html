@@ -1,6 +1,6 @@
-<section class="lista-usuario">
-    <h1>Usuarios : {{ listUsuarios().length}}</h1>
-    <p>Total de registros: {{ totalUsuarios() }}</p>
+<section class="lista-persona">
+    <h1>Usuarios : {{ listPersonas().length}}</h1>
+    <p>Total de registros: {{ totalPersonas() }}</p>
     
     <input type="text"
     class="form-control w-25"
@@ -8,64 +8,63 @@
     placeholder="Buscar..."
     (input)="ejecutarBusqueda(txtBuscar.value)">
 
-    <button type="button" class="btn btn-primary" (click)="crearUsuario()">
-        + Nuevo usuario
-    </button>
+      <!-- <button type="button" class="btn btn-primary" (click)="crearPersona()">
+        + Nueva Persona
+    </button> -->
+
+    
 
     <table class="table">
-        <thead>
-            <tr class="bg-info">
+        <thead class="thead-dark">
+            <tr >
                 <th scope="col">#</th>
-                 
-                <th scope="col">Nombre Sala</th>
-                <th scope="col">Correo Electronico</th>
-          
-                 
-                <th scope="col">Fecha Creación</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Usuario</th>
+ 
+                <th scope="col">rol</th>
                 <th scope="col">Acciones</th>
-                 
             </tr>
         </thead>
         <tbody>
-             @for (usuario of listUsuarios(); track usuario.fecha_modificacion; let idx= $index) {
+             @for (persona of listPersonas(); track persona.fecha_creacion; let idx= $index) {
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
-                    <!-- <td>{{ sala.id }}</td> -->
-                 
-                    <td>{{ usuario.nombre_usuario }}</td>
-                    <td>{{ usuario.correo_electronico }}</td>
-                  
-                 
-                    <td>{{ usuario.fecha_creacion }}</td>
-
+                    <td> {{persona.estado}}</td>
+                    <td>{{persona.usuario}} </td>
+          
+                    <td>{{ persona.roles[0].rol}}</td>
+                     
                     <td>
                         <button
                             type="button" class="btn btn-warning"
-                            (click)="editarUsuario(usuario.id)"
-                                                >
+                            (click)="editarPersona(persona.id)"
+                        >
                             Editar
                         </button>
-
-                        <button
+                        @if (persona.estado=="PENDIENTE") {
+                          <button type="button"
+                          class="btn btn-success"
+                           (click)="activarUsuario(persona.usuario)">Activar</button>
+                        }
+                        <!-- <button
                         type="button"
                         class="btn btn-danger "
                         data-toggle="modal"
                         data-target="#modalEliminar"
-                        (click)="seleccionarUsuarioEliminar(usuario.id)"
-                        >
+                        (click)="seleccionarPersonaEliminar(persona.id)"
+                      >
                         Eliminar
-                        </button>
-
+                      </button> -->
+                      
                     </td>
-
                 </tr>
             }
         </tbody>
         
        
     </table>
-
 </section>
+
 
 
 <!-- Modal para confirmar eliminación -->
@@ -109,7 +108,7 @@
       <div class="modal-body">
 
         <p class="mb-2">
-          ¿Está seguro de eliminar este usuario?
+          ¿Está seguro de eliminar esta persona?
         </p>
 
         <p class="text-muted mb-0">
