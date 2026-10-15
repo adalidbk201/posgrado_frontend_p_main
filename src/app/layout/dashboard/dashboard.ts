@@ -70,7 +70,7 @@ export class Dashboard {
         { label: 'Menciones', ruta: '/dashboard/menciones', icono: '📚' },
         { label: 'Programas', ruta: '/dashboard/programas', icono: '📘' },
       ],
-      collapse:'show',
+      collapse:'',
     },
     {
       id: 'salas',

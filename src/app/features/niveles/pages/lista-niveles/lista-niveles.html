@@ -1,6 +1,5 @@
- <section class="lista-nivel">
-    <h1>Niveles : {{ listNiveles().length}}</h1>
-    <p>Total de registros: {{ totalNiveles() }}</p>
+<section class="lista-nivel">
+    <h1>Niveles</h1>
     
     <input type="text"
     class="form-control w-25"
@@ -8,59 +7,62 @@
     placeholder="Buscar..."
     (input)="ejecutarBusqueda(txtBuscar.value)">
 
-      <button type="button" class="btn btn-primary" (click)="crearNivel()">
-        + Nuevo Nivel
+    <button type="button" class="btn btn-primary" (click)="crearSala()">
+        + Nueva sala
     </button>
 
-    
-
-    <table class="table">
+    <table id="example" class="table table-striped">
         <thead class="thead-dark">
-            <tr >
+            <tr>
                 <th scope="col">#</th>
-       
-                <th scope="col">Nombre Nivel</th>
+                <th scope="col">Sala</th>
+                <th scope="col">Nivel</th>
                 <th scope="col">Filas</th>
                 <th scope="col">Columnas</th>
-               
-                <th scope="col">Acciones</th>
+                <!-- <th scope="col">Butacas</th> -->
+                <!-- <th scope="col">Acciones</th> -->
             </tr>
         </thead>
         <tbody>
-             @for (nivel of listNiveles(); track nivel.id; let idx= $index) {
+        
+             @for (sala of listSalas(); track sala.id; let idx= $index ) {
+              @for (nivel of sala.niveles; track nivel.id;) 
+                { 
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
-                    
-                    <td>{{ nivel.nombre_nivel }}</td>
-                    <td>{{ nivel.filas }}</td>
+                    <td>{{ sala.nombre_sala }}</td>
+                    <td>{{ nivel.nombre_nivel}}</td>
+                    <td>{{ nivel.filas}}</td>
                     <td>{{ nivel.columnas }}</td>
-                   
-                    <td>
+                    <!-- <td>{{ nivel.filas*nivel.columnas}}</td> -->
+                    <!-- <td> <span class="badge bg-info me-1 mb-1 ml-1"> {{ nivel.nombre_nivel }} </span>  
+                    </td> -->
+
+                    <!-- <td>
                         <button
                             type="button" class="btn btn-warning"
-                            (click)="editarNivel(nivel.id)"
+                            (click)="editarSala(sala.id,sala.nombre_sala)"
                         >
                             Editar
                         </button>
-
                         <button
                         type="button"
                         class="btn btn-danger "
                         data-toggle="modal"
                         data-target="#modalEliminar"
-                        (click)="seleccionarNivelEliminar(nivel.id)"
+                        (click)="seleccionarSalaEliminar(sala.id)"
                       >
                         Eliminar
                       </button>
-                      
-                    </td>
+                    </td> -->
                 </tr>
-            }
+              } }
         </tbody>
         
        
     </table>
 </section>
+
 
 
 
@@ -105,7 +107,7 @@
       <div class="modal-body">
 
         <p class="mb-2">
-          ¿Está seguro de eliminar este nivel?
+          ¿Está seguro de eliminar esta sala?
         </p>
 
         <p class="text-muted mb-0">
@@ -140,3 +142,5 @@
 
   </div>
 </div>
+
+ 

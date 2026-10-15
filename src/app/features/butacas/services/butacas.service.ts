@@ -45,9 +45,9 @@ export class ButacasService {
     }
 
     // =========================
-    // POST - CREAR
-    crearPersona(datos: ButacaRequest): Observable<Butaca> {
-    return this.http.post<Butaca>(this.apiUrl, datos);
+    // POST - CREAR BUTACA
+    crearButaca(idNivel: string,datos: ButacaRequest): Observable<Butaca> {
+    return this.http.post<Butaca>(this.apiUrl,datos,{params: {id_nivel: idNivel}});
     }
 
     // =========================
