@@ -36,7 +36,14 @@ export class ListaPersonas {
   // texto del buscador
   readonly terminoBuscar = signal('');
 
+  // Método para obtener iniciales del avatar
+  getInitials(nombres: string, apellido: string): string {
+    const nombre = nombres?.charAt(0)?.toUpperCase() || '';
+    const apell = apellido?.charAt(0)?.toUpperCase() || '';
+    return `${nombre}${apell}`;
+  }
 
+  
   // lista final que se muestra en la tabla, filtrada en el cliente
   // computed crea un signal derivado - resultado depende de terminoBuscar y personas
   readonly listPersonas = computed(() => {

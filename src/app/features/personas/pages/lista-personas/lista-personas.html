@@ -1,72 +1,166 @@
-<section class="lista-persona">
-    <h1>Personas : {{ listPersonas().length}}</h1>
-    <p>Total de registros: {{ totalPersonas() }}</p>
+<section class="personas-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Gestión de Personas
+      </h1>
+      <p class="page-subtitle">
+        Administra los registros de personas del sistema
+      </p>
+    </div>
     
-    <input type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
-
-      <button type="button" class="btn btn-primary" (click)="crearPersona()">
-        + Nueva Persona
+    <button type="button" class="btn-primary" (click)="crearPersona()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva Persona
     </button>
+  </div>
 
-    
+  <!-- BARRA DE ACCIONES -->
+  <div class="action-bar">
+    <div class="search-container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por nombre, documento o apellido..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar personas">
+      @if (txtBuscar.value) {
+        <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr >
-                <th scope="col">#</th>
-                <!-- <th scope="col">ID</th> -->
-                <!-- <th scope="col">Estado</th> -->
-                <th scope="col">Nro Documento</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Paterno</th>
-                <th scope="col">Materno</th>
-                <th scope="col">Grado</th>
-                <th scope="col">Acciones</th>
-            </tr>
+    <div class="results-info">
+      <span class="results-count">
+        {{ listPersonas().length }} {{ listPersonas().length === 1 ? 'registro' : 'registros' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA DE PERSONAS -->
+  <div class="table-container">
+    @if (listPersonas().length > 0) {
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-number">#</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Nombre Completo</th>
+            <th scope="col">Grado Académico</th>
+            <th scope="col" class="col-actions">Acciones</th>
+          </tr>
         </thead>
         <tbody>
-             @for (persona of listPersonas(); track persona.fecha_creacion; let idx= $index) {
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
-                    <!-- <td>{{ persona.id }}</td> -->
-                    <!-- <td>{{ persona.estado }}</td> -->
-                    <td>{{ persona.nro_documento }}</td>
-                    <td>{{ persona.nombres }}</td>
-                    <td>{{ persona.primer_apellido }}</td>
-                    <td>{{ persona.segundo_apellido }}</td>
-                    <td>{{ persona.titulado.grado.grado_academico}}</td>
-                     
-                    <td>
-                        <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarPersona(persona.id)"
-                        >
-                            Editar
-                        </button>
-
-                        <!-- <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarPersonaEliminar(persona.id)"
-                      >
-                        Eliminar
-                      </button> -->
-                      
-                    </td>
-                </tr>
-            }
+          @for (persona of listPersonas(); track persona.fecha_creacion; let idx = $index) {
+            <tr class="table-row">
+              <td class="col-number">
+                <span class="row-number">{{ idx + 1 }}</span>
+              </td>
+              <td>
+                <div class="cell-document">
+                  <span class="document-number">{{ persona.nro_documento }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="cell-person">
+                  <div class="person-avatar">
+                    {{ getInitials(persona.nombres, persona.primer_apellido) }}
+                  </div>
+                  <div class="person-info">
+                    <span class="person-name">
+                      {{ persona.nombres }} {{ persona.primer_apellido }} {{ persona.segundo_apellido }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                @if (persona.titulado?.grado?.grado_academico) {
+                  <span class="badge badge-primary">
+                    {{ persona.titulado.grado.grado_academico }}
+                  </span>
+                } @else {
+                  <span class="badge badge-muted">Sin grado</span>
+                }
+              </td>
+              <td class="col-actions">
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-icon btn-edit"
+                    (click)="editarPersona(persona.id)"
+                    aria-label="Editar persona"
+                    title="Editar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  
+                  <!-- Botón Eliminar (comentado pero listo para usar) -->
+                  <!--
+                  <button
+                    type="button"
+                    class="btn-icon btn-delete"
+                    (click)="seleccionarPersonaEliminar(persona.id)"
+                    aria-label="Eliminar persona"
+                    title="Eliminar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                  -->
+                </div>
+              </td>
+            </tr>
+          }
         </tbody>
-        
-       
-    </table>
-</section>
+      </table>
+    } @else {
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <h3 class="empty-title">No hay personas registradas</h3>
+        <p class="empty-description">
+          Comienza agregando tu primera persona al sistema
+        </p>
+        <button type="button" class="btn-primary" (click)="crearPersona()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Persona
+        </button>
+      </div>
+    }
+  </div>
 
+</section>
 
 
 <!-- Modal para confirmar eliminación -->
