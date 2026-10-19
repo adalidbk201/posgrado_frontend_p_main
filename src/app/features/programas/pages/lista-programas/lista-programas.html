@@ -1,65 +1,165 @@
-<section class="lista-programa">
-    <h1>Programas : {{ listProgramas().length}}</h1>
-    <p>Total de registros: {{ totalProgramas() }}</p>
+<section class="programas-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        Programas Académicos
+      </h1>
+      <p class="page-subtitle">
+        Administra los programas de posgrado y sus menciones
+      </p>
+    </div>
     
-    <input type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
-
-    <button type="button" class="btn btn-primary" (click)="crearPrograma()">
-        + Nuevo Programa
+    <button type="button" class="btn-primary" (click)="crearPrograma()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nuevo Programa
     </button>
+  </div>
 
+  <!-- BARRA DE ACCIONES -->
+  <div class="action-bar">
+    <div class="search-container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por nombre de programa, grado o mención..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar programas">
+      @if (txtBuscar.value) {
+        <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre del Programa</th>
-                <th scope="col">Grado Académico</th>
-                <th scope="col">Menciones</th>
-                 
-                <th scope="col">Acciones</th>
-            </tr>
+    <div class="results-info">
+      <span class="results-count">
+        {{ listProgramas().length }} {{ listProgramas().length === 1 ? 'programa' : 'programas' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA DE PROGRAMAS -->
+  <div class="table-container">
+    @if (listProgramas().length > 0) {
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-number">#</th>
+            <th scope="col">Nombre del Programa</th>
+            <th scope="col">Grado Académico</th>
+            <th scope="col">Menciones</th>
+            <th scope="col" class="col-actions">Acciones</th>
+          </tr>
         </thead>
         <tbody>
-             @for (programa of listProgramas(); track programa.id; let idx= $index) {
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
-
-                    <td>{{ programa.nombre_programa }}</td>
-                    <td>{{ programa.grado.grado_academico }}</td>
-                    <td> @for (mencion of programa.menciones; track mencion.id) 
-                      { <span class="badge bg-info me-1 mb-1 ml-1"> {{ mencion.mencion }} </span> } 
-                    </td>
-                     
-                    <td>
-                        <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarPrograma(programa.id)"
-                        >
-                            Editar
-                        </button>
-
-                        <!-- <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarProgramaEliminar(programa.id)"
-                      >
-                        Eliminar
-                      </button> -->
-                    </td>
-                    
-                </tr>
-            }
+          @for (programa of listProgramas(); track programa.id; let idx = $index) {
+            <tr class="table-row">
+              <td class="col-number">
+                <span class="row-number">{{ idx + 1 }}</span>
+              </td>
+              <td>
+                <div class="cell-programa">
+                  <div class="programa-icon" [class]="'programa-icon-' + getGradoClass(programa.grado?.grado_academico)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                  </div>
+                  <div class="programa-info">
+                    <span class="programa-name">{{ programa.nombre_programa }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="grado-badge" [class]="'grado-' + getGradoClass(programa.grado?.grado_academico)">
+                  {{ programa.grado?.grado_academico }}
+                </span>
+              </td>
+              <td>
+                <div class="cell-menciones">
+                  @if (programa.menciones && programa.menciones.length > 0) {
+                    <div class="menciones-list">
+                      @for (mencion of programa.menciones; track mencion.id) {
+                        <span class="mencion-badge" [class]="'mencion-type-' + getMencionType(mencion.mencion)" [title]="mencion.mencion">
+                          {{ mencion.mencion }}
+                        </span>
+                      }
+                    </div>
+                  } @else {
+                    <span class="mencion-empty">Sin menciones</span>
+                  }
+                </div>
+              </td>
+              <td class="col-actions">
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-icon btn-edit"
+                    (click)="editarPrograma(programa.id)"
+                    aria-label="Editar programa"
+                    title="Editar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+<!--                   
+                  <button
+                    type="button"
+                    class="btn-icon btn-delete"
+                    (click)="seleccionarProgramaEliminar(programa.id)"
+                    aria-label="Eliminar programa"
+                    title="Eliminar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button> -->
+                </div>
+              </td>
+            </tr>
+          }
         </tbody>
-        
-       
-    </table>
+      </table>
+    } @else {
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        <h3 class="empty-title">No hay programas registrados</h3>
+        <p class="empty-description">
+          Comienza agregando el primer programa académico del sistema
+        </p>
+        <button type="button" class="btn-primary" (click)="crearPrograma()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Programa
+        </button>
+      </div>
+    }
+  </div>
+
 </section>
 
 

@@ -15,6 +15,71 @@ export class ListaMenciones {
   // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
 
+  // Método para determinar si es mención general
+  isGeneralMencion(mencion: string): boolean {
+    return mencion?.toLowerCase().includes('general') || 
+           mencion?.toLowerCase().includes('única') ||
+           mencion?.toLowerCase().includes('unica');
+  }
+
+  // Método para obtener tipo de mención (para colores)
+  getMencionType(mencion: string): string {
+    const mencionLower = mencion?.toLowerCase() || '';
+    
+    if (mencionLower.includes('general') || mencionLower.includes('única')) {
+      return 'general';
+    }
+    if (mencionLower.includes('tecnología') || mencionLower.includes('digital') || 
+        mencionLower.includes('inteligencia') || mencionLower.includes('machine learning') ||
+        mencionLower.includes('data science') || mencionLower.includes('web')) {
+      return 'tech';
+    }
+    if (mencionLower.includes('gestión') || mencionLower.includes('administración') ||
+        mencionLower.includes('logística') || mencionLower.includes('negocios')) {
+      return 'business';
+    }
+    if (mencionLower.includes('ingeniería') || mencionLower.includes('sanitaria')) {
+      return 'engineering';
+    }
+    if (mencionLower.includes('docencia') || mencionLower.includes('educación') ||
+        mencionLower.includes('curricular')) {
+      return 'education';
+    }
+    if (mencionLower.includes('neuromarketing') || mencionLower.includes('marketing')) {
+      return 'marketing';
+    }
+    
+    return 'default';
+  }
+
+  // Método para obtener categoría descriptiva
+  getMencionCategory(mencion: string): string {
+    const mencionLower = mencion?.toLowerCase() || '';
+    
+    if (mencionLower.includes('tecnología') || mencionLower.includes('digital') || 
+        mencionLower.includes('inteligencia') || mencionLower.includes('machine learning') ||
+        mencionLower.includes('data science') || mencionLower.includes('web')) {
+      return 'Tecnología';
+    }
+    if (mencionLower.includes('gestión') || mencionLower.includes('administración') ||
+        mencionLower.includes('logística') || mencionLower.includes('negocios')) {
+      return 'Administración';
+    }
+    if (mencionLower.includes('ingeniería') || mencionLower.includes('sanitaria')) {
+      return 'Ingeniería';
+    }
+    if (mencionLower.includes('docencia') || mencionLower.includes('educación') ||
+        mencionLower.includes('curricular')) {
+      return 'Educación';
+    }
+    if (mencionLower.includes('neuromarketing') || mencionLower.includes('marketing')) {
+      return 'Marketing';
+    }
+    
+    return 'General';
+  }
+
+
   // =========================
   // Cargar y filtrar
   // =========================

@@ -17,6 +17,27 @@ export class ListaGrados {
   // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
 
+   // Método para obtener clase CSS según jerarquía
+  getJerarquiaClass(jerarquia: number): string {
+    if (jerarquia >= 5) return 'highest';
+    if (jerarquia >= 4) return 'high';
+    if (jerarquia >= 3) return 'medium';
+    if (jerarquia >= 2) return 'low';
+    return 'lowest';
+  }
+
+  // Método para obtener etiqueta descriptiva de jerarquía
+  getJerarquiaLabel(jerarquia: number): string {
+    const labels: { [key: number]: string } = {
+      5: 'Máximo',
+      4: 'Alto',
+      3: 'Medio',
+      2: 'Bajo',
+      1: 'Básico',
+    };
+    return labels[jerarquia] || 'N/A';
+  }
+
   // =========================
   // Cargar y filtrar
   // =========================

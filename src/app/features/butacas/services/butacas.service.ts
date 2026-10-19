@@ -26,11 +26,18 @@ export class ButacasService {
     }
 
     // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
-    getButacas(id_nivel:string, pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Butaca>>> {
-        return this.http.get<RespuestaApi<PaginacionResponse<Butaca>>>(
-        `${this.apiUrl}?id_nivel=${id_nivel}&pagina=${pagina}&limite=${limite}`
+  
+        getButacas(
+        id_nivel: string,
+        pagina = 1,
+        limite = 100
+        ): Observable<RespuestaApi<Butaca[]>> {
+        return this.http.get<RespuestaApi<Butaca[]>>(
+            `${this.apiUrl}?id_nivel=${encodeURIComponent(id_nivel)}&pagina=${pagina}&limite=${limite}`
+            + `&limite=${limite}`
         );
-    }
+        }
+
 
     //metodo para buscar personas por termino
     // AHORA

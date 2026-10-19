@@ -16,6 +16,61 @@ export class ListaProgramas {
   
     // inyectar Roter para navegacion entre paginas
     private readonly router = inject(Router);
+
+    // Método para obtener clase CSS según el grado académico
+  getGradoClass(grado: string): string {
+    const gradoUpper = grado?.toUpperCase() || '';
+    
+    if (gradoUpper.includes('POSDOCTORADO')) return 'posdoctorado';
+    if (gradoUpper.includes('DOCTORADO')) return 'doctorado';
+    if (gradoUpper.includes('MAESTRÍA') || gradoUpper.includes('MAESTRIA')) return 'maestria';
+    if (gradoUpper.includes('ESPECIALIZACIÓN') || gradoUpper.includes('ESPECIALIZACION')) return 'especializacion';
+    if (gradoUpper.includes('DIPLOMADO')) return 'diplomado';
+    
+    return 'default';
+  }
+
+  // Método para obtener tipo de mención (para colores)
+  getMencionType(mencion: string): string {
+    const mencionLower = mencion?.toLowerCase() || '';
+    
+    if (mencionLower.includes('general') || mencionLower.includes('única') || mencionLower.includes('unica')) {
+      return 'general';
+    }
+    if (mencionLower.includes('tecnología') || mencionLower.includes('digital') || 
+        mencionLower.includes('inteligencia') || mencionLower.includes('machine learning') ||
+        mencionLower.includes('data science') || mencionLower.includes('web') ||
+        mencionLower.includes('neuromarketing') || mencionLower.includes('analítica')) {
+      return 'tech';
+    }
+    if (mencionLower.includes('gestión') || mencionLower.includes('administración') ||
+        mencionLower.includes('logística') || mencionLower.includes('negocios') ||
+        mencionLower.includes('comercio') || mencionLower.includes('aduanera')) {
+      return 'business';
+    }
+    if (mencionLower.includes('ingeniería') || mencionLower.includes('sanitaria') ||
+        mencionLower.includes('hídricos') || mencionLower.includes('hidráulica') ||
+        mencionLower.includes('agua')) {
+      return 'engineering';
+    }
+    if (mencionLower.includes('docencia') || mencionLower.includes('educación') ||
+        mencionLower.includes('curricular') || mencionLower.includes('didáctica') ||
+        mencionLower.includes('lecto')) {
+      return 'education';
+    }
+    if (mencionLower.includes('derecho') || mencionLower.includes('legal') ||
+        mencionLower.includes('constitucional') || mencionLower.includes('procesal') ||
+        mencionLower.includes('litigación') || mencionLower.includes('civil') ||
+        mencionLower.includes('laboral') || mencionLower.includes('penal')) {
+      return 'law';
+    }
+    if (mencionLower.includes('marketing') || mencionLower.includes('analítica web')) {
+      return 'marketing';
+    }
+    
+    return 'default';
+  }
+
   
     // =========================
     // Cargar y filtrar

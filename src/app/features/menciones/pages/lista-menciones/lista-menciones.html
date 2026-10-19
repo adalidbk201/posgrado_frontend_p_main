@@ -1,64 +1,159 @@
-<section class="lista-mencion">
-    <h1>Menciones : {{ listMenciones().length}}</h1>
-    <p>Total de registros: {{ totalMenciones() }}</p>
+<section class="menciones-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="8" y1="7" x2="16" y2="7"/>
+          <line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+        Menciones Académicas
+      </h1>
+      <p class="page-subtitle">
+        Administra las especializaciones y menciones de los programas
+      </p>
+    </div>
     
-    <input type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
-
-      <button type="button" class="btn btn-primary" (click)="crearMencion()">
-        + Nueva Mención
+    <button type="button" class="btn-primary" (click)="crearMencion()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva Mención
     </button>
+  </div>
 
-    
+  <!-- BARRA DE ACCIONES -->
+  <div class="action-bar">
+    <div class="search-container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por nombre de mención..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar menciones">
+      @if (txtBuscar.value) {
+        <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr >
-                <th scope="col">#</th>
-                <!-- <th scope="col">ID</th> -->
-                <th scope="col">Mención</th>
-                
-                 
-                <th scope="col">Acciones</th>
-            </tr>
+    <div class="results-info">
+      <span class="results-count">
+        {{ listMenciones().length }} {{ listMenciones().length === 1 ? 'mención' : 'menciones' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA DE MENCIONES -->
+  <div class="table-container">
+    @if (listMenciones().length > 0) {
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-number">#</th>
+            <th scope="col">Mención</th>
+            <th scope="col" class="col-actions">Acciones</th>
+          </tr>
         </thead>
         <tbody>
-             @for (mencion of listMenciones(); track mencion.id; let idx= $index) {
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
-                    <!-- <td>{{ persona.id }}</td> -->
-                    <td>{{ mencion.mencion }}</td>
-                     
-                    <td>
-                        <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarMencion(mencion.id)"
-                        >
-                            Editar
-                        </button>
-
-                        <!-- <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarMencionEliminar(mencion.id)"
-                      >
-                        Eliminar
-                      </button> -->
-                      
-                    </td>
-                </tr>
-            }
+          @for (mencion of listMenciones(); track mencion.id; let idx = $index) {
+            <tr class="table-row">
+              <td class="col-number">
+                <span class="row-number">{{ idx + 1 }}</span>
+              </td>
+              <td>
+                <div class="cell-mencion">
+                  <div class="mencion-avatar" [class]="'mencion-type-' + getMencionType(mencion.mencion)">
+                    @if (isGeneralMencion(mencion.mencion)) {
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                      </svg>
+                    } @else {
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                      </svg>
+                    }
+                  </div>
+                  <div class="mencion-info">
+                    <span class="mencion-name">{{ mencion.mencion }}</span>
+                    @if (!isGeneralMencion(mencion.mencion)) {
+                      <span class="mencion-type">{{ getMencionCategory(mencion.mencion) }}</span>
+                    }
+                  </div>
+                </div>
+              </td>
+              <td class="col-actions">
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-icon btn-edit"
+                    (click)="editarMencion(mencion.id)"
+                    aria-label="Editar mención"
+                    title="Editar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  
+                  <!-- <button
+                    type="button"
+                    class="btn-icon btn-delete"
+                    (click)="seleccionarMencionEliminar(mencion.id)"
+                    aria-label="Eliminar mención"
+                    title="Eliminar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button> -->
+                </div>
+              </td>
+            </tr>
+          }
         </tbody>
-        
-       
-    </table>
-</section>
+      </table>
+    } @else {
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="8" y1="7" x2="16" y2="7"/>
+          <line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+        <h3 class="empty-title">No hay menciones registradas</h3>
+        <p class="empty-description">
+          Comienza agregando la primera mención académica del sistema
+        </p>
+        <button type="button" class="btn-primary" (click)="crearMencion()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Mención
+        </button>
+      </div>
+    }
+  </div>
 
+</section>
 
 
 <!-- Modal para confirmar eliminación -->

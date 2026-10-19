@@ -1,1 +1,192 @@
-<p>butaca-form works!</p>,
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+    <!-- fila -->
+    <div class="rol">
+        <div class="form-group row">
+            <label for="rol"class="col-sm-3 col-form-label">Fila</label>
+            
+            <div class="col-sm-9">
+                <input type="text"
+                nombre="fila"
+                id="fila"
+                class="form-control"
+                formControlName="fila"
+                placeholder="Ingrese rol" >
+                @if (formulario.controls.fila.invalid &&
+                     formulario.controls.fila.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.fila.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo fila es obligatorio</div>
+                        }
+                    
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- columna -->
+    <div class="columna">
+        <div class="form-group row">
+            <label for="nombre"class="col-sm-3 col-form-label">Columna</label>
+
+            <div class="col-sm-9">
+                <input type="text" 
+                name="columna" 
+                id="columna"
+                class="form-control"
+                formControlName="columna"
+                placeholder="Ingrese columna">
+                @if (formulario.controls.columna.invalid &&
+                     formulario.controls.columna.touched) {
+                    
+                    <div class="class-error">
+                        @if (formulario.controls.columna.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo columna es obligatorio</div>
+                        }
+                      
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <!-- codigo_butaca -->
+    <div class="descripcion">
+        <div class="form-group row">
+            <label for="descripcion"class="col-sm-3 col-form-label">Codigo Butaca</label>
+            <div class="col-sm-9">
+                <input type="text" 
+                name="codigo_butaca" 
+                id="codigo_butaca"
+                class="form-control"
+                formControlName="codigo_butaca"
+                placeholder="Ingrese descripción">
+                @if (formulario.controls.codigo_butaca.invalid &&
+                     formulario.controls.codigo_butaca.touched) {
+                        
+                    <div class="class-error">
+                        @if (formulario.controls.codigo_butaca.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El codigo Butaca es obligatorio</div>
+                        }
+                        @if (formulario.controls.codigo_butaca.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">El codigo Butaca debe tener al menos 3 caracteres </div>
+                        }
+                        @if (formulario.controls.codigo_butaca.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">El codigo Butaca no debe superar los 150 caracteres</div>
+                        }
+                    </div>    
+                }
+            </div>
+        </div>
+    </div>
+
+     <!-- id_sala -->
+    <div class="id_sala">
+        <div class="form-group row">
+            <label for="id_sala" class="col-sm-3 col-form-label">Sala</label>
+
+            <div class="col-sm-9">
+
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre sala..."
+                    [value]="busquedaSala()"
+                    (input)="busquedaSala.set($any($event.target).value)">
+
+                <!-- select -->
+                <select
+                    id="id_sala"
+                    name="id_sala"
+                    formControlName="id_sala"
+                    class="form-control"
+                    (change)="alCambiarSala()">
+
+                    <option value="" disabled>Selecciona programa</option>
+
+                    @for (sala of salasFiltradas(); track sala.id) {
+                        <option [value]="sala.id">
+                            {{ sala.nombre_sala }}
+                        </option>
+                    }       
+                      
+                </select>
+
+                @if (formulario.controls.id_sala.invalid &&
+                    formulario.controls.id_sala.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.id_sala.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo sala es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaSala()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasSalas()"
+                        [disabled]="cargandoMasSalas()">
+                        {{ cargandoMasSalas() ? 'Cargando...' : 'Cargar más salas' }}
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+
+     <!-- Nivel correspondiente a la Sala seleccionado -->
+        <div class="id_nivel">
+        <div class="form-group row">
+            <label for="id_nivel" class="col-sm-3 col-form-label">
+            Nivel
+            </label>
+
+            <div class="col-sm-9">
+            <select
+                id="id_nivel"
+                name="id_nivel"
+                formControlName="id_nivel"
+                class="form-control"
+            >
+                <option [ngValue]="null" disabled>
+                Selecciona una mención
+                </option>
+
+                @for (nivel of nivelDelSala(); track nivel.id) {
+                <option [ngValue]="nivel.id">
+                    {{ nivel.nombre_nivel }}
+                </option>
+                }
+            </select>
+
+            @if (!salaSeleccionadoId()) {
+                <small class="form-text text-muted">
+                Primero selecciona una sala.
+                </small>
+            }
+
+            @if (
+                formulario.controls.id_nivel.invalid &&
+                formulario.controls.id_nivel.touched
+            ) {
+                @if (formulario.controls.id_nivel.errors?.['required']) {
+                <div class="alert alert-danger mt-2" role="alert">
+                    Debes seleccionar un Nivel.
+                </div>
+                }
+            }
+            </div>
+        </div>
+        </div>
+
+    <button  class="btn btn-success" >
+        Guardar
+    </button>
+
+</form>

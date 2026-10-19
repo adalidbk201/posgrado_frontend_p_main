@@ -82,7 +82,23 @@ export class ListaUsuarios {
       // si no hay texto en buscador
       : this.totalBackend()
     );
-  
+    
+
+     // Método para obtener iniciales del avatar
+      getInitials(usuario: string): string {
+        return usuario?.substring(0, 2)?.toUpperCase() || 'US';
+      }
+
+      // Método para asignar clase CSS según el tipo de rol
+      getRoleClass(rol: string): string {
+        const roleMap: { [key: string]: string } = {
+          'ADMINISTRADOR': 'admin',
+          'ESTUDIANTE': 'estudiante',
+
+        };
+        return roleMap[rol?.toUpperCase()] || 'default';
+      }
+
   
     constructor() {
       // cargar la primera pagina
@@ -129,7 +145,7 @@ export class ListaUsuarios {
     cargarMasPersonas(): void {
       this.cargarPersonas(this.paginaActual() + 1);
     }
-  
+    
     
   
     // =========================

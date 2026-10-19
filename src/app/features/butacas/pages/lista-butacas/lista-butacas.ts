@@ -1,10 +1,13 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
-import { ButacasService } from '../../services/butacas.service';
-import { Router } from '@angular/router';
-import { Butaca } from '../../models/butaca.interface';
-import { NivelesService } from '../../../niveles/services/niveles.service';
-import { Nivel } from '../../../niveles/models/nivel.interface';
 
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ButacasService } from '../../services/butacas.service';
+import { Butaca } from '../../models/butaca.interface';
+import { Sala } from '../../../salas/models/sala.interface';
+import { SalasService } from '../../../salas/services/salas.service';
+import { Nivel } from '../../../niveles/models/nivel.interface';
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-lista-butacas',
   imports: [],
@@ -12,113 +15,157 @@ import { Nivel } from '../../../niveles/models/nivel.interface';
   styleUrl: './lista-butacas.scss',
 })
 export class ListaButacas {
-  // injectar butacasService
   private readonly butacasService = inject(ButacasService);
-  // inyectar nivelesService
-  private readonly nivelesService = inject(NivelesService);
-  // inyectar Router para navegacion entre paginas
+  private readonly salasService = inject(SalasService);
   private readonly router = inject(Router);
 
   // =========================
-  // SELECTOR DE NIVEL
-  // =========================
-
-  // niveles disponibles para el <select>
-  readonly niveles = signal<Nivel[]>([]);
-
-  // nivel actualmente elegido — null = ninguno seleccionado todavía
-  readonly nivelSeleccionado = signal<string | null>(null);
-
-  private cargarNiveles(): void {
-    this.nivelesService.getNiveles(1, 100).subscribe({
-      next: (respuesta) => this.niveles.set(respuesta.Data.filas),
-      error: (error) => console.error('Error al cargar niveles:', error),
-    });
-  }
-
-  onNivelSeleccionado(idNivel: string): void {
-    // el <select> entrega string; convertimos a number o null si viene vacío
-    const id = idNivel ? idNivel : null;
-    this.nivelSeleccionado.set(id);
-  }
-
-  // =========================
-  // CARGAR Y FILTRAR BUTACAS (solo si hay nivel elegido)
+  // BUTACAS
   // =========================
 
   readonly butacas = signal<Butaca[]>([]);
-  readonly paginaActual = signal(1);
-  readonly totalBackend = signal(0);
-  readonly cargando = signal(false);
-  readonly terminoBuscar = signal('');
+  readonly cargandoButacas = signal(false);
 
-  readonly listButacas = computed(() => {
-    const termino = this.terminoBuscar().trim().toLowerCase();
-    if (!termino) return this.butacas();
+  // =========================
+  // SALAS Y BÚSQUEDA
+  // =========================
 
-    return this.butacas().filter(b =>
-      `${b.codigo_butaca} ${b.estado_butaca} ${b.fila} ${b.columna}`
-        .toLowerCase()
-        .includes(termino)
+  readonly salas = signal<Sala[]>([]);
+  readonly paginaSala = signal(1);
+  readonly busquedaSala = signal('');
+  readonly cargandoMasSalas = signal(false);
+
+  readonly salasFiltradas = computed(() => {
+    const termino = this.busquedaSala().trim().toLowerCase();
+
+    if (!termino) {
+      return this.salas();
+    }
+
+    return this.salas().filter(sala =>
+      sala.nombre_sala.toLowerCase().includes(termino)
     );
   });
 
-  readonly totalButacas = computed(() =>
-    this.terminoBuscar().trim() ? this.listButacas().length : this.totalBackend()
-  );
+  // =========================
+  // SALA Y NIVEL SELECCIONADOS
+  // =========================
 
-  ejecutarBusqueda(termino: string): void {
-    this.terminoBuscar.set(termino);
-  }
+  readonly salaSeleccionadoId = signal<string | null>(null);
+  readonly nivelSeleccionadoId = signal<string | null>(null);
+
+  // Los niveles se obtienen de la sala seleccionada.
+  readonly nivelesSala = computed<Nivel[]>(() => {
+    const idSala = this.salaSeleccionadoId();
+
+    if (!idSala) {
+      return [];
+    }
+
+    const sala = this.salas().find(s => s.id === idSala);
+
+    return sala?.niveles ?? [];
+  });
 
   constructor() {
-    this.cargarNiveles();
-
-    // cada vez que cambia el nivel elegido, se reinicia todo y se recarga desde cero
-    effect(() => {
-      const idNivel = this.nivelSeleccionado();
-
-      // limpiar estado anterior siempre que cambie el nivel (incluido volver a "ninguno")
-      this.butacas.set([]);
-      this.paginaActual.set(1);
-      this.totalBackend.set(0);
-      this.terminoBuscar.set('');
-
-      if (idNivel !== null) {
-        this.cargarButacas(idNivel, 1);
-      }
-    });
-  }
-
-  private cargarButacas(idNivel: string, pagina: number): void {
-    this.cargando.set(true);
-
-    this.butacasService.getButacas(idNivel, pagina, 100).subscribe({
-      next: (respuesta) => {
-        const nuevas = respuesta.Data.filas;
-
-        this.butacas.update(actual => {
-          const idsExistentes = new Set(actual.map(p => p.id));
-          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.id));
-          return [...actual, ...sinDuplicar];
-        });
-
-        this.totalBackend.set(respuesta.Data.total);
-        this.paginaActual.set(pagina);
-        this.cargando.set(false);
-      },
-      error: () => this.cargando.set(false),
-    });
-  }
-
-  cargarMasButacas(): void {
-    const idNivel = this.nivelSeleccionado();
-    if (idNivel === null) return;
-    this.cargarButacas(idNivel, this.paginaActual() + 1);
+    this.cargarSalas(1);
   }
 
   // =========================
-  // NAVEGACIÓN Y ELIMINACIÓN — igual que antes
+  // CARGAR SALAS
+  // =========================
+
+  private cargarSalas(pagina: number): void {
+    if (this.cargandoMasSalas()) {
+      return;
+    }
+
+    this.cargandoMasSalas.set(true);
+
+    this.salasService.getSalas(pagina, 100).subscribe({
+      next: respuesta => {
+        const nuevas = respuesta.Data.filas;
+
+        this.salas.update(actuales => {
+          const idsExistentes = new Set(actuales.map(s => s.id));
+
+          return [
+            ...actuales,
+            ...nuevas.filter(s => !idsExistentes.has(s.id)),
+          ];
+        });
+
+        this.paginaSala.set(pagina);
+        this.cargandoMasSalas.set(false);
+      },
+      error: error => {
+        console.error('Error al cargar salas:', error);
+        this.cargandoMasSalas.set(false);
+      },
+    });
+  }
+
+  cargarMasSalas(): void {
+    this.cargarSalas(this.paginaSala() + 1);
+  }
+
+  // =========================
+  // CAMBIAR SALA
+  // =========================
+
+  alCambiarSala(idSala: string): void {
+    this.salaSeleccionadoId.set(idSala || null);
+
+    // Reiniciar el nivel y las butacas anteriores.
+    this.nivelSeleccionadoId.set(null);
+    this.butacas.set([]);
+  }
+
+  // =========================
+  // CAMBIAR NIVEL
+  // =========================
+
+  alCambiarNivel(idNivel: string): void {
+  this.nivelSeleccionadoId.set(idNivel || null);
+  this.butacas.set([]);
+
+  if (!idNivel) {
+    return;
+  }
+
+  this.cargarButacas(idNivel);
+}
+
+  // =========================
+  // CARGAR BUTACAS POR NIVEL
+  // =========================
+
+  
+
+
+private cargarButacas(idNivel: string): void {
+  this.cargandoButacas.set(true);
+  this.butacas.set([]);
+
+  this.butacasService.getButacas(idNivel, 1, 100).subscribe({
+    next: (respuesta) => {
+      console.log('Butacas recibidas:', respuesta.Data);
+
+      // El backend devuelve directamente un arreglo en Data.
+      this.butacas.set(respuesta.Data);
+      this.cargandoButacas.set(false);
+    },
+    error: (error) => {
+      console.error('Error al cargar butacas:', error);
+      this.cargandoButacas.set(false);
+    },
+  });
+}
+
+
+
+  // =========================
+  // NAVEGACIÓN Y ELIMINACIÓN
   // =========================
 
   crearButaca(): void {
@@ -134,24 +181,4 @@ export class ListaButacas {
   seleccionarButacaEliminar(id: string): void {
     this.butacaEliminarId.set(id);
   }
-
-  confirmarEliminacion(): void {
-    const id = this.butacaEliminarId();
-    const idNivel = this.nivelSeleccionado();
-    if (!id || idNivel === null) return;
-
-    this.butacasService.eliminarButaca(id).subscribe({
-      next: () => {
-        console.log('Butaca eliminada correctamente');
-        this.butacas.set([]);
-        this.paginaActual.set(1);
-        this.cargarButacas(idNivel, 1);
-        this.butacaEliminarId.set(null);
-      },
-      error: (error) => {
-        console.error('Error al eliminar la butaca:', error);
-      },
-    });
-  }
- 
-} 
+}

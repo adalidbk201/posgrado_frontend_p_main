@@ -130,6 +130,16 @@ export class ListaRoles {
     this.cargarRoles(this.paginaActual() + 1);
   }
 
+
+  // Método para asignar clase CSS según el tipo de rol
+  getRoleClass(rol: string): string {
+    const roleMap: { [key: string]: string } = {
+      'ADMINISTRADOR': 'admin',
+      'ESTUDIANTE': 'estudiante',
+    };
+    return roleMap[rol?.toUpperCase()] || 'default';
+  }
+
   
 
   // =========================
