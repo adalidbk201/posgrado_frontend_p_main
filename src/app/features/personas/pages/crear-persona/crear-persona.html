@@ -1,13 +1,6 @@
-<section class="crear-persona">
-  <div class="encabezado">
-    <h1>Crear Persona</h1>
-
-    <p>
-      Registra una nueva persona en el sistema.
-    </p>
-  </div>
+ 
   
-    @if (errorMensaje()) {
+  @if (errorMensaje()) {
     <div class="alert alert-danger" role="alert">
       {{ errorMensaje() }}
     </div>
@@ -17,4 +10,4 @@
     (guardar)="crearPersona($event)"
   />
   
-</section>
+ 

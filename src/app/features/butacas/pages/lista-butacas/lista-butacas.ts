@@ -172,13 +172,44 @@ private cargarButacas(idNivel: string): void {
     this.router.navigate(['/dashboard/butacas/crear']);
   }
 
-  editarButaca(id: string): void {
-    this.router.navigate(['/dashboard/butacas/editar', id]);
+  editarButaca(id: string, id_nivel:string): void {
+    this.router.navigate(['/dashboard/butacas/editar', id, id_nivel]);
   }
 
+  
+  /** Eliminar butaca */
   readonly butacaEliminarId = signal<string | null>(null);
 
   seleccionarButacaEliminar(id: string): void {
     this.butacaEliminarId.set(id);
   }
+
+  confirmarEliminacion(): void {
+  const id = this.butacaEliminarId();
+
+  if (!id) return;
+
+  this.butacasService.eliminarButaca(id).subscribe({
+    next: () => {
+      console.log('Butaca eliminada correctamente');
+
+      // Quitar la butaca eliminada de la lista actual.
+      this.butacas.update(butacas =>
+        butacas.filter(butaca => butaca.id !== id)
+      );
+
+      // Limpiar el ID seleccionado para eliminar.
+      this.butacaEliminarId.set(null);
+    },
+
+    error: (error) => {
+      console.error('Error al eliminar la butaca:', error);
+    },
+  });
+}
+
+
+
+
+
 }

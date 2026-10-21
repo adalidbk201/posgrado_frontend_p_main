@@ -1,66 +1,194 @@
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-    <!-- grado_academico -->
-    <div class="grado_academico">
-        <div class="form-group row">
-            <label for="grado_academico" class="col-sm-3 col-form-label">Grado Academico</label>
+<div class="form-container">
+  
+  <!-- HEADER DINÁMICO (Crear/Editar) -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        @if (esEdicion()) {
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon title-icon--edit">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Editar Grado Académico
+        } @else {
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+          Nuevo Grado Académico
+        }
+      </h1>
+      <p class="form-subtitle">
+        @if (esEdicion()) {
+          Modifique los datos del grado académico seleccionado
+        } @else {
+          Complete los campos para registrar un nuevo grado académico
+        }
+      </p>
+    </div>
+  </div>
 
-            <div class="col-sm-9">
-                <input 
-                type="text"
-                class="form-control"
-                id="grado_academico"
-                name="grado_academico"
-                formControlName="grado_academico"
-                placeholder="Ingrese Grado Academico">
-            
-            @if (formulario.controls.grado_academico.invalid &&
-                 formulario.controls.grado_academico.touched) {
-                
-                <div class="class-error">
-                    @if (formulario.controls.grado_academico.errors?.['required']) {
-                        <div class="alert alert-danger" role="alert">El grado académico es obligatorio</div>
-                    }
-                    @if (formulario.controls.grado_academico.errors?.['minlength']) {
-                        <div class="alert alert-danger" role="alert">El grado académico debe tener al menos 3 caracteres</div>
-                    }
-                    @if (formulario.controls.grado_academico.errors?.['maxlength']) {
-                        <div class="alert alert-danger" role="alert">El grado académico no debe superar los 150 caracteres</div>
-                    }
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    
+    <!-- ==================== SECCIÓN: DATOS DEL GRADO ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+        <h2 class="section-title">Información del Grado</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Grado Académico -->
+        <div class="form-group form-group--full">
+          <label for="grado_academico" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Grado Académico
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.grado_academico.invalid && formulario.controls.grado_academico.touched"
+            id="grado_academico"
+            name="grado_academico"
+            formControlName="grado_academico"
+            placeholder="Ingrese Grado Académico"
+            autocomplete="off">
+          
+          @if (formulario.controls.grado_academico.invalid && formulario.controls.grado_academico.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.grado_academico.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El grado académico es obligatorio
                 </div>
-            }
+              }
+              @if (formulario.controls.grado_academico.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El grado académico debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.grado_academico.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El grado académico no debe superar los 150 caracteres
+                </div>
+              }
             </div>
+          }
         </div>
+
+        <!-- Jerarquía -->
+        <div class="form-group">
+          <label for="jerarquia" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            Jerarquía
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.jerarquia.invalid && formulario.controls.jerarquia.touched"
+            id="jerarquia"
+            formControlName="jerarquia"
+            placeholder="Ej: 1, 2, 3, 4, 5"
+            min="1"
+            max="10">
+          
+          <div class="helper-message helper-message--info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            Número que indica el nivel jerárquico (1 = más bajo, 5 = más alto)
+          </div>
+
+          @if (formulario.controls.jerarquia.invalid && formulario.controls.jerarquia.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.jerarquia.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El campo jerarquía es obligatorio
+                </div>
+              }
+              @if (formulario.controls.jerarquia.errors?.['min']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  La jerarquía debe ser mayor o igual a 1
+                </div>
+              }
+              @if (formulario.controls.jerarquia.errors?.['max']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  La jerarquía no debe superar 10
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
-    <!-- jerarquia -->
-    <div class="jerarqquia">
-        <div class="form-group row">
-            <label for="jerarquia" class="col-sm-3 col-form-label">Jerarquia</label>
-            
-            <div class="col-sm-9">
-                <input 
-                type="number"
-                class="form-control"
-                formControlName="jerarquia"
-                >
-            
-            @if (formulario.controls.jerarquia.invalid &&
-                formulario.controls.jerarquia.touched) {
-                
-                <div class="class-error">
-                    @if (formulario.controls.jerarquia.errors?.['required']) {
-                        <div class="alert alert-danger" role="alert">El campo jerarquia es obligatorio</div>
-                    }
-                     
-                </div>
-
-            }
-            </div>
-
-        </div>
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          @if (esEdicion()) {
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          } @else {
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          }
+        </svg>
+        {{ esEdicion() ? 'Guardar Cambios' : 'Crear Grado' }}
+      </button>
     </div>
 
-    <button  class="btn btn-success" >
-        Guardar
-    </button>
-</form>
+  </form>
+</div>

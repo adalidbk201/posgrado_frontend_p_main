@@ -1,12 +1,21 @@
 export interface Asignacion{
-    id:string,
-    estado:string,
-    transaccion:string,
-    fecha_creacion:string,
-    fecha_modificacion:string | null,
-    usuario_creacion:string,
-    usuario_modificacion:string | null,
     colacion:string,
     titulado:string,
     butaca:string,
+    persona:{
+        id:string,
+        nombres:string,
+        primer_apellido:string,
+        segundo_apellido:string,
+        nro_documento:string,
+        celular:string,
+    },
+    programa:{
+        id:string,
+        nombre_programa:string,
+        grado:{
+            id:number,
+            grado_academico:string,
+        }
+    }
 }

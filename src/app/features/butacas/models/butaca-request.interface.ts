@@ -9,3 +9,10 @@ export interface CrearButacaRequest {
   id_nivel: string;
   datos: ButacaRequest;
 }
+
+export interface ButacaEditarRequest {
+  fila: number | null;
+  columna: number | null;
+  codigo_butaca: string;
+  
+}

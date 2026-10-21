@@ -19,7 +19,7 @@
             <tr >
                 <th scope="col">#</th>
                
-                <th scope="col">Estado</th>
+                <!-- <th scope="col">Estado</th> -->
                 <th scope="col">Colación</th>
                 <th scope="col">Titulado</th>
                 <th scope="col">Butaca</th>
@@ -28,25 +28,25 @@
             </tr>
         </thead>
         <tbody>
-             @for (asignacion of listAsignaciones(); track asignacion.id ; let idx= $index) {
+             @for (asignacion of listAsignaciones(); track asignacion.butaca ; let idx= $index) {
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     
-                    <td>{{ asignacion.estado }}</td>
+                    <!-- <td>{{ asignacion.estado }}</td> -->
                     <td>{{ asignacion.colacion }}</td>
                     <td>{{ asignacion.titulado }}</td>
                     <td>{{ asignacion.butaca }}</td>
                      
                      
                     <td>
-                        <button
+                        <!-- <button
                             type="button" class="btn btn-warning"
                             (click)="editarAsignacion(asignacion.id)"
                         >
                             Editar
-                        </button>
+                        </button> -->
 
-                        <button
+                        <!-- <button
                         type="button"
                         class="btn btn-danger "
                         data-toggle="modal"
@@ -54,7 +54,7 @@
                         (click)="seleccionarAsignacionEliminar(asignacion.id)"
                       >
                         Eliminar
-                      </button>
+                      </button> -->
                       
                     </td>
                 </tr>

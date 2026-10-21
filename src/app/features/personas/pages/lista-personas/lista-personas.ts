@@ -148,6 +148,9 @@ export class ListaPersonas {
     this.router.navigate(['/dashboard/personas/editar', id]);
   }
 
+  volverPersona(): void {
+    this.router.navigate(['/dashboard/personas']);
+  }
 
   /** Eliminar persona */
   readonly personaEliminarId = signal<string | null>(null);

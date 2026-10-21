@@ -1,0 +1,119 @@
+
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+  <!-- Fila -->
+  <div class="form-group row mb-3">
+    <label for="fila" class="col-sm-3 col-form-label">
+      Fila
+    </label>
+
+    <div class="col-sm-9">
+      <input
+        type="number"
+        name="fila"
+        id="fila"
+        class="form-control"
+        formControlName="fila"
+        placeholder="Ingrese fila"
+        min="1"
+      />
+
+      @if (formulario.controls.fila.invalid &&
+           formulario.controls.fila.touched) {
+
+        @if (formulario.controls.fila.errors?.['required']) {
+          <div class="alert alert-danger">
+            El campo fila es obligatorio.
+          </div>
+        }
+
+        @if (formulario.controls.fila.errors?.['min']) {
+          <div class="alert alert-danger">
+            La fila debe ser mayor o igual a 1.
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Columna -->
+  <div class="form-group row mb-3">
+    <label for="columna" class="col-sm-3 col-form-label">
+      Columna
+    </label>
+
+    <div class="col-sm-9">
+      <input
+        type="number"
+        name="columna"
+        id="columna"
+        class="form-control"
+        formControlName="columna"
+        placeholder="Ingrese columna"
+        min="1"
+      />
+
+      @if (formulario.controls.columna.invalid &&
+           formulario.controls.columna.touched) {
+
+        @if (formulario.controls.columna.errors?.['required']) {
+          <div class="alert alert-danger">
+            El campo columna es obligatorio.
+          </div>
+        }
+
+        @if (formulario.controls.columna.errors?.['min']) {
+          <div class="alert alert-danger">
+            La columna debe ser mayor o igual a 1.
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Código de butaca -->
+  <div class="form-group row mb-3">
+    <label for="codigo_butaca" class="col-sm-3 col-form-label">
+      Código de butaca
+    </label>
+
+    <div class="col-sm-9">
+      <input
+        type="text"
+        name="codigo_butaca"
+        id="codigo_butaca"
+        class="form-control"
+        formControlName="codigo_butaca"
+        placeholder="Ingrese código de butaca"
+      />
+
+      @if (formulario.controls.codigo_butaca.invalid &&
+           formulario.controls.codigo_butaca.touched) {
+
+        @if (formulario.controls.codigo_butaca.errors?.['required']) {
+          <div class="alert alert-danger">
+            El código de butaca es obligatorio.
+          </div>
+        }
+
+        @if (formulario.controls.codigo_butaca.errors?.['minlength']) {
+          <div class="alert alert-danger">
+            El código debe tener al menos 3 caracteres.
+          </div>
+        }
+
+        @if (formulario.controls.codigo_butaca.errors?.['maxlength']) {
+          <div class="alert alert-danger">
+            El código no debe superar los 150 caracteres.
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-success">
+    Guardar cambios
+  </button>
+
+</form>
+ 

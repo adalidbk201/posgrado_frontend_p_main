@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
 import { Butaca } from '../models/butaca.interface';
-import { ButacaRequest } from '../models/butaca-request.interface';
+import { ButacaEditarRequest, ButacaRequest, CrearButacaRequest } from '../models/butaca-request.interface';
 
 @Injectable({
     // ejecute desde la raiz
@@ -27,16 +27,12 @@ export class ButacasService {
 
     // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
   
-        getButacas(
-        id_nivel: string,
-        pagina = 1,
-        limite = 100
-        ): Observable<RespuestaApi<Butaca[]>> {
-        return this.http.get<RespuestaApi<Butaca[]>>(
-            `${this.apiUrl}?id_nivel=${encodeURIComponent(id_nivel)}&pagina=${pagina}&limite=${limite}`
-            + `&limite=${limite}`
-        );
-        }
+    getButacas(id_nivel: string,pagina = 1,limite = 100): Observable<RespuestaApi<Butaca[]>> {
+    return this.http.get<RespuestaApi<Butaca[]>>(
+        `${this.apiUrl}?id_nivel=${encodeURIComponent(id_nivel)}&pagina=${pagina}&limite=${limite}`
+        + `&limite=${limite}`
+    );
+    }
 
 
     //metodo para buscar personas por termino
@@ -47,8 +43,10 @@ export class ButacasService {
 
     // =========================
     // GET - POR ID
-    getButacaPorId(id: string): Observable<RespuestaApi<Butaca>> {
-    return this.http.get<RespuestaApi<Butaca>>(`${this.apiUrl}${id}/`);
+    getButacaPorId(id: string, id_nivel: string): Observable<RespuestaApi<Butaca>> {
+    return this.http.get<RespuestaApi<Butaca>>(
+        `${this.apiUrl}${id}/?id_nivel=${encodeURIComponent(id_nivel)}`
+    );
     }
 
     // =========================
@@ -65,8 +63,9 @@ export class ButacasService {
 
     // =========================
     // PATCH - ACTUALIZAR PARCIALMENTE
-    actualizarParcialButaca(id: string,datos: Partial<ButacaRequest>): Observable<Butaca> {
-    return this.http.patch<Butaca>(`${this.apiUrl}${id}/`,datos);
+    actualizarParcialButaca(id: string,id_nivel: string,datos: Partial<ButacaEditarRequest>): Observable<Butaca> {
+        return this.http.patch<Butaca>(
+            `${this.apiUrl}${id}/?id_nivel=${encodeURIComponent(id_nivel)}`,datos);
     }
 
     // =========================

@@ -1,1 +1,14 @@
-<p>crear-asignacion works!</p>,
+<section class="crear-rol">
+  <div class="encabezado">
+    <h1>Crear Asignacion</h1>
+
+    <p>
+      Registra un nueva asignacion en el sistema.
+    </p>
+  </div>
+
+  <app-asignacion-form
+    (guardar)="crearAsignacion($event)"
+  />
+  
+</section>

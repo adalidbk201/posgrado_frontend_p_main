@@ -18,6 +18,7 @@ import { MencionesService } from '../../../menciones/services/menciones.service'
 import { Mencion } from '../../../menciones/models/mencion.interface';
 import { Programa } from '../../../programas/models/programa.interface';
 import { ProgramasService } from '../../../programas/services/programas.service';
+import { Router } from '@angular/router';
 
  
 
@@ -196,6 +197,16 @@ export class PersonaForm {
         separador + letra.toLocaleUpperCase('es')
       );
   }
+
+  /** NAVEGAR AL COMPONENTE PERSONA */
+  // inyectar Roter para navegacion entre paginas
+  private readonly router = inject(Router);
+  volverPersona(): void {
+    this.router.navigate(['/dashboard/personas']);
+  }
+
+
+
 
   enviarFormulario(): void {
     if (this.formulario.invalid || this.formulario.pending) {

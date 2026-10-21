@@ -10,8 +10,8 @@
 
     @if (programa()) {
 
-      <app-programa-form
-        /* [programa]="programa()" */
+      <app-programa-editar-form
+        [programa]="programa()"
         (guardar)="actualizarPrograma($event)"
       />
 

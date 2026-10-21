@@ -1,532 +1,861 @@
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-<!-- buscador de nro_documento input -->
-    <!-- pais documento -->
-      <div class="pais_documento">
-        <div class="form-group row">
-            <label for="pais_documento" class="col-sm-3 col-form-label">País Docuemnto</label>
-
-            <div class="col-sm-9">
-                <input type="text" 
-                name="pais_documento" 
-                id="pais_documento"
-                class="form-control"
-                formControlName="pais_documento"
-                placeholder="Ingrese pais">
-                @if (formulario.controls.pais_documento.invalid &&
-                     formulario.controls.pais_documento.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.pais_documento.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">País Documento es obligatorio</div>
-                        }
-                        @if (formulario.controls.pais_documento.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">País Documento debe tener al menos 3 caracteres</div>
-                        }
-                        @if (formulario.controls.pais_documento.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">País Documento no debe superar los 50 caracteres</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-      </div>
-    <!-- nro_documento -->
-    <div class="nro_documento">
-
-        <div class="form-group row">
-
-            <label for="nro_documento" class="col-sm-3 col-form-label">Nro Documento</label>
-
-            <div class="col-sm-9">
-                 <input type="text"
-                class="form-control "
-                id="nro_documento"
-                formControlName="nro_documento"
-                placeholder="Ingrese documento">
-
-                @if (formulario.controls.nro_documento.invalid &&
-                     formulario.controls.nro_documento.touched) {
-
-                    <div class="class-error">
-
-                        @if (formulario.controls.nro_documento.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El nro documento es obligatorio</div>
-                            <!-- <span>El nro documento es obligatorio</span> -->
-                        }
-                        @if (formulario.controls.nro_documento.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">El nro documento debe tener al menos 3 caracteres</div>
-                            <!-- <span>El nro documento debe tener al menos 3 caracteres</span> -->
-                        }
-                        @if (formulario.controls.nro_documento.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">El nro documento no debe superar los 30 caracteres</div>
-                            <!-- <span>El nro documento no debe superar los 30 caracteres</span> -->
-                        }
-                        @if (formulario.controls.nro_documento.errors?.['documentoDuplicado']) {
-                            <div class="alert alert-danger" role="alert">Este número de documento ya está registrado</div>
-                        }
-                    </div>
-
-                }
-
-                @if (formulario.controls.nro_documento.pending) {
-                    <small class="text-muted d-block mt-1">Verificando documento...</small>
-                }
-
-            </div>
-           
-        </div>
-        
-
+<div class="form-container">
+  
+  <!-- HEADER DEL FORMULARIO -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Registro de Persona
+      </h1>
+      <p class="form-subtitle">
+        Complete todos los campos requeridos para registrar una nueva persona
+      </p>
     </div>
+  </div>
 
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
     
-    <!-- expedido -->
-    <div class="expedido">
-        <div class="form-group row">
-            <label for="expedido" class="col-sm-3 col-form-label">Expedido</label>
-            <div class="col-sm-9">
-                <select name="expedido" id="expedido" formControlName="expedido" class="form-control">
-                    <option value="" >Selecciona un departamento</option>
-                    <option value="LP">(LP)La Paz</option>
-                    <option value="BN">(BN)Beni</option>
-                    <option value="CH">(CH)Chiquisaca</option>
-                    <option value="CB">(CB)Cochabamba</option>
-                    <option value="OR">(OR)Oruro</option>
-                    <option value="PD">(PD)Pando</option>
-                    <option value="PT">(PT)Potosi</option>
-                    <option value="SC">(SC)Santa Cruz</option>
-                    <option value="TJ">(TJ)Tarija</option>
-                    
-                </select>
-                @if (formulario.controls.expedido.invalid &&
-                     formulario.controls.expedido.touched) {
-                    <div class="class-error">
-                        @if (formulario.controls.expedido.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">Expedido es obligatorio</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-
-    <!-- nombres -->
-    <div class="nombres">
-
-        <div class="form-group row">
-            <label for="nombres" class="col-sm-3 col-form-label">Nombres</label>
-
-            <div class="col-sm-9">
-
-                <input type="text"
-                class="form-control"
-                id="nombres"
-                formControlName="nombres"
-                placeholder="Ingrese su nombre"> 
-
-                @if (formulario.controls.nombres.invalid &&
-                    formulario.controls.nombres.touched) {
-                    <div class="class-error">
-                        @if (formulario.controls.nombres.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">Nombre es  obligatorio</div>
-                            <!-- <span>Nombre es  obligatorio</span> -->
-                        }
-                        @if (formulario.controls.nombres.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">Nombre debe tener minimo 3 caracteres</div>
-                            <!-- <span>Nombre debe tener minimo 3 caracteres</span> -->
-                        }
-                        @if (formulario.controls.nombres.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">Nombre no debe superar los 100 caracteres</div>
-                            <!-- <span>Nombre no debe superar los 100 caracteres</span> -->
-                        }
-                    </div>
-                }
-
-            </div>
-
-            
-        </div>
-        
-
-    </div>
-
-    <!-- primer_apellido -->
-     <div class="primer_apellido">
-
-        <div class="form-group row">
-            
-            <label for="primer_apellido" class="col-sm-3 col-form-label">Primer Apellido</label>
-
-            <div class="col-sm-9">
-                <input type="text"
-                class="form-control"
-                id="primer_apellido"
-                formControlName="primer_apellido"
-                placeholder="Primer apellido">
-
-                @if (formulario.controls.primer_apellido.invalid &&
-                    formulario.controls.primer_apellido.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.primer_apellido.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">Primer apellido es obligatorio</div>
-                            <!-- <span>Primer apellido es obligatorio</span> -->
-                        }
-                        @if (formulario.controls.primer_apellido.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">Primer apellido debe tener minimo 3 caracteres</div>
-                            <!-- <span>Primer apellido debe tener minimo 3 caracteres</span> -->
-                        }
-                        @if (formulario.controls.primer_apellido.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">Primer apellido no debe superar los 50 caracteres</div>
-                            <!-- <span>Primer apellido no debe superar los 50 caracteres</span> -->
-                        }
-                    </div>
-                }
-            </div>
-            
-        </div>
-        
-     </div>
-
-     <!-- Segundo apelllido -->
-      <div class="segundo_apellido">
-
-        <div class="form-group row">
-            <label for="segundo_apellido" class="col-sm-3 col-form-label">Segundo Apellido</label>
-
-            <div class="col-sm-9">
-                <input type="text"
-                class="form-control"
-                id="segundo_apellido"
-                formControlName="segundo_apellido"
-                placeholder="Segundo apellido">
-                 @if (formulario.controls.segundo_apellido.invalid &&
-                    formulario.controls.segundo_apellido.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.segundo_apellido.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">Segundo apellido es obligatorio</div>
-                            <!-- <span>Segundo apellido es obligatorio</span> -->
-                        }
-                        @if (formulario.controls.segundo_apellido.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">Segundo apellido debe tener al menos 3 caracteres</div>
-                            <!-- <span>Segundo apellido debe tener al menos 3 caracteres</span> -->
-                        }
-                        @if (formulario.controls.segundo_apellido.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">Segundo apellido no debe superar los 50 caracteres</div>
-                            <!-- <span>Segundo apellido no debe superar los 50 caracteres</span> -->
-                        }
-                    </div>
-                }
-            </div>
-
-        </div>
-        
+    <!-- ==================== SECCIÓN: DATOS DEL DOCUMENTO ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <h2 class="section-title">Datos del Documento</h2>
       </div>
-       
       
-      <!-- genero -->
-    <div class="genero">
-        <div class="form-group row">
-            <label for="genero" class="col-sm-3 col-form-label">Genero</label>
-            <div class="col-sm-9">
-                <select name="genero" id="genero" formControlName="genero" class="form-control">
-                    <option value="" >Selecciona un Genero</option>
-                    <option value="MASCULINO">MASCULINO</option>
-                    <option value="FEMENINO">FEMENINO</option>
-                    
-                    
-                </select>
-                 @if (formulario.controls.genero.invalid &&
-                     formulario.controls.genero.touched) {
-                    <div class="class-error">
-                        @if (formulario.controls.genero.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">Genero es obligatorio</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-
-     
-
-       <!-- celular -->
-        <div class="celular">
-
-            <div class="form-group row">
-                <label for="celular" class="col-sm-3 col-form-label">Celular</label>
-
-                <div class="col-sm-9">
-                    <input type="number" 
-                    id="celular"
-                    class="form-control sm"
-                    formControlName="celular"
-                    placeholder="Ingrese celular">
-                    @if (formulario.controls.celular.invalid &&
-                        formulario.controls.celular.touched) {
-
-                        <div class="class-error">
-                            @if (formulario.controls.celular.errors?.['required']) {
-                                <div class="alert alert-danger" role="alert">Celular es obligatrio</div>
-                                <!-- <span>Celular es obligatrio</span> -->
-                            }
-                            @if (formulario.controls.celular.errors?.['minlength']) {
-                                <div class="alert alert-danger" role="alert">Celular debe tener al menos 3 caracteres</div>
-                                <!-- <span>Celular debe tener al menos 3 caracteres</span> -->
-                            }
-                            @if (formulario.controls.celular.errors?.['maxlength']) {
-                                <div class="alert alert-danger" role="alert">Celular no debe superar los 20 caracteres</div>
-                                <!-- <span>Celular no debe superar los 20 caracteres</span> -->
-                            }
-                        </div>
-                    }
-                </div>
-                
-            </div>
-            
-
-        </div>
-
-
-        <!-- Obervacion -->
-           <div class="observacion">
-
-            <div class="form-group row">
-                <label for="observacion"class="col-sm-3 col-form-label">Observacion</label>
-
-                <div class="col-sm-9">
-                    <input type="text"
-                    id="observacion"
-                    class="form-control sm"
-                    formControlName="observacion"
-                    placeholder="Observación">
-                    @if (formulario.controls.observacion.invalid &&
-                        formulario.controls.observacion.touched) {
-                        
-                        <div class="class-error">
-                            @if (formulario.controls.observacion.errors?.['required']) {
-                                <div class="alert alert-danger" role="alert">Observación es obligatorio</div>
-                                <!-- <span>Observación es obligatorio</span> -->
-                            }
-                            @if (formulario.controls.observacion.errors?.['minlength']) {
-                                <div class="alert alert-danger" role="alert">Observación debe tener al menos 3 caracteres</div>
-                                <!-- <span>Observación debe tener al menos 3 caracteres</span> -->
-                            }
-                            @if (formulario.controls.observacion.errors?.['maxlength']) {
-                                <div class="alert alert-danger" role="alert">Observación no debe superar los 255 caracteres</div>
-                                <!-- <span>Observación no debe superar los 255 caracteres</span> -->
-                            }
-                        </div>
-                    }
-                </div>
-                
-            </div>
-            
-           </div>
-
- 
-
+      <div class="form-grid">
+        <!-- País Documento -->
+        <div class="form-group">
+          <label for="pais_documento" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            País Documento
+          </label>
+          <input 
+            type="text" 
+            name="pais_documento" 
+            id="pais_documento"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.pais_documento.invalid && formulario.controls.pais_documento.touched"
+            formControlName="pais_documento"
+            placeholder="Ingrese país">
           
-
-           <!-- fecha nacimiento -->
-           <div class="fecha_nacimiento">
-
-            <div class="form-group row">
-                <label for="fecha_nacimiento"class="col-sm-3 col-form-label">Fecha Nacimiento</label>
-
-                <div class="col-sm-9">
-                    <input type="date"
-                    id="fecha_nacimiento"
-                    formControlName="fecha_nacimiento"
-                    class="form-control sm"
-                    placeholder="Fecha de Nacimiento">
-                    @if (formulario.controls.fecha_nacimiento.invalid &&
-                        formulario.controls.fecha_nacimiento.touched) {
-                        
-                        <div class="class-error">
-                            @if (formulario.controls.fecha_nacimiento.errors?.['required']) {
-                                <div class="alert alert-danger" role="alert">Fecha de nacimiento obligatorio</div>
-                                <!-- <span>Fecha de nacimiento obligatorio</span> -->
-                            }
-                        
-                        </div>
-                    }
+          @if (formulario.controls.pais_documento.invalid && formulario.controls.pais_documento.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.pais_documento.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  País Documento es obligatorio
                 </div>
-                
+              }
+              @if (formulario.controls.pais_documento.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  País Documento debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.pais_documento.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  País Documento no debe superar los 50 caracteres
+                </div>
+              }
             </div>
+          }
+        </div>
+
+        <!-- Nro Documento -->
+        <div class="form-group">
+          <label for="nro_documento" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Nro Documento
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.nro_documento.invalid && formulario.controls.nro_documento.touched"
+            [class.form-control-loading]="formulario.controls.nro_documento.pending"
+            id="nro_documento"
+            formControlName="nro_documento"
+            placeholder="Ingrese documento">
+
+          @if (formulario.controls.nro_documento.pending) {
+            <div class="loading-message">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+              Verificando documento...
+            </div>
+          }
+
+          @if (formulario.controls.nro_documento.invalid && formulario.controls.nro_documento.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.nro_documento.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nro documento es obligatorio
+                </div>
+              }
+              @if (formulario.controls.nro_documento.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nro documento debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.nro_documento.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nro documento no debe superar los 30 caracteres
+                </div>
+              }
+              @if (formulario.controls.nro_documento.errors?.['documentoDuplicado']) {
+                <div class="error-message error-message--critical">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                  </svg>
+                  Este número de documento ya está registrado
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Expedido -->
+        <div class="form-group">
+          <label for="expedido" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Expedido en
+            <span class="required">*</span>
+          </label>
+          <select 
+            name="expedido" 
+            id="expedido" 
+            formControlName="expedido" 
+            class="form-select"
+            [class.form-select-error]="formulario.controls.expedido.invalid && formulario.controls.expedido.touched">
+            <option value="" disabled>Selecciona un departamento</option>
+            <option value="LP">(LP) La Paz</option>
+            <option value="BN">(BN) Beni</option>
+            <option value="CH">(CH) Chuquisaca</option>
+            <option value="CB">(CB) Cochabamba</option>
+            <option value="OR">(OR) Oruro</option>
+            <option value="PD">(PD) Pando</option>
+            <option value="PT">(PT) Potosí</option>
+            <option value="SC">(SC) Santa Cruz</option>
+            <option value="TJ">(TJ) Tarija</option>
+          </select>
           
-           </div>
-
-           <!-- correo electronico -->
-    <div class="correo-electronico">
-        <div class="form-group row">
-            <label for="correo_electronico" class="col-sm-3 col-form-label">Correo Electronico</label>
-
-            <div class="col-sm-9">
-                <input type="email" 
-                name="correo_electronico" 
-                id="correo_electronico"
-                formControlName="correo_electronico"
-                placeholder="Correo Electronico"
-                class="form-control"
-                >
-                @if (formulario.controls.correo_electronico.invalid &&
-                     formulario.controls.correo_electronico.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.correo_electronico.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El correo es obligatorio</div>
-                        }
-                        @if (formulario.controls.correo_electronico.errors?.['email']) {
-                            <div class="alert alert-danger" role="alert">El correo debe ser valido</div>
-                        }
-                      
-                    </div>
-                }
-
+          @if (formulario.controls.expedido.invalid && formulario.controls.expedido.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.expedido.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Expedido es obligatorio
+                </div>
+              }
             </div>
+          }
         </div>
+      </div>
     </div>
 
-   
+    <!-- ==================== SECCIÓN: DATOS PERSONALES ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <h2 class="section-title">Datos Personales</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Nombres -->
+        <div class="form-group form-group--full">
+          <label for="nombres" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Nombres
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.nombres.invalid && formulario.controls.nombres.touched"
+            id="nombres"
+            formControlName="nombres"
+            placeholder="Ingrese su nombre"> 
 
-
-    <!-- id_programa -->
-    <div class="id_programa">
-        <div class="form-group row">
-            <label for="id_programa" class="col-sm-3 col-form-label">Programa</label>
-
-            <div class="col-sm-9">
-
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre programa..."
-                    [value]="busquedaPrograma()"
-                    (input)="busquedaPrograma.set($any($event.target).value)">
-
-                <!-- select -->
-                <select
-                    id="id_programa"
-                    name="id_programa"
-                    formControlName="id_programa"
-                    class="form-control"
-                    (change)="alCambiarPrograma()">
-
-                    <option value="" disabled>Selecciona programa</option>
-
-                    @for (programa of programasFiltradas(); track programa.id) {
-                        <option [value]="programa.id">
-                            {{ programa.nombre_programa }}
-                        </option>
-                    }       
-                      
-                </select>
-
-                @if (formulario.controls.id_programa.invalid &&
-                    formulario.controls.id_programa.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.id_programa.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo programa es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaPrograma()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasProgramas()"
-                        [disabled]="cargandoMasProgramas()">
-                        {{ cargandoMasProgramas() ? 'Cargando...' : 'Cargar más programas' }}
-                    </button>
-                }
-
+          @if (formulario.controls.nombres.invalid && formulario.controls.nombres.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.nombres.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Nombre es obligatorio
+                </div>
+              }
+              @if (formulario.controls.nombres.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Nombre debe tener mínimo 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.nombres.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Nombre no debe superar los 100 caracteres
+                </div>
+              }
             </div>
+          }
         </div>
+
+        <!-- Primer Apellido -->
+        <div class="form-group">
+          <label for="primer_apellido" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Primer Apellido
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.primer_apellido.invalid && formulario.controls.primer_apellido.touched"
+            id="primer_apellido"
+            formControlName="primer_apellido"
+            placeholder="Primer apellido">
+
+          @if (formulario.controls.primer_apellido.invalid && formulario.controls.primer_apellido.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.primer_apellido.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Primer apellido es obligatorio
+                </div>
+              }
+              @if (formulario.controls.primer_apellido.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Primer apellido debe tener mínimo 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.primer_apellido.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Primer apellido no debe superar los 50 caracteres
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Segundo Apellido -->
+        <div class="form-group">
+          <label for="segundo_apellido" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Segundo Apellido
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.segundo_apellido.invalid && formulario.controls.segundo_apellido.touched"
+            id="segundo_apellido"
+            formControlName="segundo_apellido"
+            placeholder="Segundo apellido">
+          
+          @if (formulario.controls.segundo_apellido.invalid && formulario.controls.segundo_apellido.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.segundo_apellido.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Segundo apellido es obligatorio
+                </div>
+              }
+              @if (formulario.controls.segundo_apellido.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Segundo apellido debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.segundo_apellido.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Segundo apellido no debe superar los 50 caracteres
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Género -->
+        <div class="form-group">
+          <label for="genero" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v8"/>
+              <path d="M8 12h8"/>
+            </svg>
+            Género
+            <span class="required">*</span>
+          </label>
+          <select 
+            name="genero" 
+            id="genero" 
+            formControlName="genero" 
+            class="form-select"
+            [class.form-select-error]="formulario.controls.genero.invalid && formulario.controls.genero.touched">
+            <option value="" disabled>Selecciona un género</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+          </select>
+          
+          @if (formulario.controls.genero.invalid && formulario.controls.genero.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.genero.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Género es obligatorio
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Fecha Nacimiento -->
+        <div class="form-group">
+          <label for="fecha_nacimiento" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Fecha de Nacimiento
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="date"
+            id="fecha_nacimiento"
+            formControlName="fecha_nacimiento"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.fecha_nacimiento.invalid && formulario.controls.fecha_nacimiento.touched">
+          
+          @if (formulario.controls.fecha_nacimiento.invalid && formulario.controls.fecha_nacimiento.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.fecha_nacimiento.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Fecha de nacimiento es obligatoria
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
-     
-        <!-- Mención correspondiente al programa seleccionado -->
-        <div class="id_mencion">
-        <div class="form-group row">
-            <label for="id_mencion" class="col-sm-3 col-form-label">
+    <!-- ==================== SECCIÓN: CONTACTO ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <h2 class="section-title">Información de Contacto</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Celular -->
+        <div class="form-group">
+          <label for="celular" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            Celular
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="tel"
+            id="celular"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.celular.invalid && formulario.controls.celular.touched"
+            formControlName="celular"
+            placeholder="Ingrese número de celular">
+          
+          @if (formulario.controls.celular.invalid && formulario.controls.celular.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.celular.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Celular es obligatorio
+                </div>
+              }
+              @if (formulario.controls.celular.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Celular debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.celular.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Celular no debe superar los 20 caracteres
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="form-group">
+          <label for="correo_electronico" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Correo Electrónico
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="email" 
+            name="correo_electronico" 
+            id="correo_electronico"
+            formControlName="correo_electronico"
+            placeholder="correo@ejemplo.com"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.correo_electronico.invalid && formulario.controls.correo_electronico.touched">
+          
+          @if (formulario.controls.correo_electronico.invalid && formulario.controls.correo_electronico.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.correo_electronico.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El correo es obligatorio
+                </div>
+              }
+              @if (formulario.controls.correo_electronico.errors?.['email']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El correo debe ser válido
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SECCIÓN: INFORMACIÓN ACADÉMICA ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+        <h2 class="section-title">Información Académica</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Programa -->
+        <div class="form-group">
+          <label for="id_programa" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            Programa Académico
+            <span class="required">*</span>
+          </label>
+
+          <!-- Buscador de programas -->
+          <input
+            type="text"
+            class="form-control form-control--search"
+            placeholder="Buscar por nombre de programa..."
+            [value]="busquedaPrograma()"
+            (input)="busquedaPrograma.set($any($event.target).value)">
+
+          <!-- Select de programas -->
+          <select
+            id="id_programa"
+            name="id_programa"
+            formControlName="id_programa"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.id_programa.invalid && formulario.controls.id_programa.touched"
+            (change)="alCambiarPrograma()">
+
+            <option value="" disabled>Selecciona un programa</option>
+
+            @for (programa of programasFiltradas(); track programa.id) {
+              <option [value]="programa.id">
+                {{ programa.nombre_programa }}
+              </option>
+            }       
+          </select>
+
+          @if (formulario.controls.id_programa.invalid && formulario.controls.id_programa.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.id_programa.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El campo programa es obligatorio
+                </div>
+              }
+            </div>
+          }
+
+          @if (!busquedaPrograma()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasProgramas()"
+              [disabled]="cargandoMasProgramas()">
+              @if (cargandoMasProgramas()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más programas
+              }
+            </button>
+          }
+        </div>
+
+        <!-- Mención -->
+        <div class="form-group">
+          <label for="id_mencion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
             Mención
-            </label>
+            <span class="required">*</span>
+          </label>
 
-            <div class="col-sm-9">
-            <select
-                id="id_mencion"
-                name="id_mencion"
-                formControlName="id_mencion"
-                class="form-control"
-            >
-                <option [ngValue]="null" disabled>
-                Selecciona una mención
-                </option>
+          <select
+            id="id_mencion"
+            name="id_mencion"
+            formControlName="id_mencion"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.id_mencion.invalid && formulario.controls.id_mencion.touched"
+            [disabled]="!programaSeleccionadoId()">
+            
+            <option [ngValue]="null" disabled>
+              {{ programaSeleccionadoId() ? 'Selecciona una mención' : 'Primero selecciona un programa' }}
+            </option>
 
-                @for (mencion of mencionesDelPrograma(); track mencion.id) {
-                <option [ngValue]="mencion.id">
-                    {{ mencion.mencion }}
-                </option>
-                }
-            </select>
-
-            @if (!programaSeleccionadoId()) {
-                <small class="form-text text-muted">
-                Primero selecciona un programa.
-                </small>
+            @for (mencion of mencionesDelPrograma(); track mencion.id) {
+              <option [ngValue]="mencion.id">
+                {{ mencion.mencion }}
+              </option>
             }
+          </select>
 
-            @if (
-                formulario.controls.id_mencion.invalid &&
-                formulario.controls.id_mencion.touched
-            ) {
-                @if (formulario.controls.id_mencion.errors?.['required']) {
-                <div class="alert alert-danger mt-2" role="alert">
-                    Debes seleccionar una mención.
+          @if (!programaSeleccionadoId()) {
+            <div class="helper-message">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              Primero selecciona un programa para ver las menciones disponibles
+            </div>
+          }
+
+          @if (formulario.controls.id_mencion.invalid && formulario.controls.id_mencion.touched) {
+            @if (formulario.controls.id_mencion.errors?.['required']) {
+              <div class="error-messages">
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Debes seleccionar una mención
                 </div>
-                }
+              </div>
             }
-            </div>
+          }
         </div>
-        </div>
- 
 
+        <!-- Fecha Fin -->
+        <div class="form-group">
+          <label for="fecha_fin" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Fecha Fin
+          </label>
+          <input 
+            type="date" 
+            name="fecha_fin" 
+            id="fecha_fin"
+            formControlName="fecha_fin"
+            class="form-control">
 
-    <!-- id_rol -->
-    <div class="id-rol">
-        <div class="form-group row">
-            <label for="id_rol" class="col-sm-3 col-form-label">Id Rol</label>
-            <div class="col-sm-9">
-                <select name="id_rol" id="id_rol" formControlName="id_rol" class="form-control">
-                    <option value="">Selecciona un rol</option>
-                    <option value="1">ADMINISTRADOR</option>
-                    <option value="2">ESTUDIANTE</option>
-                </select>
+            @if (formulario.controls.fecha_fin.invalid && formulario.controls.fecha_fin.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.fecha_fin.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Fecha de fin es obligatoria
+                </div>
+              }
             </div>
+          }
+
+            
         </div>
+
+        <!-- Rol -->
+        <div class="form-group">
+          <label for="id_rol" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            Rol en el Sistema
+            <span class="required">*</span>
+          </label>
+          <select 
+            name="id_rol" 
+            id="id_rol" 
+            formControlName="id_rol" 
+            class="form-select">
+            <option value="" disabled>Selecciona un rol</option>
+            <option value="1">Administrador</option>
+            <option value="2">Estudiante</option>
+          </select>
+          @if (formulario.controls.id_rol.invalid && formulario.controls.id_rol.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.id_rol.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El rol es obligatorio
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Observación -->
+        <div class="form-group form-group--full">
+          <label for="observacion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Observación
+          </label>
+          <textarea
+            id="observacion"
+            class="form-control form-control--textarea"
+            formControlName="observacion"
+            placeholder="Observaciones adicionales (opcional)"
+            rows="3"></textarea>
+          
+          @if (formulario.controls.observacion.invalid && formulario.controls.observacion.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.observacion.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Observación es obligatoria
+                </div>
+              }
+              @if (formulario.controls.observacion.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Observación debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.observacion.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Observación no debe superar los 255 caracteres
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
-    <!-- fecha_fin -->
-    <div class="fecha-fin">
-        <div class="form-group row">
-            <label for="fecha_fin" class="col-sm-3 col-form-label">Fecha Fin</label>
-            <div class="col-sm-9">
-                <input type="date" 
-                name="fecha_fin" 
-                id="fecha_fin"
-                formControlName="fecha_fin"
-                placeholder="Fecha Fin"
-                class="form-control"
-                >
-            </div>
-        </div>
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary"  (click)="volverPersona()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Guardar Persona
+      </button>
     </div>
 
-    <button class="btn btn-success">Guardar</button>
-
-</form>
+  </form>
+</div>

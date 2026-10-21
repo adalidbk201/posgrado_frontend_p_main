@@ -94,7 +94,7 @@ export class ListaAsignaciones {
     // ordena por fecha_creacion descendente (más reciente primero)
     // [...base] crea una copia para no mutar el array del signal original
     return [...base].sort((a, b) =>
-      new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
+      new Date(b.butaca).getTime() - new Date(a.butaca).getTime()
     );
 
   });
@@ -138,10 +138,10 @@ export class ListaAsignaciones {
         this.asignaciones.update(actual => {
 
           //          crea un conjunto de los IDs extraidos.
-          const idsExistentes = new Set(actual.map(p => p.id));
+          const idsExistentes = new Set(actual.map(p => p.butaca));
 
           // De las asignaciones nuevas, quédate solamente con aquellas cuyo ID todavía no existe en asignaciones.
-          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.id));
+          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.butaca));
 
           // Agregar las nuevas asignaciones
           return [...actual, ...sinDuplicar];

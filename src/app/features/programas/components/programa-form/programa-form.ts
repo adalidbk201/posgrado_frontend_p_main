@@ -14,7 +14,7 @@ import { Mencion } from '../../../menciones/models/mencion.interface';
   styleUrl: './programa-form.scss',
 })
 export class ProgramaForm {
-    // Ya no recibe "programa" — este formulario es solo para CREAR
+  // Ya no recibe "programa" — este formulario es solo para CREAR
   // Envia los datos al componente Padre
   readonly guardar =output<ProgramaRequest>();
 

@@ -14,8 +14,7 @@ import { SalasService } from '../../../salas/services/salas.service';
   styleUrl: './butaca-form.scss',
 })
 export class ButacaForm {
-   // Recibe una butaca cuando estamos editando
-  readonly butaca = input<Butaca | null>(null);
+   
 
   // Envía los datos al componente padre
   readonly guardar = output<CrearButacaRequest>();
@@ -65,22 +64,15 @@ export class ButacaForm {
    constructor() {
     this.cargarSalas(1);
     effect(() => {
-      // Almacenar Butaca a editar
-      const butacaActual = this.butaca();
+     
 
-      if (butacaActual) {
-        this.formulario.patchValue({
-          fila: butacaActual.fila,
-          columna: butacaActual.columna,
-          codigo_butaca: butacaActual.codigo_butaca,
-        });
-      } else {
+       
         this.formulario.reset({
           fila: null,
           columna:null,
           codigo_butaca:'',
         });
-      }
+      
     });
   }
 

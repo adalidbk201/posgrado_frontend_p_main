@@ -1,0 +1,201 @@
+<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+     <!-- colacion -->
+    <div class="colacion">
+        <div class="form-group row">
+            <label for="colacion" class="col-sm-3 col-form-label">Colacion</label>
+
+            <div class="col-sm-9">
+
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por descripcion colacion..."
+                    [value]="busquedaColacion()"
+                    (input)="busquedaColacion.set($any($event.target).value)">
+
+                <!-- select -->
+                <select
+                    id="colacion"
+                    name="colacion"
+                    formControlName="colacion"
+                    class="form-control"
+                    (change)="alCambiarColacion($any($event.target).value)"
+                    >
+
+                    <option value="" disabled>Selecciona programa</option>
+
+                    @for (colacion of colacionesFiltradas(); track colacion.id) {
+                        <option [value]="colacion.id">
+                            {{ colacion.descripcion }}
+                        </option>
+                    }       
+                      
+                </select>
+
+                @if (formulario.controls.colacion.invalid &&
+                    formulario.controls.colacion.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.colacion.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo programa es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaColacion()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasColaciones()"
+                        [disabled]="cargandoMasColaciones()">
+                        {{ cargandoMasColaciones() ? 'Cargando...' : 'Cargar más colaciones' }}
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+
+     <!-- titulado - de persona -->
+    <div class="colacion">
+        <div class="form-group row">
+            <label for="colacion" class="col-sm-3 col-form-label">Titulado</label>
+
+            <div class="col-sm-9">
+
+                <!-- buscador -->
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Buscar por nombre titulado..."
+                    [value]="busquedaPersona()"
+                    (input)="busquedaPersona.set($any($event.target).value)">
+
+                <!-- select -->
+                <select
+                    id="titulado"
+                    name="titulado"
+                    formControlName="titulado"
+                    class="form-control"
+                    >
+
+                    <option value="" disabled>Selecciona titulado</option>
+
+                    @for (persona of personasFiltradas(); track persona.id) {
+                        <option [value]="persona.titulado.id">
+                            {{ persona.nombres }}
+                        </option>
+                    }       
+                      
+                </select>
+
+                @if (formulario.controls.titulado.invalid &&
+                    formulario.controls.titulado.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.titulado.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo titulado es obligatorio</div>
+                        }
+                    </div>
+                }
+
+                @if (!busquedaPersona()) {
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm mt-1 p-0"
+                        (click)="cargarMasPersonas()"
+                        [disabled]="cargandoMasPersonas()">
+                        {{ cargandoMasPersonas() ? 'Cargando...' : 'Cargar más personas' }}
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+
+<!-- Mostrar nombre de la sala asociada a la colación -->
+    <div class="sala">
+        <div class="form-group row">
+
+            <label class="form-label col-sm-3 col-form-label">Sala</label>
+            
+            <div class="col-sm-9">
+                <input
+                    type="text"
+                    class="form-control"
+                    [value]="salas().find(sala => sala.id === salaSeleccionadoId())?.nombre_sala ?? ''"
+                    placeholder="Selecciona una colación primero"
+                    readonly
+                >
+            </div>
+            
+
+        </div>
+        
+    </div>
+
+    <!-- Seleccionar nivel -->
+    <div class="nivel">
+        <div class="form-group row">
+            <label class="form-label col-sm-3 col-form-label">Nivel</label>
+
+            <div class="col-sm-9">
+                 <select
+                    class="form-control"
+                    [value]="nivelSeleccionadoId() ?? ''"
+                    [disabled]="!salaSeleccionadoId()"
+                    (change)="alCambiarNivel($any($event.target).value)"
+                    >
+                    <option value="">Selecciona un nivel</option>
+
+                    @for (nivel of nivelesSala(); track nivel.id) {
+                        <option [value]="nivel.id">
+                        {{ nivel.nombre_nivel }} - Butacas-{{ nivel.filas * nivel.columnas}}
+                        </option>
+                    }
+                    </select> 
+            </div>
+        </div>
+    </div>
+    
+    <div class="butaca">
+        <div class="form-group row">
+            <label class="form-label col-sm-3 col-form-label">Butaca</label>
+
+            <div class="col-sm-9">
+                <!-- selecionar butaca -->
+                <select name="butaca" id="butaca"formControlName="butaca"
+                            class="form-control">
+                    <option value="">Selecciona una butaca</option>
+                    @for (butaca of butacas(); track butaca.id) {
+                    <option [value]="butaca.id">
+                    {{ butaca.codigo_butaca }} 
+                    </option>
+                }
+
+                </select>
+                @if (formulario.controls.butaca.invalid &&
+                    formulario.controls.butaca.touched) {
+
+                    <div class="class-error">
+                        @if (formulario.controls.butaca.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">El campo butaca es obligatorio</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+        
+
+
+
+
+    <button  class="btn btn-success" >
+        Guardar
+    </button>
+
+</form>

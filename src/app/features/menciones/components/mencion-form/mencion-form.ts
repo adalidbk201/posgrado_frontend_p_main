@@ -1,7 +1,8 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { Mencion } from '../../models/mencion.interface';
 import { MencionRequest } from '../../models/mencion-request.interface';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-mencion-form',
@@ -10,6 +11,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   styleUrl: './mencion-form.scss',
 })
 export class MencionForm {
+   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
+  // Signal para detectar modo edición
+  readonly esEdicion = signal(false);
+
   // Recibe una mencion cuando estamos editando
   readonly mencion=input<Mencion | null>(null);
 
@@ -17,6 +24,26 @@ export class MencionForm {
   readonly guardar =output<MencionRequest>();
 
   private readonly fb = inject(FormBuilder);
+
+
+  ngOnInit(): void {
+    // Detectar si estamos en modo edición
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.esEdicion.set(true);
+      this.cargarMencion(id);
+    }
+  }
+
+  cargarMencion(id: string): void {
+    // Implementar lógica para cargar datos de la mención
+    console.log('Cargar mención:', id);
+  }
+
+  cancelar(): void {
+    this.router.navigate(['/dashboard/menciones']);
+  }
+
 
   // Crear Formulario con los datos
   readonly formulario=this.fb.nonNullable.group({

@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Programa } from '../../models/programa.interface';
 import { ProgramaRequest } from '../../models/programa-request.interface';
 import { ProgramaForm } from '../../components/programa-form/programa-form';
+import { ProgramaEditarForm } from '../../components/programa-editar-form/programa-editar-form';
 @Component({
   selector: 'app-editar-programa',
-  imports: [ProgramaForm],
+  imports: [ProgramaEditarForm],
   templateUrl: './editar-programa.html',
   styleUrl: './editar-programa.scss',
 })

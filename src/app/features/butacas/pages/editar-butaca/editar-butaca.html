@@ -1,1 +1,26 @@
-<p>editar-butaca works!</p>,
+<section class="editar-sala">
+
+  <div class="encabezado">
+     <h1>Editar Butaca</h1>
+
+    <p>
+      Editar butaca en el sistema.
+    </p>
+  </div>
+
+    @if (butaca()) {
+
+      <app-butaca-editar-form
+        [butaca]="butaca()"
+        (guardar)="actualizarButaca($event)"
+      />
+
+    } @else {
+
+      <p>Cargando Butaca...</p>
+
+    }
+
+</section>
+
+

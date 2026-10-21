@@ -1,67 +1,154 @@
- <section class="lista-titulado">
-    <h1>Titulados : {{ listTitulados().length}}</h1>
-    <p>Total de registros: {{ totalTitulados() }}</p>
+<section class="personas-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Gestión de Titulados
+      </h1>
+      <p class="page-subtitle">
+        Administra los registros de personas del sistema
+      </p>
+    </div>
     
-    <input type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
-
-      <button type="button" class="btn btn-primary" (click)="crearTitulado()">
-        + Nuevo titulado
-    </button>
-
     
+  </div>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr >
-                <th scope="col">#</th>
-         
-                <th scope="col">Grado Posgraduante</th>
-                <th scope="col">Serie</th>
-                <th scope="col">Nro Titulo</th>
-                <th scope="col">Fecha Titulación</th>
-              
-            </tr>
+  <!-- BARRA DE ACCIONES -->
+  <div class="action-bar">
+    <div class="search-container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por nombre, documento o apellido..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar personas">
+      @if (txtBuscar.value) {
+        <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
+
+    <div class="results-info">
+      <span class="results-count">
+        {{ listPersonas().length }} {{ listPersonas().length === 1 ? 'registro' : 'registros' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA DE PERSONAS -->
+  <div class="table-container">
+    @if (listPersonas().length > 0) {
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-number">#</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Nombre Completo</th>
+            <th scope="col">Grado Académico</th>
+            <th scope="col">Programa</th>
+            <th scope="col">Mención</th>
+            
+          </tr>
         </thead>
         <tbody>
-             @for (titulado of listTitulados(); track titulado.id; let idx= $index) {
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
-                    <!-- <td>{{ persona.id }}</td> -->
-                    <td>{{ titulado.grado_posgraduante }}</td>
-                    <td>{{ titulado.serie }}</td>
-                    <td>{{ titulado.nro_titulo }}</td>
-                    <td>{{ titulado.fecha_titulacion }}</td>
-                     
-                    <td>
-                        <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarTitulado(titulado.id)"
-                        >
-                            Editar
-                        </button>
+          @for (persona of listPersonas(); track persona.fecha_creacion; let idx = $index) {
+            <tr class="table-row">
+              <td class="col-number">
+                <span class="row-number">{{ idx + 1 }}</span>
+              </td>
+              <td>
+                <div class="cell-document">
+                  <span class="document-number">{{ persona.nro_documento }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="cell-person">
+                  <div class="person-avatar">
+                    {{ getInitials(persona.nombres, persona.primer_apellido) }}
+                  </div>
+                  <div class="person-info">
+                    <span class="person-name">
+                      {{ persona.nombres }} {{ persona.primer_apellido }} {{ persona.segundo_apellido }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                @if (persona.titulado?.grado?.grado_academico) {
+                  <span class="badge badge-primary">
+                    {{ persona.titulado.grado.grado_academico }}
+                  </span>
+                } @else {
+                  <span class="badge badge-muted">Sin grado</span>
+                }
+              </td>
 
-                        <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarTituladoEliminar(titulado.id)"
-                      >
-                        Eliminar
-                      </button>
-                      
-                    </td>
-                </tr>
-            }
+              <td>
+                @if (persona.titulado?.grado?.grado_academico) {
+                  <span class="badge badge-primary">
+                    {{ persona.titulado.programa.nombre_programa }}
+                  </span>
+                } @else {
+                  <span class="badge badge-muted">Sin programa</span>
+                }
+              </td>
+
+               <td>
+                @if (persona.titulado?.grado?.grado_academico) {
+                  <span class="badge badge-primary">
+                    {{ persona.titulado.mencion.mencion }}
+                  </span>
+                } @else {
+                  <span class="badge badge-muted">Sin mencion</span>
+                }
+              </td>
+              
+            </tr>
+          }
         </tbody>
-        
-       
-    </table>
+      </table>
+    } @else {
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <h3 class="empty-title">No hay personas registradas</h3>
+        <p class="empty-description">
+          Comienza agregando tu primera persona al sistema
+        </p>
+        <button type="button" class="btn-primary" (click)="crearPersona()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Persona
+        </button>
+      </div>
+    }
+  </div>
+
 </section>
+
 
 
 

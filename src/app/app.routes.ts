@@ -171,7 +171,7 @@ export const routes: Routes = [
                 loadComponent:()=>import('./features/butacas/pages/crear-butaca/crear-butaca').then((m)=>m.CrearButaca),
             },
             {
-                path:'butacas/editar/:id',
+                path:'butacas/editar/:id/:id_nivel',
                 loadComponent:()=>import('./features/butacas/pages/editar-butaca/editar-butaca').then((m)=>m.EditarButaca),
             },
 

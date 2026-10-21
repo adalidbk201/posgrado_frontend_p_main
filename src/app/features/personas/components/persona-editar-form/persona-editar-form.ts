@@ -4,6 +4,7 @@ import { Persona } from '../../models/persona.interface';
 import { ActualizarPerfil, ActualizarPersona } from '../../models/persona-request.interface';
 import { Programa } from '../../../programas/models/programa.interface';
 import { ProgramasService } from '../../../programas/services/programas.service';
+import { Router } from '@angular/router';
 
  
 @Component({
@@ -183,6 +184,15 @@ export class PersonaEditarForm {
         });
       });
     }
+
+
+
+  /** NAVEGAR AL COMPONENTE PERSONA */
+  // inyectar Roter para navegacion entre paginas
+  private readonly router = inject(Router);
+  volverPersona(): void {
+    this.router.navigate(['/dashboard/personas']);
+  }
   
     enviarFormulario(): void {
     if (this.formulario.invalid) {

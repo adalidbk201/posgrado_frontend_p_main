@@ -1,7 +1,8 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { Grado } from '../../models/grado.interface';
 import { GradoRequest } from '../../models/grado-request.interface';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-grado-form',
@@ -10,6 +11,26 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   styleUrl: './grado-form.scss',
 })
 export class GradoForm {
+   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  // Signal para detectar modo edición
+  readonly esEdicion = signal(false);
+  ngOnInit(): void {
+    // Detectar si estamos en modo edición
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.esEdicion.set(true);
+      this.cargarGrado(id);
+    }
+  }
+  cargarGrado(id: string): void {
+    // Implementar lógica para cargar datos del grado
+    console.log('Cargar grado:', id);
+  }
+  cancelar(): void {
+    this.router.navigate(['/dashboard/grados']);
+  }
+
   // Recibe un grado cuando estamos editando
   readonly grado = input<Grado | null>(null);
 
