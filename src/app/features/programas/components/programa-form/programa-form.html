@@ -1,169 +1,299 @@
- <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-
-    <!-- nombre_programa -->
-    <div class="nombre_programa">
-        <div class="form-group row">
-            <label for="nombre_programa" class="col-sm-3 col-form-label">Nombre Programa</label>
-
-            <div class="col-sm-9">
-                <input 
-                type="text"
-                name="nombre_programa"
-                id="nombre_programa"
-                class="form-control"
-                formControlName="nombre_programa"
-                placeholder="Ingrese nombre del programa">
-                @if (formulario.controls.nombre_programa.invalid &&
-                     formulario.controls.nombre_programa.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.nombre_programa.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El nombre es obligatorio</div>
-                        }
-                        @if (formulario.controls.nombre_programa.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">El nombre debe tener al menos 3 caracteres</div>
-                        }
-                        @if (formulario.controls.nombre_programa.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">El nombre no debe superar los 100 caracteres</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
+<div class="form-container">
+  
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        Nuevo Programa Académico
+      </h1>
+      <p class="form-subtitle">
+        Complete los campos para registrar un nuevo programa
+      </p>
     </div>
+  </div>
 
-    <!-- grado_academico -->
-    <div class="grado_academico">
-        <div class="form-group row">
-            <label for="grado_academico" class="col-sm-3 col-form-label">Grado Academico</label>
-
-            <div class="col-sm-9">
-
-                <!-- buscador -->
-                 <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre o jerarquia..."
-                    [value]="busquedaGrado()"
-                    (input)="busquedaGrado.set($any($event.target).value)"> 
-
-                <!-- select -->
-                <select
-                    id="grado_academico"
-                    name="grado_academico"
-                    formControlName="grado_academico"
-                    class="form-control">
-
-                    <option value="" disabled>Selecciona un grado</option>
-
-                    @for (grado of gradosFiltradas(); track grado.id) {
-                        <option [value]="grado.id">
-                            {{ grado.id }} {{ grado.grado_academico }}  
-                        </option>
-                    }
-                </select>
-
-                @if (formulario.controls.grado_academico.invalid &&
-                    formulario.controls.grado_academico.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.grado_academico.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo grado  es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaGrado()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasGrados()"
-                        [disabled]="cargandoMasGrados()">
-                        {{ cargandoMasGrados() ? 'Cargando...' : 'Cargar más grados' }}
-                    </button>
-                }
-
-            </div>
-        </div>
-    </div>
-
-    <!-- menciones -->
-        <!-- Menciones del programa -->
-        <div class="mencion">
-        <div class="form-group row">
-            <label for="menciones" class="col-sm-3 col-form-label">
-            Menciones
-            </label>
-
-            <div class="col-sm-9">
-
-            <!-- Buscador de menciones -->
-            <input
-                type="text"
-                class="form-control mb-2"
-                placeholder="Buscar por nombre..."
-                [value]="busquedaMencion()"
-                (input)="busquedaMencion.set($any($event.target).value)"
-            />
-
-            <!-- Selector de múltiples menciones -->
-            <select
-                id="menciones"
-                name="menciones"
-                formControlName="menciones"
-                class="form-control"
-                multiple
-                size="6"
-                [attr.aria-invalid]="
-                formulario.controls.menciones.invalid &&
-                formulario.controls.menciones.touched
-                "
-            >
-                @for (mencion of mencionesFiltradas(); track mencion.id) {
-                <option [ngValue]="mencion.id">
-                    {{ mencion.id }} - {{ mencion.mencion }}
-                </option>
-                }
-            </select>
-
-            <small class="form-text text-muted">
-                Mantén presionada la tecla Ctrl para seleccionar varias menciones
-                en Windows.
-            </small>
-
-            <!-- Validación -->
-            @if (
-                formulario.controls.menciones.invalid &&
-                formulario.controls.menciones.touched
-            ) {
-                @if (formulario.controls.menciones.errors?.['required']) {
-                <div class="alert alert-danger mt-2" role="alert">
-                    Debes seleccionar al menos una mención.
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    
+    <!-- ==================== SECCIÓN: INFORMACIÓN DEL PROGRAMA ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        <h2 class="section-title">Información del Programa</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Nombre del Programa (IZQUIERDA) -->
+        <div class="form-group">
+          <label for="nombre_programa" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            Nombre del Programa
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.nombre_programa.invalid && formulario.controls.nombre_programa.touched"
+            name="nombre_programa"
+            id="nombre_programa"
+            formControlName="nombre_programa"
+            placeholder="Ingrese nombre del programa"
+            autocomplete="off">
+          
+          @if (formulario.controls.nombre_programa.invalid && formulario.controls.nombre_programa.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.nombre_programa.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre es obligatorio
                 </div>
-                }
-            }
-
-            <!-- Cargar más menciones -->
-            @if (!busquedaMencion()) {
-                <button
-                type="button"
-                class="btn btn-link btn-sm mt-1 p-0"
-                (click)="cargarMasMenciones()"
-                [disabled]="cargandoMasMenciones()"
-                >
-                {{
-                    cargandoMasMenciones()
-                    ? 'Cargando...'
-                    : 'Cargar más menciones'
-                }}
-                </button>
-            }
-
+              }
+              @if (formulario.controls.nombre_programa.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.nombre_programa.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre no debe superar los 100 caracteres
+                </div>
+              }
             </div>
+          }
         </div>
+
+        <!-- Grado Académico (DERECHA) -->
+        <div class="form-group">
+          <label for="grado_academico" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Grado Académico
+            <span class="required">*</span>
+          </label>
+
+          <!-- Buscador de grados -->
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por nombre o jerarquía..."
+              [value]="busquedaGrado()"
+              (input)="busquedaGrado.set($any($event.target).value)">
+          </div>
+
+          <!-- Select de grados -->
+          <select
+            id="grado_academico"
+            name="grado_academico"
+            formControlName="grado_academico"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.grado_academico.invalid && formulario.controls.grado_academico.touched">
+
+            <option [ngValue]="null" disabled>Selecciona un grado</option>
+
+            @for (grado of gradosFiltradas(); track grado.id) {
+              <option [ngValue]="grado.id">
+                {{ grado.grado_academico }} (Jerarquía: {{ grado.jerarquia }})
+              </option>
+            }
+          </select>
+
+          @if (formulario.controls.grado_academico.invalid && formulario.controls.grado_academico.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.grado_academico.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El campo grado es obligatorio
+                </div>
+              }
+            </div>
+          }
+
+          @if (!busquedaGrado()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasGrados()"
+              [disabled]="cargandoMasGrados()">
+              @if (cargandoMasGrados()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más grados
+              }
+            </button>
+          }
         </div>
+      </div>
+    </div>
 
+    <!-- ==================== SECCIÓN: MENCIONES ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="8" y1="7" x2="16" y2="7"/>
+          <line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+        <h2 class="section-title">
+          Menciones
+          <span class="section-counter" [class.section-counter--active]="formulario.controls.menciones.value?.length > 0">
+            {{ formulario.controls.menciones.value?.length || 0 }} seleccionada{{ (formulario.controls.menciones.value?.length || 0) !== 1 ? 's' : '' }}
+          </span>
+        </h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Menciones con select múltiple mejorado -->
+        <div class="form-group form-group--full">
+          <label class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Seleccionar Menciones
+            <span class="required">*</span>
+          </label>
 
+          <!-- Buscador de menciones -->
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por nombre..."
+              [value]="busquedaMencion()"
+              (input)="busquedaMencion.set($any($event.target).value)">
+          </div>
 
-    <button class="btn btn-success">Guardar</button>
- </form>
+          <!-- Select múltiple de menciones -->
+          <select
+            id="menciones"
+            name="menciones"
+            formControlName="menciones"
+            class="form-select-multiple"
+            [class.form-select-error]="formulario.controls.menciones.invalid && formulario.controls.menciones.touched"
+            multiple
+            size="6">
+            @for (mencion of mencionesFiltradas(); track mencion.id) {
+              <option [ngValue]="mencion.id">
+                {{mencion.id }}-{{ mencion.mencion }}
+              </option>
+            }
+          </select>
+
+          <!-- Helper message -->
+          <div class="helper-message helper-message--info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            Mantén presionada Ctrl (Windows) o Cmd (Mac) para seleccionar múltiples menciones
+          </div>
+
+          <!-- Validación -->
+          @if (formulario.controls.menciones.invalid && formulario.controls.menciones.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.menciones.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  Debes seleccionar al menos una mención
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Cargar más menciones -->
+          @if (!busquedaMencion()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasMenciones()"
+              [disabled]="cargandoMasMenciones()">
+              @if (cargandoMasMenciones()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más menciones
+              }
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary"(click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Crear Programa
+      </button>
+    </div>
+
+  </form>
+</div>

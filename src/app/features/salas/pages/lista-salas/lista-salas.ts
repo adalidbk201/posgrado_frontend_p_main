@@ -171,6 +171,32 @@ export class ListaSalas {
       },
     });
   }
+
+  /** Activar sala */
+  readonly salaActivarId = signal<string | null>(null);
+
+  seleccionarSalaActivar(id: string): void {
+    this.salaActivarId.set(id);
+  }
+
+  confirmarActivar(): void {
+    const id = this.salaActivarId();
+    if (!id) return;
+
+    this.salasService.activarSala(id).subscribe({
+      next: () => {
+        console.log('Sala activada correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.salas.set([]);
+        this.paginaActual.set(0);
+        this.cargarSalas(1);
+        this.salaActivarId.set(null);
+      },
+      error: (error) => {
+        console.error('Error al activar la sala:', error);
+      },
+    });
+  }
 }
 
 

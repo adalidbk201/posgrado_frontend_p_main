@@ -1,55 +1,110 @@
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+<div class="form-container">
   
-  <!-- nombre_sala -->
-  <div class="nombre_sala">
-
-    <div class="form-group row">
-
-        <label for="nombre_sala" class="col-sm-3 col-form-label">
-        Nombre de la sala
-      </label>
-
-      <div class="col-sm-9">
-          <input
-            class="form-control"
-            id="nombre_sala"
-            type="text"
-            formControlName="nombre_sala"
-            placeholder="Ejemplo: Sala 101"
-          />
-          @if (formulario.controls.nombre_sala.invalid &&
-               formulario.controls.nombre_sala.touched)
-          {
-              <div class="error">
-                @if (formulario.controls.nombre_sala.errors?.['required']) {
-                  <!-- <span>El nombre de la sala es obligatorio.</span> -->
-                  <div class="alert alert-danger sm" role="alert"> El nombre de la sala es obligatorio.</div>
-                }
-
-                @if (formulario.controls.nombre_sala.errors?.['minlength']) {
-                  <div class="alert alert-danger" role="alert">El nombre debe tener al menos 3 caracteres.</div>
-                  <!-- <span>El nombre debe tener al menos 3 caracteres.</span> -->
-                }
-
-                @if (formulario.controls.nombre_sala.errors?.['maxlength']) {
-                  <div class="alert alert-danger" role="alert">El nombre no puede superar los 150 caracteres.</div>
-                  <!-- <span>El nombre no puede superar los 150 caracteres.</span> -->
-                }
-              </div>
-            }
-      </div>
-      
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon title-icon--edit">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar Sala
+      </h1>
+      <p class="form-subtitle">
+        Modifique los datos de la sala seleccionada
+      </p>
     </div>
-    
-
-    
   </div>
 
-   
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    
+    <!-- ==================== SECCIÓN: DATOS DE LA SALA ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <h2 class="section-title">Información de la Sala</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Nombre de la Sala -->
+        <div class="form-group form-group--full">
+          <label for="nombre_sala" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Nombre de la Sala
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.nombre_sala.invalid && formulario.controls.nombre_sala.touched"
+            id="nombre_sala"
+            formControlName="nombre_sala"
+            placeholder="Ejemplo: Auditorio de Posgrado"
+            autocomplete="off">
+          
+          @if (formulario.controls.nombre_sala.invalid && formulario.controls.nombre_sala.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.nombre_sala.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre de la sala es obligatorio
+                </div>
+              }
+              @if (formulario.controls.nombre_sala.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.nombre_sala.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre no puede superar los 150 caracteres
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
 
-  <button  class="btn btn-success" >
-    Guardar
-  </button>
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Guardar Cambios
+      </button>
+    </div>
 
-
-</form>
+  </form>
+</div>

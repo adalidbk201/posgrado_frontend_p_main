@@ -1,231 +1,292 @@
-
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-
-  <!-- Nombre de la sala -->
-  <div class="form-group mb-4">
-    <label for="nombre_sala" class="form-label">
-      Nombre de la sala
-    </label>
-
-    <input
-      id="nombre_sala"
-      type="text"
-      class="form-control"
-      formControlName="nombre_sala"
-      placeholder="Ejemplo: Auditorio de Posgrado"
-    />
-
-    @if (
-      formulario.controls.nombre_sala.invalid &&
-      formulario.controls.nombre_sala.touched
-    ) {
-      <div class="text-danger mt-1">
-        @if (formulario.controls.nombre_sala.errors?.['required']) {
-          <small>El nombre de la sala es obligatorio.</small>
-        }
-
-        @if (formulario.controls.nombre_sala.errors?.['minlength']) {
-          <small>El nombre debe tener al menos 3 caracteres.</small>
-        }
-
-        @if (formulario.controls.nombre_sala.errors?.['maxlength']) {
-          <small>El nombre no puede superar los 150 caracteres.</small>
-        }
-      </div>
-    }
+<div class="form-container">
+  
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Nueva Sala
+      </h1>
+      <p class="form-subtitle">
+        Configure la sala y sus niveles para el evento
+      </p>
+    </div>
   </div>
 
-  <!-- Niveles de la sala -->
-  <div formArrayName="niveles">
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    
+    <!-- ==================== SECCIÓN: DATOS DE LA SALA ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <h2 class="section-title">Información de la Sala</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Nombre de la Sala -->
+        <div class="form-group form-group--full">
+          <label for="nombre_sala" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Nombre de la Sala
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.nombre_sala.invalid && formulario.controls.nombre_sala.touched"
+            id="nombre_sala"
+            formControlName="nombre_sala"
+            placeholder="Ejemplo: Auditorio de Posgrado"
+            autocomplete="off">
+          
+          @if (formulario.controls.nombre_sala.invalid && formulario.controls.nombre_sala.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.nombre_sala.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre de la sala es obligatorio
+                </div>
+              }
+              @if (formulario.controls.nombre_sala.errors?.['minlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre debe tener al menos 3 caracteres
+                </div>
+              }
+              @if (formulario.controls.nombre_sala.errors?.['maxlength']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El nombre no puede superar los 150 caracteres
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Niveles de la sala</h5>
+    <!-- ==================== SECCIÓN: NIVELES DE LA SALA ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-header-left">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="9" y1="21" x2="9" y2="9"/>
+          </svg>
+          <h2 class="section-title">
+            Niveles de la Sala
+            <span class="section-counter" [class.section-counter--active]="niveles.length > 0">
+              {{ niveles.length }} nivel{{ niveles.length !== 1 ? 'es' : '' }}
+            </span>
+          </h2>
+        </div>
+        <button 
+          type="button" 
+          class="btn-add-level"
+          (click)="agregarNivel()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Nivel
+        </button>
+      </div>
+      
+      <div formArrayName="niveles" class="niveles-container">
+        @for (nivelGroup of niveles.controls; track $index; let i = $index) {
+          <div class="nivel-card" [formGroupName]="i">
+            <div class="nivel-card-header">
+              <div class="nivel-card-title">
+                <span class="nivel-number">Nivel {{ i + 1 }}</span>
+                <span class="nivel-separator">•</span>
+                <input 
+                  type="text"
+                  formControlName="nombre_nivel"
+                  class="nivel-name-input"
+                  placeholder="Nombre del nivel (ej: Planta Baja)">
+              </div>
+              <button 
+                type="button"
+                class="btn-remove-level"
+                [disabled]="niveles.length === 1"
+                (click)="eliminarNivel(i)"
+                [attr.aria-label]="'Eliminar nivel ' + (i + 1)"
+                title="Eliminar nivel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
 
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        (click)="agregarNivel()"
-      >
-        + Agregar nivel
+            <div class="nivel-card-body">
+              <div class="nivel-grid">
+                <!-- Número de Nivel -->
+                <div class="form-group">
+                  <label [for]="'numero_nivel_' + i" class="form-label">
+                    Número de Nivel
+                  </label>
+                  <input 
+                    type="number"
+                    class="form-control"
+                    [class.form-control-error]="nivelGroup.controls.numero_nivel.invalid && nivelGroup.controls.numero_nivel.touched"
+                    [id]="'numero_nivel_' + i"
+                    formControlName="numero_nivel"
+                    min="1"
+                    step="1"
+                    placeholder="1">
+                  
+                  @if (nivelGroup.controls.numero_nivel.invalid && nivelGroup.controls.numero_nivel.touched) {
+                    <div class="error-messages">
+                      @if (nivelGroup.controls.numero_nivel.errors?.['required']) {
+                        <div class="error-message error-message--small">
+                          Obligatorio
+                        </div>
+                      }
+                      @if (nivelGroup.controls.numero_nivel.errors?.['min']) {
+                        <div class="error-message error-message--small">
+                          Mínimo 1
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Filas -->
+                <div class="form-group">
+                  <label [for]="'filas_' + i" class="form-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="8" y1="6" x2="21" y2="6"/>
+                      <line x1="8" y1="12" x2="21" y2="12"/>
+                      <line x1="8" y1="18" x2="21" y2="18"/>
+                      <line x1="3" y1="6" x2="3.01" y2="6"/>
+                      <line x1="3" y1="12" x2="3.01" y2="12"/>
+                      <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                    Filas
+                  </label>
+                  <input 
+                    type="number"
+                    class="form-control"
+                    [class.form-control-error]="nivelGroup.controls.filas.invalid && nivelGroup.controls.filas.touched"
+                    [id]="'filas_' + i"
+                    formControlName="filas"
+                    min="1"
+                    step="1"
+                    placeholder="10">
+                  
+                  @if (nivelGroup.controls.filas.invalid && nivelGroup.controls.filas.touched) {
+                    <div class="error-messages">
+                      @if (nivelGroup.controls.filas.errors?.['required']) {
+                        <div class="error-message error-message--small">
+                          Obligatorio
+                        </div>
+                      }
+                      @if (nivelGroup.controls.filas.errors?.['min']) {
+                        <div class="error-message error-message--small">
+                          Mínimo 1
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Columnas -->
+                <div class="form-group">
+                  <label [for]="'columnas_' + i" class="form-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="6" y1="3" x2="6" y2="21"/>
+                      <line x1="12" y1="3" x2="12" y2="21"/>
+                      <line x1="18" y1="3" x2="18" y2="21"/>
+                      <line x1="3" y1="6" x2="21" y2="6"/>
+                    </svg>
+                    Columnas
+                  </label>
+                  <input 
+                    type="number"
+                    class="form-control"
+                    [class.form-control-error]="nivelGroup.controls.columnas.invalid && nivelGroup.controls.columnas.touched"
+                    [id]="'columnas_' + i"
+                    formControlName="columnas"
+                    min="1"
+                    step="1"
+                    placeholder="12">
+                  
+                  @if (nivelGroup.controls.columnas.invalid && nivelGroup.controls.columnas.touched) {
+                    <div class="error-messages">
+                      @if (nivelGroup.controls.columnas.errors?.['required']) {
+                        <div class="error-message error-message--small">
+                          Obligatorio
+                        </div>
+                      }
+                      @if (nivelGroup.controls.columnas.errors?.['min']) {
+                        <div class="error-message error-message--small">
+                          Mínimo 1
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Preview del total de butacas -->
+              <div class="nivel-preview">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="preview-text">
+                  Total de butacas: 
+                  <strong>{{ getButacasTotales(i) }}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Guardar Sala
       </button>
     </div>
 
-    @for (nivel of niveles.controls; track $index; let i = $index) {
-      <div
-        class="card mb-3"
-        [formGroupName]="i"
-      >
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
-          <strong>Nivel {{ i + 1 }}</strong>
-
-          <button
-            type="button"
-            class="btn btn-outline-danger btn-sm"
-            [disabled]="niveles.length === 1"
-            (click)="eliminarNivel(i)"
-          >
-            Eliminar
-          </button>
-        </div>
-
-        <div class="card-body">
-
-          <!-- Número de nivel -->
-          <div class="form-group mb-3">
-            <label [for]="'numero_nivel_' + i">
-              Número de nivel
-            </label>
-
-            <input
-              class="form-control"
-              [id]="'numero_nivel_' + i"
-              type="number"
-              min="1"
-              step="1"
-              formControlName="numero_nivel"
-              placeholder="Ejemplo: 1"
-            />
-
-            @if (
-              nivel.controls.numero_nivel.invalid &&
-              nivel.controls.numero_nivel.touched
-            ) {
-              <div class="text-danger mt-1">
-                @if (nivel.controls.numero_nivel.errors?.['required']) {
-                  <small>El número de nivel es obligatorio.</small>
-                }
-
-                @if (nivel.controls.numero_nivel.errors?.['min']) {
-                  <small>El número debe ser al menos 1.</small>
-                }
-
-                @if (nivel.controls.numero_nivel.errors?.['pattern']) {
-                  <small>Introduce un número entero positivo.</small>
-                }
-              </div>
-            }
-          </div>
-
-          <!-- Nombre del nivel -->
-          <div class="form-group mb-3">
-            <label [for]="'nombre_nivel_' + i">
-              Nombre del nivel
-            </label>
-
-            <input
-              class="form-control"
-              [id]="'nombre_nivel_' + i"
-              type="text"
-              formControlName="nombre_nivel"
-              placeholder="Ejemplo: Planta baja"
-            />
-
-            @if (
-              nivel.controls.nombre_nivel.invalid &&
-              nivel.controls.nombre_nivel.touched
-            ) {
-              <div class="text-danger mt-1">
-                @if (nivel.controls.nombre_nivel.errors?.['required']) {
-                  <small>El nombre del nivel es obligatorio.</small>
-                }
-
-                @if (nivel.controls.nombre_nivel.errors?.['minlength']) {
-                  <small>Debe tener al menos 3 caracteres.</small>
-                }
-
-                @if (nivel.controls.nombre_nivel.errors?.['maxlength']) {
-                  <small>No puede superar los 150 caracteres.</small>
-                }
-              </div>
-            }
-          </div>
-
-          <div class="row">
-
-            <!-- Filas -->
-            <div class="col-md-6 form-group mb-3">
-              <label [for]="'filas_' + i">Número de filas</label>
-
-              <input
-                class="form-control"
-                [id]="'filas_' + i"
-                type="number"
-                min="1"
-                step="1"
-                formControlName="filas"
-                placeholder="Ejemplo: 10"
-              />
-
-              @if (
-                nivel.controls.filas.invalid &&
-                nivel.controls.filas.touched
-              ) {
-                <div class="text-danger mt-1">
-                  @if (nivel.controls.filas.errors?.['required']) {
-                    <small>El número de filas es obligatorio.</small>
-                  }
-
-                  @if (nivel.controls.filas.errors?.['min']) {
-                    <small>Debe existir al menos una fila.</small>
-                  }
-
-                  @if (nivel.controls.filas.errors?.['pattern']) {
-                    <small>Introduce un entero positivo.</small>
-                  }
-                </div>
-              }
-            </div>
-
-            <!-- Columnas -->
-            <div class="col-md-6 form-group mb-3">
-              <label [for]="'columnas_' + i">Número de columnas</label>
-
-              <input
-                class="form-control"
-                [id]="'columnas_' + i"
-                type="number"
-                min="1"
-                step="1"
-                formControlName="columnas"
-                placeholder="Ejemplo: 12"
-              />
-
-              @if (
-                nivel.controls.columnas.invalid &&
-                nivel.controls.columnas.touched
-              ) {
-                <div class="text-danger mt-1">
-                  @if (nivel.controls.columnas.errors?.['required']) {
-                    <small>El número de columnas es obligatorio.</small>
-                  }
-
-                  @if (nivel.controls.columnas.errors?.['min']) {
-                    <small>Debe existir al menos una columna.</small>
-                  }
-
-                  @if (nivel.controls.columnas.errors?.['pattern']) {
-                    <small>Introduce un entero positivo.</small>
-                  }
-                </div>
-              }
-            </div>
-
-          </div>
-        </div>
-      </div>
-    }
-  </div>
-
-  <!-- Guardar sala -->
-  <div class="d-flex justify-content-end mt-4">
-    <button
-      type="submit"
-      class="btn btn-success"
-    >
-      Guardar sala
-    </button>
-  </div>
-
-</form>
+  </form>
+</div>

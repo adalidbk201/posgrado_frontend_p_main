@@ -72,4 +72,10 @@ export class SalasService {
       return this.http.delete<void>(`${this.url}${id}/`);
     }
 
+    // =========================
+    // DELETE - ACTIVAR
+    activarSala(id: string): Observable<void> {
+      return this.http.patch<void>(`${this.url}${id}/activar/`, {});
+    }
+
 }

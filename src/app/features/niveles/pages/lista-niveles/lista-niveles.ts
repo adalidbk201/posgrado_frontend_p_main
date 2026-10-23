@@ -19,6 +19,7 @@ export class ListaNiveles {
  
    // inyectar Roter para navegacion entre paginas
    private readonly router = inject(Router);
+ // Función para validar unicidad de IDs
  
    // =========================
    // Cargar y filtrar

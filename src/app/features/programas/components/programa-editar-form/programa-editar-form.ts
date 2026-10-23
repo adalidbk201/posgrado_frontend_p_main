@@ -6,6 +6,7 @@ import { GradosService } from '../../../grados/services/grados.service';
 import { Grado } from '../../../grados/models/grado.interface';
 import { MencionesService } from '../../../menciones/services/menciones.service';
 import { Mencion } from '../../../menciones/models/mencion.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-programa-editar-form',
@@ -14,6 +15,8 @@ import { Mencion } from '../../../menciones/models/mencion.interface';
   styleUrl: './programa-editar-form.scss',
 })
 export class ProgramaEditarForm {
+    private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   readonly programa = input<Programa | null>(null);
  
   readonly guardar = output<ProgramaRequest>();
@@ -38,6 +41,14 @@ export class ProgramaEditarForm {
     ]),
     
   });
+  
+
+  
+
+  //  Devuelve la cantidad de menciones o 0 si es null/undefined
+  get mencionesCount(): number {
+    return this.formulario.controls.menciones.value?.length ?? 0;
+  }
 
 
   
@@ -183,7 +194,9 @@ export class ProgramaEditarForm {
         }
     
 
-
+  cancelar(): void {
+    this.router.navigate(['/dashboard/programas']);
+  }
 
   constructor() {
     // cargar la primera página de grados al iniciar el formulario

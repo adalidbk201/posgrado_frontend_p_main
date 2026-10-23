@@ -2,6 +2,7 @@ import { Component, effect, inject, input, output } from '@angular/core';
 import { SalaEditarRequest } from '../../models/sala-request.interface';
 import { Sala } from '../../models/sala.interface';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-sala-editar-form',
   imports: [ReactiveFormsModule],
@@ -9,6 +10,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   styleUrl: './sala-editar-form.scss',
 })
 export class SalaEditarForm {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   readonly sala = input<Sala | null>(null);
   readonly nombre_sala = input<string>('');
   readonly guardar = output<SalaEditarRequest>();
@@ -26,6 +29,10 @@ export class SalaEditarForm {
     ],
     
   });
+
+  cancelar(): void {
+    this.router.navigate(['/dashboard/salas']);
+  }
 
   constructor() {
     effect(() => {

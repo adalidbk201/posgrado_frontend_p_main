@@ -2,6 +2,7 @@ import { Component, effect, inject, input, output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -9,6 +10,7 @@ import {
 import { Sala } from '../../models/sala.interface';
 import { SalaRequest } from '../../models/sala-request.interface';
 import { SalasService } from '../../services/salas.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sala-form',
@@ -17,6 +19,8 @@ import { SalasService } from '../../services/salas.service';
   styleUrl: './sala-form.scss',
 })
 export class SalaForm {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
    // Ya no recibe "sala" — este formulario es solo para CREAR
     readonly guardar = output<SalaRequest>();
   
@@ -76,6 +80,13 @@ export class SalaForm {
  get niveles() {
   return this.formulario.controls.niveles;
 }
+// Calcular total de butacas para un nivel específico
+  getButacasTotales(index: number): number {
+    const nivel = this.niveles.at(index) as FormGroup;
+    const filas = nivel.get('filas')?.value || 0;
+    const columnas = nivel.get('columnas')?.value || 0;
+    return filas * columnas;
+  }
 
   // Agrega otro nivel al formulario.
   agregarNivel(): void {
@@ -89,7 +100,9 @@ export class SalaForm {
     }
   }
 
-
+  cancelar(): void {
+    this.router.navigate(['/dashboard/salas']);
+  }
 
   constructor() {
     
