@@ -65,7 +65,7 @@ export class NivelesService {
     // =========================
     // DELETE - ELIMINAR
     eliminarNivel(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}${id}/`);
+        return this.http.delete<void>(`${this.apiUrl}${id}/eliminar-nivel/`);
     }
 
 }

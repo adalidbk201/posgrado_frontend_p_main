@@ -67,8 +67,8 @@ export class SalasService {
     }
 
     // =========================
-    // DELETE - ELIMINAR
-    eliminarSala(id: string): Observable<void> {
+    // DESACTIVAR - ELIMINAR
+    desactivarSala(id: string): Observable<void> {
       return this.http.delete<void>(`${this.url}${id}/`);
     }
 
@@ -77,5 +77,12 @@ export class SalasService {
     activarSala(id: string): Observable<void> {
       return this.http.patch<void>(`${this.url}${id}/activar/`, {});
     }
+
+     // =========================
+    // ELIMINAR SALA
+    eliminarSala(id: string): Observable<void> {
+      return this.http.delete<void>(`${this.url}${id}/eliminar/`);
+    }
+    
 
 }

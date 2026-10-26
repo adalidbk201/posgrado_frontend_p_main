@@ -134,15 +134,15 @@
                 <button
                   type="button"
                   class="btn-icon btn-delete"
-                  (click)="seleccionarSalaEliminar(sala.id)"
+                  (click)="seleccionarSalaDesactivar(sala.id)"
                   data-toggle="modal"
-                  data-target="#modalEliminar"
-                  aria-label="Eliminar sala"
-                  title="Eliminar sala">
+                  data-target="#modalDesactivar"
+                  aria-label="Desactivar sala"
+                  title="Desactivar sala">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                  </svg>
+                      <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+                      <line x1="12" y1="2" x2="12" y2="12"/>
+                    </svg>
                 </button>
                 } @else {
                   <button
@@ -160,6 +160,20 @@
                     </svg>
                   </button>
                 }
+
+                <button
+                  type="button"
+                  class="btn-icon btn-delete"
+                  (click)="seleccionarSalaEliminar(sala.id)"
+                  data-toggle="modal"
+                  data-target="#modalEliminar"
+                  aria-label="Eliminar sala"
+                  title="Eliminar sala">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
 
                
               </div>
@@ -340,6 +354,83 @@
           (click)="confirmarActivar()"
         >
           Activar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+  <!-- Modal para confirmar desactivacion -->
+<div
+  class="modal fade"
+  id="modalDesactivar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalDesactivarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalDesactivarTitulo"
+        >
+          Confirmar Desactivación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de desactivar esta sala?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarDesactivar()"
+        >
+          Desactivar
         </button>
 
       </div>

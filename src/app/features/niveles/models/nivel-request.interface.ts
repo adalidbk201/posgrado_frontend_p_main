@@ -1,7 +1,7 @@
 export interface NivelRequest{
-    numero_nivel:string,
+    numero_nivel:number | null,
     nombre_nivel:string,
-    filas:number,
-    columnas:number,
+    filas:number | null,
+    columnas:number | null,
     sala:string,
 }

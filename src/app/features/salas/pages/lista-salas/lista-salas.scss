@@ -291,10 +291,10 @@
 }
 
 .col-actions {
-  width: 120px;
+  width: 160px; /* ✅ AUMENTADO de 120px a 160px */
   text-align: right;
+  white-space: nowrap; /* ✅ Evita que los botones se rompan */
 }
-
 /* CELDA ESTADO */
 .cell-status {
   .status-badge {
@@ -395,13 +395,14 @@
 /* BOTONES DE ACCIÓN */
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px; /*  REDUCIDO de 8px a 6px para que quepan mejor */
   justify-content: flex-end;
+  flex-wrap: nowrap; /* Evita que los botones salten de línea */
 }
 
 .btn-icon {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -409,31 +410,79 @@
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
+  position: relative;
+  flex-shrink: 0; /* ✅ Evita que los botones se encojan */
   
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
   
+  // Editar - Ámbar
   &.btn-edit {
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(245, 158, 11, 0.12);
     color: var(--color-warning);
     
     &:hover {
       background: var(--color-warning);
       color: white;
-      transform: scale(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
     }
   }
   
+  // Activar - Verde (success)
+  &.btn-activate {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--color-success);
+    
+    &:hover {
+      background: var(--color-success);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // Desactivar - Naranja (warning)
+  &.btn-deactivate {
+    background: rgba(249, 115, 22, 0.12);
+    color: #ea580c;
+    
+    &:hover {
+      background: #ea580c;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(234, 88, 12, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // Eliminar - Rojo (danger)
   &.btn-delete {
-    background: rgba(239, 68, 68, 0.1);
+    background: rgba(239, 68, 68, 0.12);
     color: var(--color-danger);
     
     &:hover {
       background: var(--color-danger);
       color: white;
-      transform: scale(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
     }
   }
 }
@@ -550,6 +599,7 @@
   opacity: 0;
   pointer-events: none;
   transition: all var(--transition-fast);
+  z-index: 10;
 }
 
 .btn-icon:hover::after {
@@ -650,7 +700,12 @@
         }
         
         .action-buttons {
-          justify-content: flex-start;
+          flex-wrap: wrap; /*  Permitir wrap solo en móvil */
+          gap: 8px;
+        }
+        .btn-icon {
+          width: 36px; /*  Ligeramente más grandes en móvil para mejor touch */
+          height: 36px;
         }
       }
     }

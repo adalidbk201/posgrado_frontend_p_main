@@ -1,66 +1,178 @@
-<section class="lista-nivel">
-    <h1>Niveles</h1>
+<section class="niveles-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+          <line x1="15" y1="3" x2="15" y2="21"/>
+        </svg>
+        Gestión de Niveles
+      </h1>
+      <p class="page-subtitle">
+        Visualiza y administra todos los niveles de las salas configuradas
+      </p>
+    </div>
     
-    <input type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
+     
+  </div>
 
-    <button type="button" class="btn btn-primary" (click)="crearSala()">
-        + Nueva sala
-    </button>
+  <!-- BARRA DE ACCIONES -->
+  <div class="action-bar">
+    <div class="search-container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por sala o nivel..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar niveles">
+      @if (txtBuscar.value) {
+        <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
 
-    <table id="example" class="table table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Sala</th>
-                <th scope="col">Nivel</th>
-                <th scope="col">Filas</th>
-                <th scope="col">Columnas</th>
-                <!-- <th scope="col">Butacas</th> -->
-                <!-- <th scope="col">Acciones</th> -->
-            </tr>
+    <div class="results-info">
+      <span class="results-count">
+        {{ listSalas().length }} {{ listSalas().length === 1 ? 'sala' : 'salas' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA DE NIVELES -->
+  <div class="table-container">
+    @if (listSalas().length > 0) {
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-number">#</th>
+            <th scope="col">Sala</th>
+            <th scope="col">Nivel</th>
+            <th scope="col">Filas</th>
+            <th scope="col">Columnas</th>
+            <th scope="col" class="col-actions">Acciones</th>
+          </tr>
         </thead>
         <tbody>
-        
-             @for (sala of listSalas(); track sala.id; let idx= $index ) {
-              @for (nivel of sala.niveles; track nivel.id;) 
-                { 
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
-                    <td>{{ sala.nombre_sala }}</td>
-                    <td>{{ nivel.nombre_nivel}}</td>
-                    <td>{{ nivel.filas}}</td>
-                    <td>{{ nivel.columnas }}</td>
-                    <!-- <td>{{ nivel.filas*nivel.columnas}}</td> -->
-                    <!-- <td> <span class="badge bg-info me-1 mb-1 ml-1"> {{ nivel.nombre_nivel }} </span>  
-                    </td> -->
-
-                    <!-- <td>
-                        <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarSala(sala.id,sala.nombre_sala)"
-                        >
-                            Editar
-                        </button>
-                        <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarSalaEliminar(sala.id)"
-                      >
-                        Eliminar
-                      </button>
-                    </td> -->
-                </tr>
-              } }
+          @for (sala of listSalas(); track sala.id; let idx = $index) {
+            @for (nivel of sala.niveles; track nivel.id) {
+              <tr class="table-row">
+                <td class="col-number">
+                  <span class="row-number">{{ idx + 1 }}</span>
+                </td>
+                <td>
+                  <div class="cell-sala">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sala-icon">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <span class="sala-name">{{ sala.nombre_sala }}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cell-nivel">
+                    <span class="nivel-badge">
+                      <span class="nivel-number">{{ nivel.numero_nivel }}</span>
+                      <span class="nivel-name">{{ nivel.nombre_nivel }}</span>
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cell-dimension">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dimension-icon">
+                      <line x1="8" y1="6" x2="21" y2="6"/>
+                      <line x1="8" y1="12" x2="21" y2="12"/>
+                      <line x1="8" y1="18" x2="21" y2="18"/>
+                      <line x1="3" y1="6" x2="3.01" y2="6"/>
+                      <line x1="3" y1="12" x2="3.01" y2="12"/>
+                      <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                    <span class="dimension-value">{{ nivel.filas }}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cell-dimension">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dimension-icon">
+                      <line x1="6" y1="3" x2="6" y2="21"/>
+                      <line x1="12" y1="3" x2="12" y2="21"/>
+                      <line x1="18" y1="3" x2="18" y2="21"/>
+                      <line x1="3" y1="6" x2="21" y2="6"/>
+                    </svg>
+                    <span class="dimension-value">{{ nivel.columnas }}</span>
+                  </div>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <button
+                      type="button"
+                      class="btn-icon btn-edit"
+                      (click)="editarNivel(nivel.id, nivel.numero_nivel, nivel.nombre_nivel, nivel.filas, nivel.columnas, sala.id)"
+                      aria-label="Editar nivel"
+                      title="Editar nivel">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    
+                    <button
+                      type="button"
+                      class="btn-icon btn-delete"
+                      (click)="seleccionarSalaEliminar(nivel.id)"
+                      data-toggle="modal"
+                      data-target="#modalEliminar"
+                      aria-label="Eliminar nivel"
+                      title="Eliminar nivel">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
         </tbody>
-        
-       
-    </table>
+      </table>
+    } @else {
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+          <line x1="15" y1="3" x2="15" y2="21"/>
+        </svg>
+        <h3 class="empty-title">No hay niveles registrados</h3>
+        <p class="empty-description">
+          Los niveles aparecerán aquí cuando se configuren en las salas
+        </p>
+        <button type="button" class="btn-primary" (click)="crearSala()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Sala
+        </button>
+      </div>
+    }
+  </div>
+
 </section>
 
 
@@ -107,7 +219,7 @@
       <div class="modal-body">
 
         <p class="mb-2">
-          ¿Está seguro de eliminar esta sala?
+          ¿Está seguro de eliminar este nivel?
         </p>
 
         <p class="text-muted mb-0">

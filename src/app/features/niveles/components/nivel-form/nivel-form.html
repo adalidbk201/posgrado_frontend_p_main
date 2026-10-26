@@ -1,1 +1,138 @@
-<p>nivel-form works!</p>,
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    <!-- Número de Nivel -->
+    <div class="form-group">
+        <label for="numero_nivel">
+        Número de Nivel
+        </label>
+        <input 
+        type="number"
+        class="form-control"
+        id="numero_nivel"
+         
+        formControlName="numero_nivel"
+       
+        placeholder="1">
+        
+        @if (formulario.controls.numero_nivel.invalid && formulario.controls.numero_nivel.touched) {
+        <div class="error-messages">
+            @if (formulario.controls.numero_nivel.errors?.['required']) {
+            <div class="error-message error-message--small">
+                Obligatorio
+            </div>
+            }
+            @if (formulario.controls.numero_nivel.errors?.['min']) {
+            <div class="error-message error-message--small">
+                Mínimo 1
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- nombre de Nivel -->
+    <div class="form-group">
+        <label for="nombre_nivel">
+        Nombre de Nivel
+        </label>
+        <input 
+        type="text"
+        class="form-control"
+        id="nombre_nivel"
+         
+        formControlName="nombre_nivel"
+       
+        placeholder="1">
+        
+        @if (formulario.controls.nombre_nivel.invalid && formulario.controls.nombre_nivel.touched) {
+        <div class="error-messages">
+            @if (formulario.controls.nombre_nivel.errors?.['required']) {
+            <div class="error-message error-message--small">
+                Obligatorio
+            </div>
+            }
+            @if (formulario.controls.nombre_nivel.errors?.['min']) {
+            <div class="error-message error-message--small">
+                Mínimo 1
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- filas de Nivel -->
+    <div class="form-group">
+        <label for="filas">
+        Filas
+        </label>
+        <input 
+        type="number"
+        class="form-control"
+        id="filas"
+         
+        formControlName="filas"
+       
+        placeholder="1">
+        
+        @if (formulario.controls.filas.invalid && formulario.controls.filas.touched) {
+        <div class="error-messages">
+            @if (formulario.controls.filas.errors?.['required']) {
+            <div class="error-message error-message--small">
+                Obligatorio
+            </div>
+            }
+            @if (formulario.controls.filas.errors?.['min']) {
+            <div class="error-message error-message--small">
+                Mínimo 1
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+     <!-- columnas de Nivel -->
+    <div class="form-group">
+        <label for="columnas">
+        Filas
+        </label>
+        <input 
+        type="number"
+        class="form-control"
+        id="columnas"
+         
+        formControlName="columnas"
+       
+        placeholder="1">
+        
+        @if (formulario.controls.columnas.invalid && formulario.controls.columnas.touched) {
+        <div class="error-messages">
+            @if (formulario.controls.columnas.errors?.['required']) {
+            <div class="error-message error-message--small">
+                Obligatorio
+            </div>
+            }
+            @if (formulario.controls.columnas.errors?.['min']) {
+            <div class="error-message error-message--small">
+                Mínimo 1
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+     <!-- sala de Nivel -->
+    <div class="form-group">
+        <label for="sala">ID de sala</label>
+        <input
+            id="sala"
+            type="text"
+            class="form-control"
+            [value]="id_sala()"
+            readonly
+        />
+        </div>
+
+    <button  class="btn btn-success" >
+        Guardar
+    </button>
+
+</form>

@@ -179,6 +179,12 @@ export class ListaSalas {
     this.salaActivarId.set(id);
   }
 
+  /** Desactivar sala */
+  readonly salaDesactivarId = signal<string | null>(null);
+   seleccionarSalaDesactivar(id: string): void {
+    this.salaDesactivarId.set(id);
+  }
+
   confirmarActivar(): void {
     const id = this.salaActivarId();
     if (!id) return;
@@ -194,6 +200,25 @@ export class ListaSalas {
       },
       error: (error) => {
         console.error('Error al activar la sala:', error);
+      },
+    });
+  }
+
+  confirmarDesactivar(): void {
+    const id = this.salaDesactivarId();
+    if (!id) return;
+
+    this.salasService.desactivarSala(id).subscribe({
+      next: () => {
+        console.log('Sala desactivada correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.salas.set([]);
+        this.paginaActual.set(0);
+        this.cargarSalas(1);
+        this.salaActivarId.set(null);
+      },
+      error: (error) => {
+        console.error('Error al desactivar la sala:', error);
       },
     });
   }

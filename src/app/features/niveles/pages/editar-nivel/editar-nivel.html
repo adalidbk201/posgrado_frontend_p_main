@@ -1,1 +1,15 @@
-<p>editar-nivel works!</p>,
+ 
+ 
+
+      <app-nivel-form
+       
+        (guardar)="actualizarNivel($event)"
+        
+        [numero_nivel]= "numero_nivel"
+        nombre_nivel="{{ nombre_nivel }}"
+        [filas]= "filas"
+        [columnas]= "columnas"
+        id_sala="{{ id_sala }}"
+      />
+ 
+

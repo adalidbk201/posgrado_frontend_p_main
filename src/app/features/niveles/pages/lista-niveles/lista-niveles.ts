@@ -16,7 +16,7 @@ export class ListaNiveles {
   /** LISTAR NIVELES */
  // inyectar salasService
    private readonly salasService = inject(SalasService);
- 
+  private readonly nivelesService = inject(NivelesService);
    // inyectar Roter para navegacion entre paginas
    private readonly router = inject(Router);
  // Función para validar unicidad de IDs
@@ -153,33 +153,33 @@ export class ListaNiveles {
      this.router.navigate(['/dashboard/salas/crear']);
    }
  
-   editarSala(id: string, nombre_sala: string): void {
-     this.router.navigate(['/dashboard/salas/editar', id, nombre_sala]);
+   editarNivel(id: string, numero_nivel:number, nombre_nivel:string, filas:number,columnas:number,id_sala:String): void {
+     this.router.navigate(['/dashboard/niveles/editar', id,numero_nivel,nombre_nivel,filas,columnas,id_sala]);
    }
  
  
    /** Eliminar sala */
-   readonly salaEliminarId = signal<string | null>(null);
+   readonly nivelEliminarId = signal<string | null>(null);
  
    seleccionarSalaEliminar(id: string): void {
-     this.salaEliminarId.set(id);
+     this.nivelEliminarId.set(id);
    }
  
    confirmarEliminacion(): void {
-     const id = this.salaEliminarId();
+     const id = this.nivelEliminarId();
      if (!id) return;
  
-     this.salasService.eliminarSala(id).subscribe({
+     this.nivelesService.eliminarNivel(id).subscribe({
        next: () => {
-         console.log('Sala eliminada correctamente');
+         console.log('Nivel eliminado correctamente');
          // recarga desde el inicio para reflejar el borrado
          this.salas.set([]);
          this.paginaActual.set(0);
          this.cargarSalas(1);
-         this.salaEliminarId.set(null);
+         this.nivelEliminarId.set(null);
        },
        error: (error) => {
-         console.error('Error al eliminar la sala:', error);
+         console.error('Error al eliminar el nivel:', error);
        },
      });
    }
