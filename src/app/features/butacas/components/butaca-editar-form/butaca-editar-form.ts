@@ -2,6 +2,7 @@ import { Component, effect, inject, input, output } from '@angular/core';
 import { Butaca } from '../../models/butaca.interface';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButacaEditarRequest } from '../../models/butaca-request.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-butaca-editar-form',
@@ -10,6 +11,8 @@ import { ButacaEditarRequest } from '../../models/butaca-request.interface';
   styleUrl: './butaca-editar-form.scss',
 })
 export class ButacaEditarForm {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   readonly butaca = input<Butaca | null>(null);
   // readonly nombre_sala = input<string>('');
   readonly guardar = output<ButacaEditarRequest>();

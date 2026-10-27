@@ -21,6 +21,7 @@ export class NivelForm {
   readonly filas = input<number>();
   readonly columnas = input<number>();
   readonly id_sala = input<string>('');
+  readonly nombre_sala = input<string>('');
 
   readonly guardar = output<NivelRequest>();
 
@@ -38,7 +39,7 @@ export class NivelForm {
         [
           Validators.required,
           Validators.minLength(3),
-          Validators.maxLength(150),
+          Validators.maxLength(50),
         ],
       ],
 

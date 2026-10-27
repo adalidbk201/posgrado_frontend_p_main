@@ -19,6 +19,66 @@ export class ListaButacas {
   private readonly salasService = inject(SalasService);
   private readonly router = inject(Router);
 
+      // señal para cambiar de vista
+      vistaActual = signal<'tabla' | 'plano'>('tabla');
+      // =========================
+      // ORGANIZAR BUTACAS PARA EL PLANO
+      // =========================
+
+      readonly filasButacas = computed(() => {
+        const butacas = this.butacas();
+
+        const grupos = new Map<string, Butaca[]>();
+
+        for (const butaca of butacas) {
+          const nombreFila = String(butaca.fila);
+
+          if (!grupos.has(nombreFila)) {
+            grupos.set(nombreFila, []);
+          }
+
+          grupos.get(nombreFila)!.push(butaca);
+        }
+
+        return Array.from(grupos.entries())
+          .sort(([filaA], [filaB]) =>
+            filaA.localeCompare(filaB, undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            })
+          )
+          .map(([nombre, butacas]) => {
+            const ordenadas = [...butacas].sort(
+              (a, b) => Number(a.columna) - Number(b.columna)
+            );
+
+            const porColumna = new Map(
+              ordenadas.map(butaca => [Number(butaca.columna), butaca])
+            );
+
+            const maxColumna = Math.max(
+              0,
+              ...ordenadas.map(butaca => Number(butaca.columna))
+            );
+
+            const columnas = Array.from(
+              { length: maxColumna },
+              (_, indice) => {
+                const numeroColumna = indice + 1;
+
+                return {
+                  numero: numeroColumna,
+                  butaca: porColumna.get(numeroColumna) ?? null,
+                };
+              }
+            );
+
+            return {
+              nombre,
+              columnas,
+            };
+          });
+      });
   // =========================
   // BUTACAS
   // =========================

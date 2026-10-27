@@ -1,105 +1,290 @@
- <button type="button" class="btn btn-primary" (click)="crearButaca()">
-            + Nueva butaca
-        </button>
-<!-- Buscar sala -->
-<input
-  type="search"
-  class="form-control"
-  placeholder="Buscar sala por nombre..."
-  [value]="busquedaSala()"
-  (input)="busquedaSala.set($any($event.target).value)"
-/>
-
-<!-- Seleccionar sala -->
-<select
-  class="form-control"
-  [value]="salaSeleccionadoId() ?? ''"
-  (change)="alCambiarSala($any($event.target).value)"
->
-  <option value="">Selecciona una sala</option>
-
-  @for (sala of salasFiltradas(); track sala.id) {
-    <option [value]="sala.id">
-      {{ sala.nombre_sala }}
-    </option>
-  }
-</select>
-
-<!-- Seleccionar nivel -->
-<select
-  class="form-control"
-  [value]="nivelSeleccionadoId() ?? ''"
-  [disabled]="!salaSeleccionadoId()"
-  (change)="alCambiarNivel($any($event.target).value)"
->
-  <option value="">Selecciona un nivel</option>
-
-  @for (nivel of nivelesSala(); track nivel.id) {
-    <option [value]="nivel.id">
-      {{ nivel.nombre_nivel }}
-    </option>
-  }
-</select>
-
- 
-
-
-
-
-
-@if (cargandoButacas()) {
-  <p>Cargando butacas...</p>
-} @else if (!nivelSeleccionadoId()) {
-  <p>Selecciona una sala y un nivel para ver sus butacas.</p>
-} @else if (butacas().length === 0) {
-  <p>No hay butacas registradas en este nivel.</p>
-} @else {
-  <div class="table-responsive">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>N.º</th>
-          <th>Código</th>
-          <th>Fila</th>
-          <th>Columna</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (butaca of butacas(); track butaca.id; let i = $index) {
-          <tr>
-            <td>{{ i + 1 }}</td>
-            <td>{{ butaca.codigo_butaca }}</td>
-            <td>{{ butaca.fila }}</td>
-            <td>{{ butaca.columna }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-sm btn-warning"
-                (click)="editarButaca(butaca.id, butaca.nivel)"
-              >
-                Editar
-              </button>
-              <button
-              type="button"
-              class="btn btn-danger "
-              data-toggle="modal"
-              data-target="#modalEliminar"
-              (click)="seleccionarButacaEliminar(butaca.id)"
-            >
-              Eliminar
-            </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+<section class="butacas-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Gestión de Butacas
+      </h1>
+      <p class="page-subtitle">
+        Administra la distribución de butacas por sala y nivel
+      </p>
+    </div>
+    
+    <button type="button" class="btn-primary" (click)="crearButaca()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva Butaca
+    </button>
   </div>
-}
 
+  <!-- FILTROS DE BÚSQUEDA Y SELECCIÓN -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <!-- Buscador de salas -->
+      <div class="search-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input 
+          type="search"
+          class="search-input"
+          placeholder="Buscar sala por nombre..."
+          [value]="busquedaSala()"
+          (input)="busquedaSala.set($any($event.target).value)"
+          aria-label="Buscar sala">
+      </div>
 
+      <!-- Selector de sala -->
+      <div class="select-wrapper">
+        <label for="sala-select" class="select-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Seleccionar Sala
+        </label>
+        <select
+          id="sala-select"
+          class="form-select"
+          [value]="salaSeleccionadoId() ?? ''"
+          (change)="alCambiarSala($any($event.target).value)">
+          <option value="">Selecciona una sala</option>
+          @for (sala of salasFiltradas(); track sala.id) {
+            <option [value]="sala.id">{{ sala.nombre_sala }}</option>
+          }
+        </select>
+      </div>
 
+      <!-- Selector de nivel -->
+      <div class="select-wrapper">
+        <label for="nivel-select" class="select-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+          </svg>
+          Seleccionar Nivel
+        </label>
+        <select
+          id="nivel-select"
+          class="form-select"
+          [value]="nivelSeleccionadoId() ?? ''"
+          [disabled]="!salaSeleccionadoId()"
+          (change)="alCambiarNivel($any($event.target).value)">
+          <option value="">Selecciona un nivel</option>
+          @for (nivel of nivelesSala(); track nivel.id) {
+            <option [value]="nivel.id">{{ nivel.nombre_nivel }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SWITCHER DE VISTAS -->
+  @if (nivelSeleccionadoId()) {
+    <div class="view-switcher">
+      <button
+        type="button"
+        class="view-btn"
+        [class.view-btn--active]="vistaActual() === 'tabla'"
+        (click)="vistaActual.set('tabla')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        Vista de Tabla
+      </button>
+      <button
+        type="button"
+        class="view-btn"
+        [class.view-btn--active]="vistaActual() === 'plano'"
+        (click)="vistaActual.set('plano')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Vista de Plano
+      </button>
+    </div>
+  }
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="content-area">
+    @if (cargandoButacas()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Cargando butacas...</p>
+      </div>
+    } @else if (!nivelSeleccionadoId()) {
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <h3 class="empty-title">Selecciona una sala y nivel</h3>
+        <p class="empty-description">
+          Selecciona una sala y un nivel para ver sus butacas
+        </p>
+      </div>
+    } @else if (butacas().length === 0) {
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+        </svg>
+        <h3 class="empty-title">No hay butacas registradas</h3>
+        <p class="empty-description">
+          No hay butacas registradas en este nivel
+        </p>
+        <button type="button" class="btn-primary" (click)="crearButaca()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Primera Butaca
+        </button>
+      </div>
+    } @else {
+      @if (vistaActual() === 'tabla') {
+        <!-- VISTA DE TABLA -->
+        <div class="table-container">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-number">N.º</th>
+                <th scope="col">Código</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
+                <th scope="col" class="col-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (butaca of butacas(); track butaca.id; let i = $index) {
+                <tr class="table-row">
+                  <td class="col-number">
+                    <span class="row-number">{{ i + 1 }}</span>
+                  </td>
+                  <td>
+                    <span class="codigo-badge">{{ butaca.codigo_butaca }}</span>
+                  </td>
+                  <td>
+                    <span class="dimension-badge dimension-row">
+                      {{ butaca.fila }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="dimension-badge dimension-column">
+                      {{ butaca.columna }}
+                    </span>
+                  </td>
+                  <td class="col-actions">
+                    <div class="action-buttons">
+                      <button
+                        type="button"
+                        class="btn-icon btn-edit"
+                        (click)="editarButaca(butaca.id, butaca.nivel)"
+                        aria-label="Editar butaca"
+                        title="Editar butaca">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-icon btn-delete"
+                        (click)="seleccionarButacaEliminar(butaca.id)"
+                        data-toggle="modal"
+                        data-target="#modalEliminar"
+                        aria-label="Eliminar butaca"
+                        title="Eliminar butaca">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <!-- VISTA DE PLANO -->
+        <div class="plano-container">
+          <div class="plano-header">
+            <h3 class="plano-title">Distribución de Butacas</h3>
+            <p class="plano-subtitle">Selecciona una butaca para editarla</p>
+          </div>
+
+          <div class="frente-sala">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>FRENTE DE LA SALA</span>
+          </div>
+
+          <div class="plano-grid">
+            @for (fila of filasButacas(); track fila.nombre) {
+              <div class="plano-fila">
+                <div class="fila-label">{{ fila.nombre }}</div>
+                <div class="fila-butacas">
+                  @for (columna of fila.columnas; track columna.numero) {
+                    @if (columna.butaca; as butaca) {
+                      <button
+                        type="button"
+                        class="butaca-card"
+                        [title]="'Butaca: ' + butaca.codigo_butaca + ' | Fila: ' + butaca.fila + ' | Columna: ' + butaca.columna"
+                        (click)="editarButaca(butaca.id, butaca.nivel)"
+                        aria-label="Editar butaca {{ butaca.codigo_butaca }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="butaca-icon">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span class="butaca-code">{{ butaca.codigo_butaca }}</span>
+                      </button>
+                    } @else {
+                      <div class="espacio-vacio" title="Sin butaca"></div>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="plano-legend">
+            <div class="legend-item">
+              <span class="legend-icon legend-occupied"></span>
+              <span>Butaca registrada</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-icon legend-empty"></span>
+              <span>Espacio vacío</span>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+</section>
 
 
 <!-- Modal para confirmar eliminación -->

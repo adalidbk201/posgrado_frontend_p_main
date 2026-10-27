@@ -1,192 +1,299 @@
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+<div class="form-container">
+  
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Nueva Butaca
+      </h1>
+      <p class="form-subtitle">
+        Registra una nueva butaca asignándola a una sala y nivel específico
+      </p>
+    </div>
+  </div>
 
-    <!-- fila -->
-    <div class="rol">
-        <div class="form-group row">
-            <label for="rol"class="col-sm-3 col-form-label">Fila</label>
-            
-            <div class="col-sm-9">
-                <input type="text"
-                nombre="fila"
-                id="fila"
-                class="form-control"
-                formControlName="fila"
-                placeholder="Ingrese rol" >
-                @if (formulario.controls.fila.invalid &&
-                     formulario.controls.fila.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.fila.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo fila es obligatorio</div>
-                        }
-                    
-                    </div>
-                }
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    
+    <!-- ==================== SECCIÓN: UBICACIÓN ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="9" y1="21" x2="9" y2="9"/>
+        </svg>
+        <h2 class="section-title">Ubicación en la Sala</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Fila -->
+        <div class="form-group">
+          <label for="fila" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            Fila
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.fila.invalid && formulario.controls.fila.touched"
+            id="fila"
+            formControlName="fila"
+            placeholder="Ej: A, 1, Primera">
+          
+          @if (formulario.controls.fila.invalid && formulario.controls.fila.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.fila.errors?.['required']) {
+                <div class="error-message error-message--small">El campo fila es obligatorio</div>
+              }
             </div>
+          }
         </div>
+
+        <!-- Columna -->
+        <div class="form-group">
+          <label for="columna" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <line x1="6" y1="3" x2="6" y2="21"/>
+              <line x1="12" y1="3" x2="12" y2="21"/>
+              <line x1="18" y1="3" x2="18" y2="21"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+            </svg>
+            Columna
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.columna.invalid && formulario.controls.columna.touched"
+            id="columna"
+            formControlName="columna"
+            placeholder="Ej: 12, 15">
+          
+          @if (formulario.controls.columna.invalid && formulario.controls.columna.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.columna.errors?.['required']) {
+                <div class="error-message error-message--small">El campo columna es obligatorio</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
-    <!-- columna -->
-    <div class="columna">
-        <div class="form-group row">
-            <label for="nombre"class="col-sm-3 col-form-label">Columna</label>
-
-            <div class="col-sm-9">
-                <input type="text" 
-                name="columna" 
-                id="columna"
-                class="form-control"
-                formControlName="columna"
-                placeholder="Ingrese columna">
-                @if (formulario.controls.columna.invalid &&
-                     formulario.controls.columna.touched) {
-                    
-                    <div class="class-error">
-                        @if (formulario.controls.columna.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo columna es obligatorio</div>
-                        }
-                      
-                    </div>
-                }
+    <!-- ==================== SECCIÓN: IDENTIFICACIÓN ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <h2 class="section-title">Identificación</h2>
+      </div>
+      
+      <div class="form-grid">
+        <!-- Código de Butaca -->
+        <div class="form-group form-group--full">
+          <label for="codigo_butaca" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Código de la Butaca
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.codigo_butaca.invalid && formulario.controls.codigo_butaca.touched"
+            id="codigo_butaca"
+            formControlName="codigo_butaca"
+            placeholder="Ej: A-12, PLANTA-05">
+          
+          @if (formulario.controls.codigo_butaca.invalid && formulario.controls.codigo_butaca.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.codigo_butaca.errors?.['required']) {
+                <div class="error-message error-message--small">El código de butaca es obligatorio</div>
+              }
+              @if (formulario.controls.codigo_butaca.errors?.['minlength']) {
+                <div class="error-message error-message--small">Debe tener al menos 3 caracteres</div>
+              }
+              @if (formulario.controls.codigo_butaca.errors?.['maxlength']) {
+                <div class="error-message error-message--small">No debe superar los 150 caracteres</div>
+              }
             </div>
-
+          }
         </div>
+      </div>
     </div>
 
-    <!-- codigo_butaca -->
-    <div class="descripcion">
-        <div class="form-group row">
-            <label for="descripcion"class="col-sm-3 col-form-label">Codigo Butaca</label>
-            <div class="col-sm-9">
-                <input type="text" 
-                name="codigo_butaca" 
-                id="codigo_butaca"
-                class="form-control"
-                formControlName="codigo_butaca"
-                placeholder="Ingrese descripción">
-                @if (formulario.controls.codigo_butaca.invalid &&
-                     formulario.controls.codigo_butaca.touched) {
-                        
-                    <div class="class-error">
-                        @if (formulario.controls.codigo_butaca.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El codigo Butaca es obligatorio</div>
-                        }
-                        @if (formulario.controls.codigo_butaca.errors?.['minlength']) {
-                            <div class="alert alert-danger" role="alert">El codigo Butaca debe tener al menos 3 caracteres </div>
-                        }
-                        @if (formulario.controls.codigo_butaca.errors?.['maxlength']) {
-                            <div class="alert alert-danger" role="alert">El codigo Butaca no debe superar los 150 caracteres</div>
-                        }
-                    </div>    
-                }
+    <!-- ==================== SECCIÓN: ASIGNACIÓN ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <h2 class="section-title">Asignación a Sala y Nivel</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Sala -->
+        <div class="form-group form-group--full">
+          <label for="id_sala" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Sala
+            <span class="required">*</span>
+          </label>
+
+          <!-- Buscador de salas -->
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por nombre de sala..."
+              [value]="busquedaSala()"
+              (input)="busquedaSala.set($any($event.target).value)">
+          </div>
+
+          <!-- Select de salas -->
+          <select
+            id="id_sala"
+            name="id_sala"
+            formControlName="id_sala"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.id_sala.invalid && formulario.controls.id_sala.touched"
+            (change)="alCambiarSala()">
+
+            <option [ngValue]="null" disabled>Selecciona una sala</option>
+
+            @for (sala of salasFiltradas(); track sala.id) {
+              <option [ngValue]="sala.id">
+                {{ sala.nombre_sala }}
+              </option>
+            }       
+          </select>
+
+          @if (formulario.controls.id_sala.invalid && formulario.controls.id_sala.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.id_sala.errors?.['required']) {
+                <div class="error-message error-message--small">El campo sala es obligatorio</div>
+              }
             </div>
+          }
+
+          @if (!busquedaSala()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasSalas()"
+              [disabled]="cargandoMasSalas()">
+              @if (cargandoMasSalas()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más salas
+              }
+            </button>
+          }
         </div>
-    </div>
 
-     <!-- id_sala -->
-    <div class="id_sala">
-        <div class="form-group row">
-            <label for="id_sala" class="col-sm-3 col-form-label">Sala</label>
-
-            <div class="col-sm-9">
-
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre sala..."
-                    [value]="busquedaSala()"
-                    (input)="busquedaSala.set($any($event.target).value)">
-
-                <!-- select -->
-                <select
-                    id="id_sala"
-                    name="id_sala"
-                    formControlName="id_sala"
-                    class="form-control"
-                    (change)="alCambiarSala()">
-
-                    <option value="" disabled>Selecciona programa</option>
-
-                    @for (sala of salasFiltradas(); track sala.id) {
-                        <option [value]="sala.id">
-                            {{ sala.nombre_sala }}
-                        </option>
-                    }       
-                      
-                </select>
-
-                @if (formulario.controls.id_sala.invalid &&
-                    formulario.controls.id_sala.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.id_sala.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo sala es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaSala()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasSalas()"
-                        [disabled]="cargandoMasSalas()">
-                        {{ cargandoMasSalas() ? 'Cargando...' : 'Cargar más salas' }}
-                    </button>
-                }
-
-            </div>
-        </div>
-    </div>
-
-     <!-- Nivel correspondiente a la Sala seleccionado -->
-        <div class="id_nivel">
-        <div class="form-group row">
-            <label for="id_nivel" class="col-sm-3 col-form-label">
+        <!-- Nivel -->
+        <div class="form-group form-group--full">
+          <label for="id_nivel" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="3" y1="15" x2="21" y2="15"/>
+            </svg>
             Nivel
-            </label>
+            <span class="required">*</span>
+          </label>
 
-            <div class="col-sm-9">
-            <select
-                id="id_nivel"
-                name="id_nivel"
-                formControlName="id_nivel"
-                class="form-control"
-            >
-                <option [ngValue]="null" disabled>
-                Selecciona una mención
-                </option>
+          <select
+            id="id_nivel"
+            name="id_nivel"
+            formControlName="id_nivel"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.id_nivel.invalid && formulario.controls.id_nivel.touched"
+            [disabled]="!salaSeleccionadoId()">
+            
+            <option [ngValue]="null" disabled>
+              {{ salaSeleccionadoId() ? 'Selecciona un nivel' : 'Primero selecciona una sala' }}
+            </option>
 
-                @for (nivel of nivelDelSala(); track nivel.id) {
-                <option [ngValue]="nivel.id">
-                    {{ nivel.nombre_nivel }}
-                </option>
-                }
-            </select>
-
-            @if (!salaSeleccionadoId()) {
-                <small class="form-text text-muted">
-                Primero selecciona una sala.
-                </small>
+            @for (nivel of nivelDelSala(); track nivel.id) {
+              <option [ngValue]="nivel.id">
+                {{ nivel.nombre_nivel }}
+              </option>
             }
+          </select>
 
-            @if (
-                formulario.controls.id_nivel.invalid &&
-                formulario.controls.id_nivel.touched
-            ) {
-                @if (formulario.controls.id_nivel.errors?.['required']) {
-                <div class="alert alert-danger mt-2" role="alert">
-                    Debes seleccionar un Nivel.
-                </div>
-                }
-            }
+          @if (!salaSeleccionadoId()) {
+            <div class="helper-message helper-message--info">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              Primero selecciona una sala para ver los niveles disponibles
             </div>
-        </div>
-        </div>
+          }
 
-    <button  class="btn btn-success" >
-        Guardar
-    </button>
+          @if (formulario.controls.id_nivel.invalid && formulario.controls.id_nivel.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.id_nivel.errors?.['required']) {
+                <div class="error-message error-message--small">Debes seleccionar un nivel</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
 
-</form>
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Guardar Butaca
+      </button>
+    </div>
+
+  </form>
+</div>

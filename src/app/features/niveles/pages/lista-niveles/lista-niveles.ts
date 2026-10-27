@@ -153,8 +153,8 @@ export class ListaNiveles {
      this.router.navigate(['/dashboard/salas/crear']);
    }
  
-   editarNivel(id: string, numero_nivel:number, nombre_nivel:string, filas:number,columnas:number,id_sala:String): void {
-     this.router.navigate(['/dashboard/niveles/editar', id,numero_nivel,nombre_nivel,filas,columnas,id_sala]);
+   editarNivel(id: string, numero_nivel:number, nombre_nivel:string, filas:number,columnas:number,id_sala:String,nombre_sala:string): void {
+     this.router.navigate(['/dashboard/niveles/editar', id,numero_nivel,nombre_nivel,filas,columnas,id_sala,nombre_sala]);
    }
  
  

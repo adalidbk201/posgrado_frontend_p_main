@@ -5,6 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Butaca } from '../../models/butaca.interface';
 import { Sala } from '../../../salas/models/sala.interface';
 import { SalasService } from '../../../salas/services/salas.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -15,7 +16,8 @@ import { SalasService } from '../../../salas/services/salas.service';
 })
 export class ButacaForm {
    
-
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   // Envía los datos al componente padre
   readonly guardar = output<CrearButacaRequest>();
 
@@ -142,6 +144,10 @@ export class ButacaForm {
   }
 
 
+
+  cancelar(): void {
+    this.router.navigate(['/dashboard/salas']);
+  }
 
   enviarFormulario(): void {
   if (this.formulario.invalid) {

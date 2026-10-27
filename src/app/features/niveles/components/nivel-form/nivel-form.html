@@ -1,138 +1,186 @@
+<div class="form-container">
+  
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon title-icon--edit">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar Nivel
+      </h1>
+      <p class="form-subtitle">
+        Modificando configuración de la sala: <strong>{{ nombre_sala() }}</strong>
+      </p>
+    </div>
+  </div>
+
   <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
-    <!-- Número de Nivel -->
-    <div class="form-group">
-        <label for="numero_nivel">
-        Número de Nivel
-        </label>
-        <input 
-        type="number"
-        class="form-control"
-        id="numero_nivel"
-         
-        formControlName="numero_nivel"
-       
-        placeholder="1">
-        
-        @if (formulario.controls.numero_nivel.invalid && formulario.controls.numero_nivel.touched) {
-        <div class="error-messages">
-            @if (formulario.controls.numero_nivel.errors?.['required']) {
-            <div class="error-message error-message--small">
-                Obligatorio
+    
+    <!-- ==================== SECCIÓN: DATOS DEL NIVEL ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+        </svg>
+        <h2 class="section-title">Configuración del Nivel</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Número de Nivel -->
+        <div class="form-group">
+          <label for="numero_nivel" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v8"/>
+              <path d="M8 12h8"/>
+            </svg>
+            Número de Nivel
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.numero_nivel.invalid && formulario.controls.numero_nivel.touched"
+            id="numero_nivel"
+            formControlName="numero_nivel"
+            min="1"
+            step="1"
+            placeholder="Ej: 1">
+          
+          @if (formulario.controls.numero_nivel.invalid && formulario.controls.numero_nivel.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.numero_nivel.errors?.['required']) {
+                <div class="error-message error-message--small">Obligatorio</div>
+              }
+              @if (formulario.controls.numero_nivel.errors?.['min']) {
+                <div class="error-message error-message--small">Mínimo 1</div>
+              }
             </div>
-            }
-            @if (formulario.controls.numero_nivel.errors?.['min']) {
-            <div class="error-message error-message--small">
-                Mínimo 1
-            </div>
-            }
+          }
         </div>
-        }
-    </div>
 
-    <!-- nombre de Nivel -->
-    <div class="form-group">
-        <label for="nombre_nivel">
-        Nombre de Nivel
-        </label>
-        <input 
-        type="text"
-        class="form-control"
-        id="nombre_nivel"
-         
-        formControlName="nombre_nivel"
-       
-        placeholder="1">
-        
-        @if (formulario.controls.nombre_nivel.invalid && formulario.controls.nombre_nivel.touched) {
-        <div class="error-messages">
-            @if (formulario.controls.nombre_nivel.errors?.['required']) {
-            <div class="error-message error-message--small">
-                Obligatorio
-            </div>
-            }
-            @if (formulario.controls.nombre_nivel.errors?.['min']) {
-            <div class="error-message error-message--small">
-                Mínimo 1
-            </div>
-            }
-        </div>
-        }
-    </div>
-
-    <!-- filas de Nivel -->
-    <div class="form-group">
-        <label for="filas">
-        Filas
-        </label>
-        <input 
-        type="number"
-        class="form-control"
-        id="filas"
-         
-        formControlName="filas"
-       
-        placeholder="1">
-        
-        @if (formulario.controls.filas.invalid && formulario.controls.filas.touched) {
-        <div class="error-messages">
-            @if (formulario.controls.filas.errors?.['required']) {
-            <div class="error-message error-message--small">
-                Obligatorio
-            </div>
-            }
-            @if (formulario.controls.filas.errors?.['min']) {
-            <div class="error-message error-message--small">
-                Mínimo 1
-            </div>
-            }
-        </div>
-        }
-    </div>
-
-     <!-- columnas de Nivel -->
-    <div class="form-group">
-        <label for="columnas">
-        Filas
-        </label>
-        <input 
-        type="number"
-        class="form-control"
-        id="columnas"
-         
-        formControlName="columnas"
-       
-        placeholder="1">
-        
-        @if (formulario.controls.columnas.invalid && formulario.controls.columnas.touched) {
-        <div class="error-messages">
-            @if (formulario.controls.columnas.errors?.['required']) {
-            <div class="error-message error-message--small">
-                Obligatorio
-            </div>
-            }
-            @if (formulario.controls.columnas.errors?.['min']) {
-            <div class="error-message error-message--small">
-                Mínimo 1
-            </div>
-            }
-        </div>
-        }
-    </div>
-
-     <!-- sala de Nivel -->
-    <div class="form-group">
-        <label for="sala">ID de sala</label>
-        <input
-            id="sala"
+        <!-- Nombre del Nivel -->
+        <div class="form-group">
+          <label for="nombre_nivel" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Nombre del Nivel
+            <span class="required">*</span>
+          </label>
+          <input 
             type="text"
             class="form-control"
-            [value]="id_sala()"
-            readonly
-        />
+            [class.form-control-error]="formulario.controls.nombre_nivel.invalid && formulario.controls.nombre_nivel.touched"
+            id="nombre_nivel"
+            formControlName="nombre_nivel"
+            placeholder="Ej: Planta Baja">
+          
+          @if (formulario.controls.nombre_nivel.invalid && formulario.controls.nombre_nivel.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.nombre_nivel.errors?.['required']) {
+                <div class="error-message error-message--small">Obligatorio</div>
+              }
+            </div>
+          }
         </div>
 
-    <button  class="btn btn-success" >
-        Guardar
-    </button>
+        <!-- Filas -->
+        <div class="form-group">
+          <label for="filas" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            Número de Filas
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.filas.invalid && formulario.controls.filas.touched"
+            id="filas"
+            formControlName="filas"
+            min="1"
+            step="1"
+            placeholder="Ej: 10">
+          
+          @if (formulario.controls.filas.invalid && formulario.controls.filas.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.filas.errors?.['required']) {
+                <div class="error-message error-message--small">Obligatorio</div>
+              }
+              @if (formulario.controls.filas.errors?.['min']) {
+                <div class="error-message error-message--small">Mínimo 1</div>
+              }
+            </div>
+          }
+        </div>
 
-</form>
+        <!-- Columnas -->
+        <div class="form-group">
+          <label for="columnas" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <line x1="6" y1="3" x2="6" y2="21"/>
+              <line x1="12" y1="3" x2="12" y2="21"/>
+              <line x1="18" y1="3" x2="18" y2="21"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+            </svg>
+            Número de Columnas
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.columnas.invalid && formulario.controls.columnas.touched"
+            id="columnas"
+            formControlName="columnas"
+            min="1"
+            step="1"
+            placeholder="Ej: 12">
+          
+          @if (formulario.controls.columnas.invalid && formulario.controls.columnas.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.columnas.errors?.['required']) {
+                <div class="error-message error-message--small">Obligatorio</div>
+              }
+              @if (formulario.controls.columnas.errors?.['min']) {
+                <div class="error-message error-message--small">Mínimo 1</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Guardar Cambios
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -29,7 +29,7 @@ export class EditarNivel {
      readonly filas = Number(this.route.snapshot.paramMap.get('filas'));
      readonly columnas = Number(this.route.snapshot.paramMap.get('columnas'));
      readonly id_sala = this.route.snapshot.paramMap.get('id_sala');
-    
+     readonly nombre_sala = this.route.snapshot.paramMap.get('nombre_sala');
   
     // Creamos un signal que inicialmente no contiene ningun nivel.
    readonly nivel = <Nivel | null>(null)

@@ -156,7 +156,7 @@ export const routes: Routes = [
                 loadComponent:()=>import('./features/niveles/pages/crear-nivel/crear-nivel').then((m)=>m.CrearNivel),
             },
             {
-                path:'niveles/editar/:id/:numero_nivel/:nombre_nivel/:filas/:columnas/:id_sala',
+                path:'niveles/editar/:id/:numero_nivel/:nombre_nivel/:filas/:columnas/:id_sala/:nombre_sala',
                 loadComponent:()=>import('./features/niveles/pages/editar-nivel/editar-nivel').then((m)=>m.EditarNivel),
             },
 
