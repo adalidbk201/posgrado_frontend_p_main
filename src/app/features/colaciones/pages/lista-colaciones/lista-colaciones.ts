@@ -169,4 +169,56 @@ export class ListaColaciones {
       },
     });
   }
+
+
+   /** Activar colacion */
+  readonly colacionActivarId = signal<string | null>(null);
+
+  seleccionarColacionActivar(id: string): void {
+    this.colacionActivarId.set(id);
+  }
+
+  /** Desactivar colacion */
+  readonly colacionDesactivarId = signal<string | null>(null);
+   seleccionarColacionDesactivar(id: string): void {
+    this.colacionDesactivarId.set(id);
+  }
+
+  confirmarActivar(): void {
+    const id = this.colacionActivarId();
+    if (!id) return;
+
+    this.colacionesService.activarColacion(id).subscribe({
+      next: () => {
+        console.log('Colacion activada correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.colaciones.set([]);
+        this.paginaActual.set(0);
+        this.cargarColaciones(1);
+        this.colacionActivarId.set(null);
+      },
+      error: (error) => {
+        console.error('Error al activar la sala:', error);
+      },
+    });
+  }
+
+  confirmarDesactivar(): void {
+    const id = this.colacionDesactivarId();
+    if (!id) return;
+
+    this.colacionesService.desactivarColacion(id).subscribe({
+      next: () => {
+        console.log('Colacion desactivada correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.colaciones.set([]);
+        this.paginaActual.set(0);
+        this.cargarColaciones(1);
+        this.colacionActivarId.set(null);
+      },
+      error: (error) => {
+        console.error('Error al desactivar la sala:', error);
+      },
+    });
+  }
 }

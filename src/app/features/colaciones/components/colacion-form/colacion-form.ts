@@ -6,6 +6,7 @@ import { SalasService } from '../../../salas/services/salas.service';
 import { Sala } from '../../../salas/models/sala.interface';
 import { ProgramasService } from '../../../programas/services/programas.service';
 import { Programa } from '../../../programas/models/programa.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-colacion-form',
@@ -14,6 +15,8 @@ import { Programa } from '../../../programas/models/programa.interface';
   styleUrl: './colacion-form.scss',
 })
 export class ColacionForm {
+   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   // Recibe una colacion cuando estamos editando
   readonly colacion=input<Colacion | null>(null);
 
@@ -129,7 +132,19 @@ export class ColacionForm {
 
       this.salasService.getSalaPorId(idSala).subscribe({
         next: (respuesta) => {
-          this.salas.update(actual => [respuesta.Data, ...actual]);
+          const salaObtenida = respuesta.Data;
+
+          this.salas.update(actual => {
+            // Volver a comprobar cuando termina la petición HTTP.
+            const yaExiste = actual.some(s => s.id === salaObtenida.id);
+
+            if (yaExiste) return actual;
+
+            return [salaObtenida, ...actual];
+          });
+        },
+        error: (error) => {
+          console.error('Error al obtener la sala de la colación:', error);
         },
       });
     }
@@ -200,7 +215,21 @@ export class ColacionForm {
 
       this.programasService.getProgramaPorId(idPrograma).subscribe({
         next: (respuesta) => {
-          this.programas.update(actual => [respuesta.Data, ...actual]);
+          const programaObtenido = respuesta.Data;
+
+          this.programas.update(actual => {
+            // Volver a comprobar cuando termina la petición HTTP.
+            const yaExiste = actual.some(
+              p => p.id === programaObtenido.id
+            );
+
+            if (yaExiste) return actual;
+
+            return [programaObtenido, ...actual];
+          });
+        },
+        error: (error) => {
+          console.error('Error al obtener el programa de la colación:', error);
         },
       });
     }
@@ -208,6 +237,9 @@ export class ColacionForm {
 
 
 
+    cancelar(): void {
+    this.router.navigate(['/dashboard/colaciones']);
+  }
 
   constructor(){
      // cargar la primera página de programas al iniciar el formulario

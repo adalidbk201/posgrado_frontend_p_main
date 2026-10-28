@@ -54,6 +54,9 @@ export class ButacaEditarForm {
     });
   }
 
+  cancelar(): void {
+    this.router.navigate(['/dashboard/butacas']);
+  }
   enviarFormulario(): void {
     console.log('Se ejecutó enviarFormulario()');
 

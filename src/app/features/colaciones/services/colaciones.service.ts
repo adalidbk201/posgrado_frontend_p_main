@@ -67,4 +67,17 @@ export class ColacionesService {
     eliminarColacion(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}${id}/`);
     }
-}
+
+    // =========================
+    // ACTIVAR
+    activarColacion(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}${id}/activar/`,{});
+    }
+
+    // =========================
+    // DESACTIVAR
+    desactivarColacion(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}${id}/desactivar/`,{});
+    }
+}    
+

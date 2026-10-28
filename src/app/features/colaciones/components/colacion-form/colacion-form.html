@@ -1,194 +1,328 @@
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-    <!-- fecha-colacion -->
-    <div class="fecha_colacion">
-        <div class="form-group row">
-            <label for="fecha_colacion" class="col-sm-3 col-form-label">Fecha Colación</label>
-            <div class="col-sm-9">
-                <input 
-                type="date"
-                id="fecha_colacion"
-                name="fecha_colacion"
-                class="form-control"
-                formControlName="fecha_colacion">
-                @if(formulario.controls.fecha_colacion.invalid &&
-                    formulario.controls.fecha_colacion.touched){
-                    
-                    <div class="class-error">
-                        @if(formulario.controls.fecha_colacion.errors?.['required']){
-                            <div class="alert alert-danger" role="alert">La fecha de Colación es obligatorio</div>
-                        }
-                        
-                    </div>
-                }
+<div class="form-container">
+  
+  <!-- HEADER DINÁMICO (Crear/Editar) -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        @if (colacion()) {
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon title-icon--edit">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Editar Colación
+        } @else {
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            <line x1="12" y1="17" x2="12" y2="22"/>
+          </svg>
+          Nueva Colación
+        }
+      </h1>
+      <p class="form-subtitle">
+        @if (colacion()) {
+          Modifica los datos de la colación seleccionada
+        } @else {
+          Registra una nueva ceremonia de graduación en el sistema
+        }
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    
+    <!-- ==================== SECCIÓN: INFORMACIÓN GENERAL ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <h2 class="section-title">Información General</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Fecha de Colación -->
+        <div class="form-group">
+          <label for="fecha_colacion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Fecha de Colación
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="date"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.fecha_colacion.invalid && formulario.controls.fecha_colacion.touched"
+            id="fecha_colacion"
+            name="fecha_colacion"
+            formControlName="fecha_colacion">
+          
+          @if (formulario.controls.fecha_colacion.invalid && formulario.controls.fecha_colacion.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.fecha_colacion.errors?.['required']) {
+                <div class="error-message error-message--small">La fecha de colación es obligatoria</div>
+              }
             </div>
+          }
         </div>
+
+        <!-- Turno -->
+        <div class="form-group">
+          <label for="turno" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Turno
+            <span class="required">*</span>
+          </label>
+          <select 
+            name="turno" 
+            id="turno"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.turno.invalid && formulario.controls.turno.touched"
+            formControlName="turno">
+            <option value="" disabled>Selecciona un turno</option>
+            <option value="MAÑANA">Mañana</option>
+            <option value="TARDE">Tarde</option>
+          </select>
+          
+          @if (formulario.controls.turno.invalid && formulario.controls.turno.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.turno.errors?.['required']) {
+                <div class="error-message error-message--small">El campo turno es obligatorio</div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group form-group--full">
+          <label for="descripcion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Descripción
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.descripcion.invalid && formulario.controls.descripcion.touched"
+            id="descripcion"
+            name="descripcion"
+            formControlName="descripcion"
+            placeholder="Ingrese descripción de la colación">
+          
+          @if (formulario.controls.descripcion.invalid && formulario.controls.descripcion.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.descripcion.errors?.['required']) {
+                <div class="error-message error-message--small">La descripción es obligatoria</div>
+              }
+              @if (formulario.controls.descripcion.errors?.['minlength']) {
+                <div class="error-message error-message--small">Debe tener al menos 3 caracteres</div>
+              }
+              @if (formulario.controls.descripcion.errors?.['maxlength']) {
+                <div class="error-message error-message--small">No debe superar los 150 caracteres</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
-    <!-- turno -->
-     <div class="turno">
-        <div class="form-group row">
-            <label for="turno" class="col-sm-3 col-form-label">Turno</label>
-            <div class="col-sm-9">
-                <select name="turno" id="turno"
-                    class="form-control"
-                    formControlName="turno">
-                    <option value="">Selecciona Turno</option>
-                    <option value="TARDE">TARDE</option>
-                    <option value="MAÑANA">MAÑANA</option>
-                </select>
-                @if(formulario.controls.turno.invalid &&
-                    formulario.controls.turno.touched){
-                    
-                    <div class="class-error">
-                        @if(formulario.controls.turno.errors?.['required']){
-                            <div class="alert alert-danger" role="alert">El campo turno es obligatorio</div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-     </div>
+    <!-- ==================== SECCIÓN: ASIGNACIÓN ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <h2 class="section-title">Asignación de Sala y Programa</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Sala -->
+        <div class="form-group">
+          <label for="sala" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Sala
+            <span class="required">*</span>
+          </label>
 
-    <!-- descripcion -->
-    <div class="descripcion">
-        <div class="form-group row">
-            <label for="descripcion" class="col-sm-3 col-form-label">Descripcion</label>
-            <div class="col-sm-9">
-                <input 
-                type="text"
-                id="descripcion"
-                name="descripcion"
-                class="form-control"
-                placeholder="Ingrese descripción"
-                formControlName="descripcion">
-                @if(formulario.controls.descripcion.invalid &&
-                    formulario.controls.descripcion.touched){
-                    <div class="class-error">
-                        @if(formulario.controls.descripcion.errors?.['required']){
-                            <div class="alert alert-danger" role="alert">El campo descripción es obligatorio</div>
-                        }
-                        @if(formulario.controls.descripcion.errors?.['minlength']){
-                            <div class="alert alert-danger" role="alert">La descripción debe tener al menos 3 caracteres</div>
-                        }
-                        @if(formulario.controls.descripcion.errors?.['maxlength']){
-                            <div class="alert alert-danger" role="alert">La descripción no debe superar los 150 caracteres</div>
-                        }
-                    </div>
-                }
+          <!-- Buscador de salas -->
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por nombre..."
+              [value]="busquedaSala()"
+              (input)="busquedaSala.set($any($event.target).value)">
+          </div>
+
+          <!-- Select de salas -->
+          <select
+            id="sala"
+            name="sala"
+            formControlName="sala"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.sala.invalid && formulario.controls.sala.touched">
+
+            <option [ngValue]="null" disabled>Selecciona una sala</option>
+
+            @for (sala of salasFiltradas(); track sala.id) {
+              <option [ngValue]="sala.id">
+                {{ sala.nombre_sala }} @if (sala.estado) { ({{ sala.estado }}) }
+              </option>
+            }
+          </select>
+
+          @if (formulario.controls.sala.invalid && formulario.controls.sala.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.sala.errors?.['required']) {
+                <div class="error-message error-message--small">El campo sala es obligatorio</div>
+              }
             </div>
+          }
+
+          @if (!busquedaSala()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasSalas()"
+              [disabled]="cargandoMasSalas()">
+              @if (cargandoMasSalas()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más salas
+              }
+            </button>
+          }
         </div>
+
+        <!-- Programa -->
+        <div class="form-group">
+          <label for="programa" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            Programa
+            <span class="required">*</span>
+          </label>
+
+          <!-- Buscador de programas -->
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por nombre..."
+              [value]="busquedaPrograma()"
+              (input)="busquedaPrograma.set($any($event.target).value)">
+          </div>
+
+          <!-- Select de programas -->
+          <select
+            id="programa"
+            name="programa"
+            formControlName="programa"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.programa.invalid && formulario.controls.programa.touched">
+
+            <option [ngValue]="null" disabled>Selecciona un programa</option>
+
+            @for (programa of programasFiltradas(); track programa.id) {
+              <option [ngValue]="programa.id">
+                {{ programa.nombre_programa }}
+              </option>
+            }
+          </select>
+
+          @if (formulario.controls.programa.invalid && formulario.controls.programa.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.programa.errors?.['required']) {
+                <div class="error-message error-message--small">El campo programa es obligatorio</div>
+              }
+            </div>
+          }
+
+          @if (!busquedaPrograma()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasProgramas()"
+              [disabled]="cargandoMasProgramas()">
+              @if (cargandoMasProgramas()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más programas
+              }
+            </button>
+          }
+        </div>
+      </div>
     </div>
 
-    <!-- sala -->
-    <div class="sala">
-        <div class="form-group row">
-            <label for="sala" class="col-sm-3 col-form-label">Sala</label>
-            
-            <div class="col-sm-9">
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre..."
-                    [value]="busquedaSala()"
-                    (input)="busquedaSala.set($any($event.target).value)">
-
-                <!-- select -->
-                 <select
-                    id="sala"
-                    name="sala"
-                    formControlName="sala"
-                    class="form-control">
-
-                    <option value="" disabled>Selecciona una sala</option>
-
-                    @for (sala of salasFiltradas(); track sala.id) {
-                        <option [value]="sala.id">
-                            {{ sala.estado }} {{ sala.nombre_sala }} 
-                        </option>
-                    }
-                </select>
-
-                @if (formulario.controls.sala.invalid &&
-                    formulario.controls.sala.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.sala.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo sala es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaSala()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasSalas()"
-                        [disabled]="cargandoMasSalas()">
-                        {{ cargandoMasSalas() ? 'Cargando...' : 'Cargar más salas' }}
-                    </button>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!-- programa -->
-    <div class="programa">
-        <div class="form-group row">
-            <label for="programa" class="col-sm-3 col-form-label">Programa</label>
-            <div class="col-sm-9">
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre..."
-                    [value]="busquedaPrograma()"
-                    (input)="busquedaPrograma.set($any($event.target).value)">
-
-                <!-- select -->
-                 <select
-                    id="programa"
-                    name="programa"
-                    formControlName="programa"
-                    class="form-control">
-
-                    <option value="" disabled>Selecciona un programa</option>
-
-                    @for (programa of programasFiltradas(); track programa.id) {
-                        <option [value]="programa.id">
-                            {{ programa.nombre_programa }}  
-                        </option>
-                    }
-                </select>
-
-                @if (formulario.controls.programa.invalid &&
-                    formulario.controls.programa.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.programa.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo programa es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaPrograma()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasProgramas()"
-                        [disabled]="cargandoMasProgramas()">
-                        {{ cargandoMasProgramas() ? 'Cargando...' : 'Cargar más programas' }}
-                    </button>
-                }
-            </div>
-        </div>
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          @if (colacion()) {
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          } @else {
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          }
+        </svg>
+        {{ colacion() ? 'Guardar Cambios' : 'Crear Colación' }}
+      </button>
     </div>
 
-
-
-
-
-
-    <button class="btn btn-success">Guardar</button>
-
-</form>
+  </form>
+</div>

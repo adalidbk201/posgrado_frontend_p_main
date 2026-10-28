@@ -389,7 +389,7 @@ export class AsignacionForm {
         this.formulario.patchValue({
           colacion: asignacionActual.colacion,
           titulado: asignacionActual.titulado,
-          butaca: asignacionActual.butaca,
+          // butaca: asignacionActual.butaca,
         });
 
         // Sincronizar la colación seleccionada al editar.

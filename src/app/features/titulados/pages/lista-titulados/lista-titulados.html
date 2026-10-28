@@ -1,23 +1,27 @@
-<section class="personas-container">
+<section class="titulados-container">
   
   <!-- HEADER DE LA SECCIÓN -->
   <div class="page-header">
     <div class="page-header-content">
       <h1 class="page-title">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
         Gestión de Titulados
       </h1>
       <p class="page-subtitle">
-        Administra los registros de personas del sistema
+        Administra los registros de personas tituladas del sistema
       </p>
     </div>
     
-    
+    <!-- <button type="button" class="btn-primary" (click)="crearTitulado()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nuevo Titulado
+    </button> -->
   </div>
 
   <!-- BARRA DE ACCIONES -->
@@ -33,7 +37,7 @@
         #txtBuscar
         placeholder="Buscar por nombre, documento o apellido..."
         (input)="ejecutarBusqueda(txtBuscar.value)"
-        aria-label="Buscar personas">
+        aria-label="Buscar titulados">
       @if (txtBuscar.value) {
         <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,12 +50,12 @@
 
     <div class="results-info">
       <span class="results-count">
-        {{ listPersonas().length }} {{ listPersonas().length === 1 ? 'registro' : 'registros' }}
+        {{ listPersonas().length }} {{ listPersonas().length === 1 ? 'titulado' : 'titulados' }}
       </span>
     </div>
   </div>
 
-  <!-- TABLA DE PERSONAS -->
+  <!-- TABLA DE TITULADOS -->
   <div class="table-container">
     @if (listPersonas().length > 0) {
       <table class="modern-table">
@@ -63,7 +67,7 @@
             <th scope="col">Grado Académico</th>
             <th scope="col">Programa</th>
             <th scope="col">Mención</th>
-            
+            <!-- <th scope="col" class="col-actions">Acciones</th> -->
           </tr>
         </thead>
         <tbody>
@@ -91,34 +95,61 @@
               </td>
               <td>
                 @if (persona.titulado?.grado?.grado_academico) {
-                  <span class="badge badge-primary">
+                  <span class="grado-badge">
                     {{ persona.titulado.grado.grado_academico }}
                   </span>
                 } @else {
-                  <span class="badge badge-muted">Sin grado</span>
+                  <span class="badge-empty">Sin grado</span>
                 }
               </td>
 
               <td>
-                @if (persona.titulado?.grado?.grado_academico) {
-                  <span class="badge badge-primary">
+                @if (persona.titulado?.programa?.nombre_programa) {
+                  <span class="programa-badge">
                     {{ persona.titulado.programa.nombre_programa }}
                   </span>
                 } @else {
-                  <span class="badge badge-muted">Sin programa</span>
+                  <span class="badge-empty">Sin programa</span>
                 }
               </td>
 
-               <td>
-                @if (persona.titulado?.grado?.grado_academico) {
-                  <span class="badge badge-primary">
+              <td>
+                @if (persona.titulado?.mencion?.mencion) {
+                  <span class="mencion-badge">
                     {{ persona.titulado.mencion.mencion }}
                   </span>
                 } @else {
-                  <span class="badge badge-muted">Sin mencion</span>
+                  <span class="badge-empty">Sin mención</span>
                 }
               </td>
-              
+
+              <!-- <td class="col-actions">
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-icon btn-edit"
+                    (click)="editarTitulado(persona.id)"
+                    aria-label="Editar titulado"
+                    title="Editar titulado">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    class="btn-icon btn-delete"
+                    (click)="eliminarTitulado(persona.id)"
+                    aria-label="Eliminar titulado"
+                    title="Eliminar titulado">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </td> -->
             </tr>
           }
         </tbody>
@@ -127,22 +158,20 @@
       <!-- ESTADO VACÍO -->
       <div class="empty-state">
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
-        <h3 class="empty-title">No hay personas registradas</h3>
+        <h3 class="empty-title">No hay titulados registrados</h3>
         <p class="empty-description">
-          Comienza agregando tu primera persona al sistema
+          Comienza agregando tu primer titulado al sistema
         </p>
-        <button type="button" class="btn-primary" (click)="crearPersona()">
+        <!-- <button type="button" class="btn-primary" (click)="crearTitulado()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"/>
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-          Agregar Persona
-        </button>
+          Agregar Titulado
+        </button> -->
       </div>
     }
   </div>

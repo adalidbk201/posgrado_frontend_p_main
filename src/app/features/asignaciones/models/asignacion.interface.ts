@@ -1,7 +1,14 @@
 export interface Asignacion{
     colacion:string,
     titulado:string,
-    butaca:string,
+    butaca: {
+        id: string,
+        fila: number | null,
+        columna: number | null,
+        codigo_butaca: string,
+        estado_butaca: string,
+        nivel: string,
+    },
     persona:{
         id:string,
         nombres:string,

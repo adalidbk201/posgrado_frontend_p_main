@@ -1,69 +1,234 @@
-<section class="lista-colacion">
-    <h1>Colaciones : {{ listColaciones().length}}</h1>
-    <p>Total de registros: {{ totalColaciones() }}</p>
+<section class="colaciones-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          <line x1="12" y1="17" x2="12" y2="22"/>
+        </svg>
+        Gestión de Colaciones
+      </h1>
+      <p class="page-subtitle">
+        Administra las ceremonias de graduación y sus detalles
+      </p>
+    </div>
     
-    <input type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
-
-      <button type="button" class="btn btn-primary" (click)="crearColacion()">
-        + Nueva Colación
+    <button type="button" class="btn-primary" (click)="crearColacion()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva Colación
     </button>
+  </div>
 
-    
+  <!-- BARRA DE ACCIONES -->
+  <div class="action-bar">
+    <div class="search-container">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por sala, programa o descripción..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar colaciones">
+      @if (txtBuscar.value) {
+        <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr >
-                <th scope="col">#</th>
-                 
-                <th scope="col">Fecha Colación</th>
-                <th scope="col">Turno</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Sala</th>
-                <th scope="col">Programa</th>
-                <th scope="col">Acciones</th>
-            </tr>
+    <div class="results-info">
+      <span class="results-count">
+        {{ listColaciones().length }} {{ listColaciones().length === 1 ? 'colación' : 'colaciones' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA DE COLACIONES -->
+  <div class="table-container">
+    @if (listColaciones().length > 0) {
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-number">#</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Turno</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Sala</th>
+            <th scope="col">Programa</th>
+            <th scope="col" class="col-actions">Acciones</th>
+          </tr>
         </thead>
         <tbody>
-             @for (colacion of listColaciones(); track colacion.id; let idx= $index) {
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
+          @for (colacion of listColaciones(); track colacion.id; let idx = $index) {
+            <tr class="table-row">
+              <td class="col-number">
+                <span class="row-number">{{ idx + 1 }}</span>
+              </td>
+              <td>
+                <div class="cell-fecha">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fecha-icon">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <span class="fecha-text">{{ colacion.fecha_colacion }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="cell-estado">
+                  @if (colacion.estado === 'ACTIVO' || colacion.estado === 'Activo') {
+                    <span class="status-badge status-active">
+                      <span class="status-dot"></span>
+                      Activo
+                    </span>
+                  } @else {
+                    <span class="status-badge status-inactive">
+                      <span class="status-dot"></span>
+                      Inactivo
+                    </span>
+                  }
+                </div>
+              </td>
+              <td>
+                <span class="turno-badge">
+                  {{ colacion.turno }}
+                </span>
+              </td>
+              <td>
+                <div class="cell-descripcion">
+                  <span class="descripcion-text" [title]="colacion.descripcion">
+                    {{ colacion.descripcion }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                @if (colacion.sala?.nombre_sala) {
+                  <span class="sala-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    {{ colacion.sala.nombre_sala }}
+                  </span>
+                } @else {
+                  <span class="badge-empty">Sin sala</span>
+                }
+              </td>
+              <td>
+                @if (colacion.programa?.nombre_programa) {
+                  <span class="programa-badge" [title]="colacion.programa.nombre_programa">
+                    {{ colacion.programa.nombre_programa }}
+                  </span>
+                } @else {
+                  <span class="badge-empty">Sin programa</span>
+                }
+              </td>
+              <td class="col-actions">
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-icon btn-edit"
+                    (click)="editarColacion(colacion.id)"
+                    aria-label="Editar colación"
+                    title="Editar colación">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
                   
-                    <td>{{ colacion.fecha_colacion }}</td>
-                    <td>{{ colacion.turno }}</td>
-                    <td>{{ colacion.descripcion }}</td>
-                    <td>{{ colacion.sala.nombre_sala  }}</td>
-                    <td>{{ colacion.programa.nombre_programa }}</td>
-                    <td>
-                        <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarColacion(colacion.id)"
-                        >
-                            Editar
-                        </button>
+                  <!-- BOTÓN ACTIVAR/DESACTIVAR (dinámico según estado) -->
+                @if (colacion.estado === 'ACTIVO' || colacion.estado === 'Activo') {
+                   <!-- BOTÓN ELIMINAR -->
+                <button
+                  type="button"
+                  class="btn-icon btn-delete"
+                  (click)="seleccionarColacionDesactivar(colacion.id)"
+                  data-toggle="modal"
+                  data-target="#modalDesactivar"
+                  aria-label="Desactivar colación"
+                  title="Desactivar colación">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+                      <line x1="12" y1="2" x2="12" y2="12"/>
+                    </svg>
+                </button>
+                } @else {
+                  <button
+                  
+                    type="button"
+                    class="btn-icon btn-activate"
+                    (click)="seleccionarColacionActivar(colacion.id)"
+                    data-toggle="modal"
+                    data-target="#modalActivar"
+                    aria-label="Activar colación"
+                    title="Activar colación">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+                      <line x1="12" y1="2" x2="12" y2="12"/>
+                    </svg>
+                  </button>
+                }
 
-                        <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarColacionEliminar(colacion.id)"
-                      >
-                        Eliminar
-                      </button>
-                      
-                    </td>
-                </tr>
-            }
+                <button
+                  type="button"
+                  class="btn-icon btn-delete"
+                  (click)="seleccionarColacionEliminar(colacion.id)"
+                  data-toggle="modal"
+                  data-target="#modalEliminar"
+                  aria-label="Eliminar colación"
+                  title="Eliminar colación">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+
+                </div>
+              </td>
+            </tr>
+          }
         </tbody>
-        
-       
-    </table>
-</section>
+      </table>
+    } @else {
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          <line x1="12" y1="17" x2="12" y2="22"/>
+        </svg>
+        <h3 class="empty-title">No hay colaciones registradas</h3>
+        <p class="empty-description">
+          Comienza programando tu primera ceremonia de graduación
+        </p>
+        <button type="button" class="btn-primary" (click)="crearColacion()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Colación
+        </button>
+      </div>
+    }
+  </div>
 
+</section>
 
 
 <!-- Modal para confirmar eliminación -->
@@ -142,3 +307,161 @@
 
   </div>
 </div>
+
+
+
+ <!-- Modal para confirmar activación -->
+<div
+  class="modal fade"
+  id="modalActivar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalActivarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalActivarTitulo"
+        >
+          Confirmar activación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de activar esta colación?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarActivar()"
+        >
+          Activar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+  <!-- Modal para confirmar desactivacion -->
+<div
+  class="modal fade"
+  id="modalDesactivar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalDesactivarTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalDesactivarTitulo"
+        >
+          Confirmar Desactivación
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de desactivar esta colación?
+        </p>
+
+        <p class="text-muted mb-0">
+          Esta acción no se puede deshacer.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarDesactivar()"
+        >
+          Desactivar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+ 

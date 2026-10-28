@@ -146,7 +146,7 @@ export class ButacaForm {
 
 
   cancelar(): void {
-    this.router.navigate(['/dashboard/salas']);
+    this.router.navigate(['/dashboard/butacas']);
   }
 
   enviarFormulario(): void {

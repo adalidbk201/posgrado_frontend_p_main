@@ -1,69 +1,75 @@
+
 <section class="lista-asignacion">
-    <h1>Asignaciones : {{ listAsignaciones().length}}</h1>
-    <p>Total de registros: {{ totalAsignaciones() }}</p>
-    
-    <input type="text"
+  <h1>Asignaciones: {{ listAsignaciones().length }}</h1>
+
+  <p>Total de registros: {{ totalAsignaciones() }}</p>
+
+  <!-- Filtrar por colación -->
+  <label for="filtroColacion">Filtrar por colación:</label>
+
+  <select
+    id="filtroColacion"
+    class="form-control w-25"
+    [value]="colacionSeleccionada()"
+    (change)="colacionSeleccionada.set($any($event.target).value)"
+  >
+    <option value="">Todas las colaciones</option>
+
+    @for (colacion of colaciones(); track colacion.id) {
+      <option [value]="colacion.id">
+        {{ colacion.turno }} - {{ colacion.descripcion }}
+      </option>
+    }
+  </select>
+
+  <!-- Buscar asignaciones -->
+  <input
+    type="text"
     class="form-control w-25"
     #txtBuscar
     placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)">
+    (input)="ejecutarBusqueda(txtBuscar.value)"
+  />
 
-      <button type="button" class="btn btn-primary" (click)="crearAsignacion()">
-        + Nueva Asignación
-    </button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="crearAsignacion()"
+  >
+    + Nueva asignación
+  </button>
 
-    
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Colación</th>
+        <th scope="col">Titulado</th>
+        <th scope="col">Butaca</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr >
-                <th scope="col">#</th>
-               
-                <!-- <th scope="col">Estado</th> -->
-                <th scope="col">Colación</th>
-                <th scope="col">Titulado</th>
-                <th scope="col">Butaca</th>
-            
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-             @for (asignacion of listAsignaciones(); track asignacion.butaca ; let idx= $index) {
-                <tr class="contenido">
-                    <th scope="row">{{ idx + 1 }}</th>
-                    
-                    <!-- <td>{{ asignacion.estado }}</td> -->
-                    <td>{{ asignacion.colacion }}</td>
-                    <td>{{ asignacion.titulado }}</td>
-                    <td>{{ asignacion.butaca }}</td>
-                     
-                     
-                    <td>
-                        <!-- <button
-                            type="button" class="btn btn-warning"
-                            (click)="editarAsignacion(asignacion.id)"
-                        >
-                            Editar
-                        </button> -->
-
-                        <!-- <button
-                        type="button"
-                        class="btn btn-danger "
-                        data-toggle="modal"
-                        data-target="#modalEliminar"
-                        (click)="seleccionarAsignacionEliminar(asignacion.id)"
-                      >
-                        Eliminar
-                      </button> -->
-                      
-                    </td>
-                </tr>
-            }
-        </tbody>
-        
-       
-    </table>
+    <tbody>
+      @for (asignacion of listAsignaciones(); track asignacion.butaca; let idx = $index) {
+        <tr class="contenido">
+          <th scope="row">{{ idx + 1 }}</th>
+          <td>{{ asignacion.colacion }}</td>
+          <td>{{ asignacion.titulado }}</td>
+          <td>{{ asignacion.butaca.codigo_butaca }}</td>
+          <td></td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="text-center">
+            No hay asignaciones para esta colación.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </section>
+
 
 
 

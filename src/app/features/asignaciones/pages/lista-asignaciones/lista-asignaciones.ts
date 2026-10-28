@@ -21,6 +21,24 @@ export class ListaAsignaciones {
   /** OBTENER  DATOS DE COLACION POR ID*/
   private readonly colacionesService=inject(ColacionesService)
   readonly colacion = signal<Colacion | null>(null)
+
+  // Todas las colaciones disponibles para el selector
+  readonly colaciones = signal<Colacion[]>([]);
+
+  // ID de la colación seleccionada.
+  // '' significa que se mostrarán todas.
+  readonly colacionSeleccionada = signal<string>('');
+  private cargarColaciones(): void {
+    this.colacionesService.getColaciones(1, 100).subscribe({
+      next: (respuesta) => {
+        this.colaciones.set(respuesta.Data.filas);
+      },
+      error: (error) => {
+        console.error('Error al cargar las colaciones:', error);
+      },
+    });
+  }
+
   // metodo obtenerSala
   obtenerColacion(id: string): void {
 
@@ -73,30 +91,23 @@ export class ListaAsignaciones {
   // lista final que se muestra en la tabla, filtrada en el cliente
   // computed crea un signal derivado - resultado depende de terminoBuscar y asignaciones
   readonly listAsignaciones = computed(() => {
-
-    // obtener el texto buscado, elimina espacios al prinicipio y final- convierte minuscula
     const termino = this.terminoBuscar().trim().toLowerCase();
+    const idColacion = this.colacionSeleccionada();
 
-    // si no escribio nada devuelve todas las asignaciones
-    // filter recorre todas las asignaciones y decide cuales deben permanecer
-     const base = !termino
-    ? this.asignaciones()
-    : this.asignaciones().filter(a =>
+    return this.asignaciones().filter(asignacion => {
+      // Filtrar por colación seleccionada
+      const coincideColacion =
+        !idColacion || String(asignacion.colacion) === idColacion;
 
-      // construye un texto con los datos de la asignacion para buscar por cualquiera de esos datos
-      `${a.titulado} ${a.colacion} ${a.butaca}`
-        // convierte los datos en minuscula
-        .toLowerCase()
-        // true si encontro el termino , false si no encontro el termino
-        .includes(termino)
-    );
+      // Filtrar por el texto del buscador
+      const texto = `${asignacion.titulado} ${asignacion.colacion} ${asignacion.butaca}`
+        .toLowerCase();
 
-    // ordena por fecha_creacion descendente (más reciente primero)
-    // [...base] crea una copia para no mutar el array del signal original
-    return [...base].sort((a, b) =>
-      new Date(b.butaca).getTime() - new Date(a.butaca).getTime()
-    );
+      const coincideBusqueda =
+        !termino || texto.includes(termino);
 
+      return coincideColacion && coincideBusqueda;
+    });
   });
 
   
@@ -108,18 +119,20 @@ export class ListaAsignaciones {
 
 
   // calcula qué número mostrar como total de asignaciones.
-  readonly totalAsignaciones = computed(() =>
-    this.terminoBuscar().trim() 
-    // si hay texto en buscador
-    ? this.listAsignaciones().length 
-    // si no hay texto en buscador
-    : this.totalBackend()
-  );
+  readonly totalAsignaciones = computed(() => {
+    const hayFiltro =
+      this.terminoBuscar().trim() !== '' ||
+      this.colacionSeleccionada() !== '';
+
+    return hayFiltro
+      ? this.listAsignaciones().length
+      : this.totalBackend();
+  });
 
 
   constructor() {
-    // cargar la primera pagina
     this.cargarAsignaciones(1);
+    this.cargarColaciones();
   }
 
   private cargarAsignaciones(pagina: number): void {
