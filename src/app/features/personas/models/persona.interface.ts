@@ -15,6 +15,8 @@ export interface Persona{
     nro_documento:string,
     genero:string,
     expedido:string,
+    fecha_nacimiento:string,
+    observacion:string,
     celular:string,
     titulado:PersonaTitulado,
 

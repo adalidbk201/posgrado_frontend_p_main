@@ -1,5 +1,16 @@
 export interface Asignacion{
-    colacion:string,
+    id:string,
+    colacion:{
+        id:string,
+        fecha_colacion:string,
+        turno:string,
+        descripcion:string,
+        estado:string,
+        sala:{
+            id:string,
+            nombre_sala:string,
+        }
+    },
     titulado:string,
     butaca: {
         id: string,

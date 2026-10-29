@@ -387,7 +387,7 @@ export class AsignacionForm {
       if (asignacionActual) {
 
         this.formulario.patchValue({
-          colacion: asignacionActual.colacion,
+          colacion: asignacionActual.colacion.id,
           titulado: asignacionActual.titulado,
           // butaca: asignacionActual.butaca,
         });

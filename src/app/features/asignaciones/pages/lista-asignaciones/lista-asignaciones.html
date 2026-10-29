@@ -1,73 +1,296 @@
 
-<section class="lista-asignacion">
-  <h1>Asignaciones: {{ listAsignaciones().length }}</h1>
+<section class="asignaciones-container">
+  
+  <!-- HEADER DE LA SECCIÓN -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <polyline points="17 11 19 13 23 9"/>
+        </svg>
+        Gestión de Asignaciones
+      </h1>
+      <p class="page-subtitle">
+        Administra la asignación de titulados a sus butacas por colación
+      </p>
+    </div>
+    
+    <button type="button" class="btn-primary" (click)="crearAsignacion()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva Asignación
+    </button>
+  </div>
 
-  <p>Total de registros: {{ totalAsignaciones() }}</p>
+  <!-- FILTROS DE BÚSQUEDA Y SELECCIÓN -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <!-- Filtro por Colación -->
+      <div class="select-wrapper">
+        <label for="filtroColacion" class="select-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+          Filtrar por Colación
+        </label>
+        <select
+          id="filtroColacion"
+          class="form-select"
+          [value]="colacionSeleccionada()"
+          (change)="colacionSeleccionada.set($any($event.target).value)">
+          <option value="">Todas las colaciones</option>
+          @for (colacion of colaciones(); track colacion.id) {
+            <option [value]="colacion.id">
+              {{ colacion.turno }} - {{ colacion.descripcion }}
+            </option>
+          }
+        </select>
+      </div>
 
-  <!-- Filtrar por colación -->
-  <label for="filtroColacion">Filtrar por colación:</label>
+      <!-- Buscador -->
+      <div class="search-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input 
+          type="text"
+          class="search-input"
+          #txtBuscar
+          placeholder="Buscar por nombre de titulado o código de butaca..."
+          (input)="ejecutarBusqueda(txtBuscar.value)"
+          aria-label="Buscar asignaciones">
+        @if (txtBuscar.value) {
+          <button type="button" class="clear-search" (click)="txtBuscar.value=''; ejecutarBusqueda('')" aria-label="Limpiar búsqueda">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
 
-  <select
-    id="filtroColacion"
-    class="form-control w-25"
-    [value]="colacionSeleccionada()"
-    (change)="colacionSeleccionada.set($any($event.target).value)"
-  >
-    <option value="">Todas las colaciones</option>
+  <!-- SWITCHER DE VISTAS (Solo visible si hay colación seleccionada y datos) -->
+  @if (colacionSeleccionada() && listAsignaciones().length > 0) {
+    <div class="view-switcher">
+      <button
+        type="button"
+        class="view-btn"
+        [class.view-btn--active]="vistaActual() === 'tabla'"
+        (click)="vistaActual.set('tabla')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        Vista de Tabla
+      </button>
+      <button
+        type="button"
+        class="view-btn"
+        [class.view-btn--active]="vistaActual() === 'plano'"
+        (click)="vistaActual.set('plano')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Vista de Plano
+      </button>
+    </div>
+  }
 
-    @for (colacion of colaciones(); track colacion.id) {
-      <option [value]="colacion.id">
-        {{ colacion.turno }} - {{ colacion.descripcion }}
-      </option>
-    }
-  </select>
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="content-area">
+    @if (cargandoAsignaciones()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Cargando asignaciones...</p>
+      </div>
+    } @else if (!colacionSeleccionada()) {
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <polyline points="17 11 19 13 23 9"/>
+        </svg>
+        <h3 class="empty-title">Selecciona una colación</h3>
+        <p class="empty-description">
+          Selecciona una colación del filtro para ver sus asignaciones
+        </p>
+      </div>
+    } @else if (listAsignaciones().length === 0) {
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+        </svg>
+        <h3 class="empty-title">No hay asignaciones registradas</h3>
+        <p class="empty-description">
+          No hay titulados asignados a butacas para esta colación
+        </p>
+        <button type="button" class="btn-primary" (click)="crearAsignacion()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Asignar Primera Butaca
+        </button>
+      </div>
+    } @else {
+      @if (vistaActual() === 'tabla') {
+        <!-- VISTA DE TABLA -->
+        <div class="table-container">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-number">#</th>
+                <th scope="col">Colación</th>
+                <th scope="col">Titulado</th>
+                <th scope="col">Butaca</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
+                <th scope="col" class="col-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (asignacion of listAsignaciones(); track asignacion.id; let idx = $index) {
+                <tr class="table-row">
+                  <td class="col-number">
+                    <span class="row-number">{{ idx + 1 }}</span>
+                  </td>
+                  <td>
+                    <span class="colacion-badge">
+                      {{ asignacion.colacion.turno }} -
+                      {{ asignacion.colacion.descripcion }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="cell-person">
+                      <div class="person-avatar">
+                        {{ getInitials(asignacion.persona.nombres, asignacion.persona.primer_apellido) }}
+                      </div>
+                      <div class="person-info">
+                        <span class="person-name">
+                          {{ asignacion.persona.nombres }} {{ asignacion.persona.primer_apellido }} {{ asignacion.persona.segundo_apellido }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="codigo-badge">{{ asignacion.butaca.codigo_butaca }}</span>
+                  </td>
+                  <td>
+                    <span class="dimension-badge dimension-row">{{ asignacion.butaca.fila }}</span>
+                  </td>
+                  <td>
+                    <span class="dimension-badge dimension-column">{{ asignacion.butaca.columna }}</span>
+                  </td>
+                  <td class="col-actions">
+                    <div class="action-buttons">
+                      <button
+                        type="button"
+                        class="btn-icon btn-edit"
+                        (click)="editarAsignacion(asignacion.id)"
+                        aria-label="Editar asignación"
+                        title="Editar asignación">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-icon btn-delete"
+                        (click)="seleccionarAsignacionEliminar(asignacion.id)"
+                        aria-label="Eliminar asignación"
+                        title="Eliminar asignación">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <!-- VISTA DE PLANO (Mapa de asignaciones) -->
+        <div class="plano-container">
+          <div class="plano-header">
+            <h3 class="plano-title">Mapa de Asignaciones</h3>
+            <p class="plano-subtitle">Visualización de titulados asignados en la sala</p>
+          </div>
 
-  <!-- Buscar asignaciones -->
-  <input
-    type="text"
-    class="form-control w-25"
-    #txtBuscar
-    placeholder="Buscar..."
-    (input)="ejecutarBusqueda(txtBuscar.value)"
-  />
+          <div class="frente-sala">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>FRENTE DE LA SALA</span>
+          </div>
 
-  <button
-    type="button"
-    class="btn btn-primary"
-    (click)="crearAsignacion()"
-  >
-    + Nueva asignación
-  </button>
+          <div class="plano-grid">
+            <!-- NOTA: Asumimos que tienes un signal 'filasAsignadas()' similar a 'filasButacas()' en tu TS -->
+            @for (fila of filasAsignadas(); track fila.nombre) {
+              <div class="plano-fila">
+                <div class="fila-label">{{ fila.nombre }}</div>
+                <div class="fila-butacas">
+                  @for (columna of fila.columnas; track columna.numero) {
+                    @if (columna.asignacion; as asignacion) {
+                      <button
+                        type="button"
+                        class="butaca-card butaca-card--assigned"
+                        [title]="'Titulado: ' + asignacion.persona.nombres + ' ' + asignacion.persona.primer_apellido + ' | Butaca: ' + asignacion.butaca.codigo_butaca"
+                        (click)="editarAsignacion(asignacion.id)"
+                        aria-label="Editar asignación de {{ asignacion.persona.nombres }}">
+                        
+                        <div class="person-avatar-small">
+                          {{ getInitials(asignacion.persona.nombres, asignacion.persona.primer_apellido) }}
+                        </div>
+                        <span class="butaca-code">{{ asignacion.butaca.codigo_butaca }}</span>
+                        <span class="person-name-small">
+                          {{ asignacion.persona.nombres }} {{ asignacion.persona.primer_apellido }}
+                        </span>
+                      </button>
+                    } @else {
+                      <div class="espacio-vacio" title="Butaca sin asignar"></div>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Colación</th>
-        <th scope="col">Titulado</th>
-        <th scope="col">Butaca</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      @for (asignacion of listAsignaciones(); track asignacion.butaca; let idx = $index) {
-        <tr class="contenido">
-          <th scope="row">{{ idx + 1 }}</th>
-          <td>{{ asignacion.colacion }}</td>
-          <td>{{ asignacion.titulado }}</td>
-          <td>{{ asignacion.butaca.codigo_butaca }}</td>
-          <td></td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="5" class="text-center">
-            No hay asignaciones para esta colación.
-          </td>
-        </tr>
+          <div class="plano-legend">
+            <div class="legend-item">
+              <span class="legend-icon legend-assigned"></span>
+              <span>Butaca asignada</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-icon legend-empty"></span>
+              <span>Butaca disponible</span>
+            </div>
+          </div>
+        </div>
       }
-    </tbody>
-  </table>
+    }
+  </div>
 </section>
 
 

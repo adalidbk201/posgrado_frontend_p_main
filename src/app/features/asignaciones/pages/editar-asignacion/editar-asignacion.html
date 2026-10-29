@@ -1,1 +1,18 @@
-<p>editar-asignacion works!</p>,
+ 
+
+    @if (asignacion()) {
+
+      <app-asignacion-editar-form
+        [asignacion]="asignacion()"
+        (guardar)="actualizarAsignacion($event)"
+        
+      />
+
+    } @else {
+
+      <p>Cargando asignacion...</p>
+
+    }
+ 
+
+

@@ -12,22 +12,16 @@ import { Colacion } from '../../../colaciones/models/colacion.interface';
   templateUrl: './lista-asignaciones.html',
 })
 export class ListaAsignaciones {
-  // inyectar asignacionesService
+  // Inyectar servicios
   private readonly asignacionesService = inject(AsignacionesService);
-
-  // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
-  
-  /** OBTENER  DATOS DE COLACION POR ID*/
-  private readonly colacionesService=inject(ColacionesService)
-  readonly colacion = signal<Colacion | null>(null)
+  private readonly colacionesService = inject(ColacionesService);
 
-  // Todas las colaciones disponibles para el selector
+  // Estado de colación
+  readonly colacion = signal<Colacion | null>(null);
   readonly colaciones = signal<Colacion[]>([]);
-
-  // ID de la colación seleccionada.
-  // '' significa que se mostrarán todas.
   readonly colacionSeleccionada = signal<string>('');
+
   private cargarColaciones(): void {
     this.colacionesService.getColaciones(1, 100).subscribe({
       next: (respuesta) => {
@@ -39,96 +33,70 @@ export class ListaAsignaciones {
     });
   }
 
-  // metodo obtenerSala
   obtenerColacion(id: string): void {
-
-    // llamamos al metodo getColacionPorId
-    // usamos subscribe para recibir la respuesta HTTP GET
     this.colacionesService.getColacionPorId(id).subscribe({
-
-      // petición correcta
       next: (respuesta) => {
-
-        console.log('Persona obtenida correctamente:', respuesta);
-
-        // guardar los datos de la colacion
-        this.colacion.set(respuesta.Data)
-        console.log('Persona:', this.colacion());
+        this.colacion.set(respuesta.Data);
       },
-
-      // si ocurre un error
       error: (error) => {
-
-        console.error('Error al obtener la persona:', error);
-
-        // volver al listado
-        this.router.navigate(['/dashboard/personas']);
+        console.error('Error al obtener la colación:', error);
+        this.router.navigate(['/dashboard/colaciones']);
       },
     });
   }
 
-
   // =========================
-  // Cargar y filtrar
+  // Cargar y filtrar asignaciones
   // =========================
-
-  // todas las asignaciones cargadas desde el backend (paginado, acumulativo)
   readonly asignaciones = signal<Asignacion[]>([]);
-
-  // página actual cargada
   readonly paginaActual = signal(1);
-
-  // total real de registros que reporta el backend (para saber si hay más páginas)
   readonly totalBackend = signal(0);
-
-  // indica si se está trayendo una página adicional
   readonly cargando = signal(false);
-
-  // texto del buscador
   readonly terminoBuscar = signal('');
 
+  // Lista final filtrada en el cliente
+      readonly listAsignaciones = computed(() => {
+      const termino = this.terminoBuscar().trim().toLowerCase();
+      const idColacion = this.colacionSeleccionada();
 
-  // lista final que se muestra en la tabla, filtrada en el cliente
-  // computed crea un signal derivado - resultado depende de terminoBuscar y asignaciones
-  readonly listAsignaciones = computed(() => {
-    const termino = this.terminoBuscar().trim().toLowerCase();
-    const idColacion = this.colacionSeleccionada();
+      return this.asignaciones().filter(asignacion => {
+        // Filtrar por el ID de la colación anidada
+        const coincideColacion =
+          !idColacion ||
+          asignacion.colacion?.id === idColacion;
 
-    return this.asignaciones().filter(asignacion => {
-      // Filtrar por colación seleccionada
-      const coincideColacion =
-        !idColacion || String(asignacion.colacion) === idColacion;
+        // Datos que se utilizarán en la búsqueda
+        const nombrePersona = [
+          asignacion.persona?.nombres ?? '',
+          asignacion.persona?.primer_apellido ?? '',
+          asignacion.persona?.segundo_apellido ?? '',
+        ].join(' ');
 
-      // Filtrar por el texto del buscador
-      const texto = `${asignacion.titulado} ${asignacion.colacion} ${asignacion.butaca}`
-        .toLowerCase();
+        const texto = [
+          nombrePersona,
+          asignacion.butaca?.codigo_butaca ?? '',
+          asignacion.butaca?.fila ?? '',
+          asignacion.butaca?.columna ?? '',
+          asignacion.colacion?.turno ?? '',
+          asignacion.colacion?.descripcion ?? '',
+          asignacion.programa?.nombre_programa ?? '',
+        ].join(' ').toLowerCase();
 
-      const coincideBusqueda =
-        !termino || texto.includes(termino);
+        const coincideBusqueda =
+          !termino || texto.includes(termino);
 
-      return coincideColacion && coincideBusqueda;
+        return coincideColacion && coincideBusqueda;
+      });
     });
-  });
 
-  
-
-  // se llama directo desde el (input), sin debounce — el filtro es en memoria, no HTTP
   ejecutarBusqueda(termino: string): void {
     this.terminoBuscar.set(termino);
   }
 
-
-  // calcula qué número mostrar como total de asignaciones.
   readonly totalAsignaciones = computed(() => {
-    const hayFiltro =
-      this.terminoBuscar().trim() !== '' ||
-      this.colacionSeleccionada() !== '';
-
-    return hayFiltro
-      ? this.listAsignaciones().length
-      : this.totalBackend();
+    const hayFiltro = this.terminoBuscar().trim() !== '' || this.colacionSeleccionada() !== '';
+    return hayFiltro ? this.listAsignaciones().length : this.totalBackend();
   });
-
 
   constructor() {
     this.cargarAsignaciones(1);
@@ -136,52 +104,100 @@ export class ListaAsignaciones {
   }
 
   private cargarAsignaciones(pagina: number): void {
-    // cuando empieza la petiicon -> true 
     this.cargando.set(true);
 
-    // Solicitar datos a Django-Como getAsignaciones() devuelve un Observable, necesitas suscribirte:
     this.asignacionesService.getAsignaciones(pagina, 100).subscribe({
-
       next: (respuesta) => {
-
-        // obtener asignaciones
         const nuevas = respuesta.Data.filas;
 
-        // actualizar señal asignaciones -> Angular te entrega el valor actual mediante: actual
         this.asignaciones.update(actual => {
-
-          //          crea un conjunto de los IDs extraidos.
-          const idsExistentes = new Set(actual.map(p => p.butaca));
-
-          // De las asignaciones nuevas, quédate solamente con aquellas cuyo ID todavía no existe en asignaciones.
-          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.butaca));
-
-          // Agregar las nuevas asignaciones
+          // Usamos el ID de la asignación para evitar duplicados, no el de la butaca
+          const idsExistentes = new Set(actual.map(a => a.id)); 
+          const sinDuplicar = nuevas.filter(a => !idsExistentes.has(a.id));
           return [...actual, ...sinDuplicar];
         });
 
-        // Guardar el total real de Django
         this.totalBackend.set(respuesta.Data.total);
-        // Guardar la página actual
         this.paginaActual.set(pagina);
-        // Terminar la carga
         this.cargando.set(false);
       },
       error: () => this.cargando.set(false),
     });
   }
 
-
   cargarMasAsignaciones(): void {
     this.cargarAsignaciones(this.paginaActual() + 1);
   }
 
-  
+  // =========================
+  // VISTA DE TABLA A PLANO
+  // =========================
+  readonly vistaActual = signal<'tabla' | 'plano'>('tabla');
+  readonly cargandoAsignaciones = signal(false);
+
+  getInitials(nombres: string, primerApellido: string): string {
+    const n = nombres?.charAt(0)?.toUpperCase() || '';
+    const a = primerApellido?.charAt(0)?.toUpperCase() || '';
+    return `${n}${a}`;
+  }
+
+  // ✅ COMPUTED PARA AGRUPAR ASIGNACIONES POR FILA Y COLUMNA (Para el Plano)
+  readonly filasAsignadas = computed(() => {
+    const asignaciones = this.listAsignaciones();
+    const grupos = new Map<string, any[]>();
+
+    for (const asignacion of asignaciones) {
+      const nombreFila = String(asignacion.butaca.fila);
+
+      if (!grupos.has(nombreFila)) {
+        grupos.set(nombreFila, []);
+      }
+
+      grupos.get(nombreFila)!.push(asignacion);
+    }
+
+    return Array.from(grupos.entries())
+      .sort(([filaA], [filaB]) =>
+        filaA.localeCompare(filaB, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        })
+      )
+      .map(([nombre, asignacionesFila]) => {
+        const ordenadas = [...asignacionesFila].sort(
+          (a, b) => Number(a.butaca.columna) - Number(b.butaca.columna)
+        );
+
+        const porColumna = new Map(
+          ordenadas.map(asignacion => [Number(asignacion.butaca.columna), asignacion])
+        );
+
+        const maxColumna = Math.max(
+          0,
+          ...ordenadas.map(asignacion => Number(asignacion.butaca.columna))
+        );
+
+        const columnas = Array.from(
+          { length: maxColumna },
+          (_, indice) => {
+            const numeroColumna = indice + 1;
+            return {
+              numero: numeroColumna,
+              asignacion: porColumna.get(numeroColumna) ?? null,
+            };
+          }
+        );
+
+        return {
+          nombre,
+          columnas,
+        };
+      });
+  });
 
   // =========================
-  // NAVEGACIÓN Y ELIMINACIÓN —  
+  // NAVEGACIÓN Y ELIMINACIÓN
   // =========================
-
   crearAsignacion(): void {
     this.router.navigate(['/dashboard/asignaciones/crear']);
   }
@@ -190,8 +206,6 @@ export class ListaAsignaciones {
     this.router.navigate(['/dashboard/asignaciones/editar', id]);
   }
 
-
-  /** Eliminar asignacion */
   readonly asignacionEliminarId = signal<string | null>(null);
 
   seleccionarAsignacionEliminar(id: string): void {
@@ -204,8 +218,6 @@ export class ListaAsignaciones {
 
     this.asignacionesService.eliminarAsignacion(id).subscribe({
       next: () => {
-        console.log('Asignacion eliminada correctamente');
-        // recarga desde el inicio para reflejar el borrado
         this.asignaciones.set([]);
         this.paginaActual.set(0);
         this.cargarAsignaciones(1);
