@@ -475,7 +475,7 @@ export class AsignacionEditarForm {
         return;
       }
 
-      const idColacion = String(asignacion.colacion);
+      const idColacion = String(asignacion.colacion.id);
 
       const colacion = colaciones.find(
         c => String(c.id) === idColacion

@@ -166,11 +166,11 @@
 
 .search-wrapper {
   position: relative;
-  
+   padding-top: 34px;
   .search-icon {
     position: absolute;
     left: 14px;
-    top: 50%; /* Corregido para centrado perfecto */
+    top: 65%; /* Corregido para centrado perfecto */
     transform: translateY(-50%);
     color: var(--color-text-muted);
     pointer-events: none;
@@ -214,6 +214,7 @@
     }
   }
 }
+ 
 
 /* =========================
    SWITCHER DE VISTAS
@@ -646,6 +647,9 @@
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
+  .search-wrapper {
+  
+   padding-top: 0px;}
   .page-header { flex-direction: column; align-items: stretch; }
   .page-title { font-size: 24px; }
   .filters-grid { grid-template-columns: 1fr; }

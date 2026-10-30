@@ -246,7 +246,7 @@
           </div>
 
           <div class="plano-grid">
-            <!-- NOTA: Asumimos que tienes un signal 'filasAsignadas()' similar a 'filasButacas()' en tu TS -->
+            <!--  signal 'filasAsignadas()' similar a 'filasButacas()'  -->
             @for (fila of filasAsignadas(); track fila.nombre) {
               <div class="plano-fila">
                 <div class="fila-label">{{ fila.nombre }}</div>
@@ -265,7 +265,7 @@
                         </div>
                         <span class="butaca-code">{{ asignacion.butaca.codigo_butaca }}</span>
                         <span class="person-name-small">
-                          {{ asignacion.persona.nombres }} {{ asignacion.persona.primer_apellido }}
+                          {{ asignacion.persona.nombres.split(' ')[0] }} {{ asignacion.persona.primer_apellido }}
                         </span>
                       </button>
                     } @else {
