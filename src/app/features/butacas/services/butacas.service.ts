@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, Service } from '@angular/core';
 import { environment } from '../../../../environment/environment';
 import { Observable } from 'rxjs';
@@ -34,6 +34,27 @@ export class ButacasService {
     );
     }
 
+    /** LISTAR BUTACAS DISPONIBLES PARA ASIGNAR AL TITULADO */
+    // GET - OBTENER BUTACAS DISPONIBLES PARA ASIGNACIÓN
+    getButacasDisponibles(
+    id_nivel: string,
+    id_colacion: string,
+    id_asignacion?: string
+    ): Observable<RespuestaApi<Butaca[]>> {
+
+    let params = new HttpParams()
+        .set('id_nivel', id_nivel)
+        .set('id_colacion', id_colacion);
+
+    if (id_asignacion) {
+        params = params.set('id_asignacion', id_asignacion);
+    }
+
+    return this.http.get<RespuestaApi<Butaca[]>>(
+        `${this.apiUrl}disponibles/`,
+        { params }
+    );
+    }
 
     //metodo para buscar personas por termino
     // AHORA

@@ -42,7 +42,7 @@
           id="filtroColacion"
           class="form-select"
           [value]="colacionSeleccionada()"
-          (change)="colacionSeleccionada.set($any($event.target).value)">
+          (change)="alCambiarColacion($any($event.target).value)">
           <option value="">Todas las colaciones</option>
           @for (colacion of colaciones(); track colacion.id) {
             <option [value]="colacion.id">
@@ -231,63 +231,190 @@
         </div>
       } @else {
         <!-- VISTA DE PLANO (Mapa de asignaciones) -->
-        <div class="plano-container">
-          <div class="plano-header">
-            <h3 class="plano-title">Mapa de Asignaciones</h3>
-            <p class="plano-subtitle">Visualización de titulados asignados en la sala</p>
-          </div>
+          <div class="plano-container">
 
-          <div class="frente-sala">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            <span>FRENTE DE LA SALA</span>
-          </div>
+            <!-- Selector de nivel -->
+            <div class="select-wrapper">
+              <label for="nivelAsignacion" class="select-label">
+                Seleccionar nivel
+              </label>
 
-          <div class="plano-grid">
-            <!--  signal 'filasAsignadas()' similar a 'filasButacas()'  -->
-            @for (fila of filasAsignadas(); track fila.nombre) {
-              <div class="plano-fila">
-                <div class="fila-label">{{ fila.nombre }}</div>
-                <div class="fila-butacas">
-                  @for (columna of fila.columnas; track columna.numero) {
-                    @if (columna.asignacion; as asignacion) {
-                      <button
-                        type="button"
-                        class="butaca-card butaca-card--assigned"
-                        [title]="'Titulado: ' + asignacion.persona.nombres + ' ' + asignacion.persona.primer_apellido + ' | Butaca: ' + asignacion.butaca.codigo_butaca"
-                        (click)="editarAsignacion(asignacion.id)"
-                        aria-label="Editar asignación de {{ asignacion.persona.nombres }}">
-                        
-                        <div class="person-avatar-small">
-                          {{ getInitials(asignacion.persona.nombres, asignacion.persona.primer_apellido) }}
-                        </div>
-                        <span class="butaca-code">{{ asignacion.butaca.codigo_butaca }}</span>
-                        <span class="person-name-small">
-                          {{ asignacion.persona.nombres.split(' ')[0] }} {{ asignacion.persona.primer_apellido }}
-                        </span>
-                      </button>
-                    } @else {
-                      <div class="espacio-vacio" title="Butaca sin asignar"></div>
-                    }
+              <select
+                id="nivelAsignacion"
+                class="form-select"
+                [value]="nivelSeleccionadoId()"
+                [disabled]="cargandoNiveles() || nivelesSala().length === 0"
+                (change)="alCambiarNivel($any($event.target).value)">
+
+                <option value="">Selecciona un nivel</option>
+
+                @for (nivel of nivelesSala(); track nivel.id) {
+                  <option [value]="nivel.id">
+                    {{ nivel.nombre_nivel }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <!-- Encabezado -->
+            <div class="plano-header">
+              <h3 class="plano-title">Mapa de Asignaciones</h3>
+              <p class="plano-subtitle">
+                Visualización de butacas y titulados del nivel seleccionado
+              </p>
+            </div>
+
+            <!-- Cargando niveles -->
+            @if (cargandoNiveles()) {
+              <div class="plano-mensaje">
+                <span class="spinner-border spinner-border-sm"></span>
+                <p>Cargando niveles de la sala...</p>
+              </div>
+            }
+
+            <!-- No hay niveles -->
+            @else if (nivelesSala().length === 0) {
+              <div class="plano-mensaje">
+                <p>Esta sala no tiene niveles registrados.</p>
+              </div>
+            }
+
+            <!-- No se ha seleccionado nivel -->
+            @else if (!nivelSeleccionadoId()) {
+              <div class="plano-mensaje">
+                <p>Selecciona un nivel para visualizar sus butacas.</p>
+              </div>
+            }
+
+            <!-- Cargando butacas -->
+            @else if (cargandoButacasNivel()) {
+              <div class="plano-mensaje">
+                <span class="spinner-border spinner-border-sm"></span>
+                <p>Cargando butacas del nivel...</p>
+              </div>
+            }
+
+            <!-- Plano -->
+            @else {
+              <div class="frente-sala">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2">
+
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+
+                <span>FRENTE DE LA SALA</span>
+              </div>
+
+              @if (filasAsignadas().length > 0) {
+                <div class="plano-grid">
+
+                  @for (fila of filasAsignadas(); track fila.nombre) {
+                    <div class="plano-fila">
+
+                      <div class="fila-label">
+                        {{ fila.nombre }}
+                      </div>
+
+                      <div class="fila-butacas">
+
+                        @for (columna of fila.columnas; track columna.numero) {
+
+                          <!-- BUTACA ASIGNADA -->
+                          @if (columna.asignacion; as asignacion) {
+                            <button
+                              type="button"
+                              class="butaca-card butaca-card--assigned"
+                              [title]="'Titulado: ' +
+                                asignacion.persona.nombres + ' ' +
+                                asignacion.persona.primer_apellido +
+                                ' | Butaca: ' + asignacion.butaca.codigo_butaca"
+                              (click)="editarAsignacion(asignacion.id)"
+                              [attr.aria-label]="'Editar asignación de ' +
+                                asignacion.persona.nombres">
+
+                              <div class="person-avatar-small">
+                                {{
+                                  getInitials(
+                                    asignacion.persona.nombres,
+                                    asignacion.persona.primer_apellido
+                                  )
+                                }}
+                              </div>
+
+                              <span class="butaca-code">
+                                {{ asignacion.butaca.codigo_butaca }}
+                              </span>
+
+                              <span class="person-name-small">
+                                {{ asignacion.persona.nombres.split(' ')[0] }}
+                                {{ asignacion.persona.primer_apellido }}
+                              </span>
+                            </button>
+                          }
+
+                          <!-- BUTACA DISPONIBLE -->
+                          @else if (columna.butaca) {
+                            <div
+                              class="butaca-card butaca-card--available"
+                              [title]="'Butaca disponible: ' + columna.butaca.codigo_butaca">
+
+                              <span class="butaca-code">
+                                {{ columna.butaca.codigo_butaca }}
+                              </span>
+
+                              <span class="person-name-small">
+                                Disponible
+                              </span>
+                            </div>
+                          }
+
+                          <!-- ESPACIO SIN BUTACA -->
+                          @else {
+                            <div
+                              class="espacio-vacio"
+                              title="Sin butaca registrada">
+                            </div>
+                          }
+
+                        }
+                      </div>
+                    </div>
                   }
                 </div>
+              } @else {
+                <div class="plano-mensaje">
+                  <p>Este nivel no tiene dimensiones configuradas.</p>
+                </div>
+              }
+
+              <!-- Leyenda -->
+              <div class="plano-legend">
+
+                <div class="legend-item">
+                  <span class="legend-icon legend-assigned"></span>
+                  <span>Butaca asignada</span>
+                </div>
+
+                <div class="legend-item">
+                  <span class="legend-icon legend-available"></span>
+                  <span>Butaca disponible</span>
+                </div>
+
+                <div class="legend-item">
+                  <span class="legend-icon legend-empty"></span>
+                  <span>Sin butaca registrada</span>
+                </div>
+
               </div>
             }
           </div>
-
-          <div class="plano-legend">
-            <div class="legend-item">
-              <span class="legend-icon legend-assigned"></span>
-              <span>Butaca asignada</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-icon legend-empty"></span>
-              <span>Butaca disponible</span>
-            </div>
-          </div>
-        </div>
       }
     }
   </div>

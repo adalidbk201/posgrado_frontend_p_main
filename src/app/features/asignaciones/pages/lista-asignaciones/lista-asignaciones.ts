@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { Asignacion } from '../../models/asignacion.interface';
 import { ColacionesService } from '../../../colaciones/services/colaciones.service';
 import { Colacion } from '../../../colaciones/models/colacion.interface';
+import { Butaca } from '../../../butacas/models/butaca.interface';
+import { Nivel } from '../../../niveles/models/nivel.interface';
+import { Sala } from '../../../salas/models/sala.interface';
+import { ButacasService } from '../../../butacas/services/butacas.service';
+import { SalasService } from '../../../salas/services/salas.service';
 
 @Component({
   imports: [],
@@ -16,6 +21,119 @@ export class ListaAsignaciones {
   private readonly asignacionesService = inject(AsignacionesService);
   private readonly router = inject(Router);
   private readonly colacionesService = inject(ColacionesService);
+
+  private readonly salasService = inject(SalasService);
+  private readonly butacasService = inject(ButacasService);
+  readonly butacasNivel = signal<Butaca[]>([]);
+  readonly cargandoButacasNivel = signal(false);
+  readonly cargandoNiveles = signal(false);
+
+  readonly nivelSeleccionadoId = signal<string>('');
+    readonly asignacionesDelNivel = computed(() => {
+    const nivelId = this.nivelSeleccionadoId();
+
+    if (!nivelId) return [];
+
+    return this.listAsignaciones().filter(
+      asignacion => asignacion.butaca.nivel === nivelId
+    );
+  });
+  
+  readonly salaActual = signal<Sala | null>(null);
+  readonly nivelesSala = signal<Nivel[]>([]);
+  private solicitudNiveles = 0;
+  private solicitudButacasNivel = 0;
+
+  alCambiarColacion(id: string): void {
+    this.colacionSeleccionada.set(id);
+
+    this.nivelesSala.set([]);
+    this.salaActual.set(null);
+    this.nivelSeleccionadoId.set('');
+    this.butacasNivel.set([]);
+
+    console.log('ID COLACIÓN SELECCIONADA:', id);
+
+    if (!id) {
+      console.log('No se seleccionó una colación específica.');
+      return;
+    }
+
+    this.colacionesService.getColacionPorId(id).subscribe({
+      next: respuesta => {
+        console.log('RESPUESTA COMPLETA COLACIÓN:', respuesta);
+        console.log('DATA COLACIÓN:', respuesta.Data);
+        console.log('SALA DE LA COLACIÓN:', respuesta.Data.sala);
+
+        const idSala = respuesta.Data.sala?.id;
+
+        console.log('ID SALA OBTENIDO:', idSala);
+
+        if (idSala) {
+          this.cargarNivelesSala(idSala);
+        } else {
+          console.error('No se encontró el ID de la sala.');
+        }
+      },
+      error: error => {
+        console.error('ERROR AL OBTENER COLACIÓN:', error);
+      }
+    });
+  }
+
+   
+
+  private cargarNivelesSala(idSala: string): void {
+    this.cargandoNiveles.set(true);
+
+    console.log('CONSULTANDO NIVELES DE LA SALA:', idSala);
+
+    this.salasService.getNivelesDeSala(idSala).subscribe({
+      next: respuesta => {
+        console.log('RESPUESTA COMPLETA NIVELES:', respuesta);
+        console.log('DATA DE LA SALA:', respuesta.Data);
+        console.log('NIVELES ENCONTRADOS:', respuesta.Data?.niveles);
+
+        this.salaActual.set(respuesta.Data);
+        this.nivelesSala.set(respuesta.Data.niveles ?? []);
+
+        console.log('SEÑAL NIVELES SALA:', this.nivelesSala());
+
+        this.cargandoNiveles.set(false);
+      },
+      error: error => {
+        console.error('ERROR AL CONSULTAR NIVELES:', error);
+        this.cargandoNiveles.set(false);
+      }
+    });
+  }
+
+  alCambiarNivel(idNivel: string): void {
+    this.nivelSeleccionadoId.set(idNivel);
+    this.butacasNivel.set([]);
+
+    const solicitudActual = ++this.solicitudButacasNivel;
+
+    if (!idNivel) return;
+
+    this.cargandoButacasNivel.set(true);
+
+    this.butacasService.getButacas(idNivel, 1, 100).subscribe({
+      next: respuesta => {
+        if (solicitudActual !== this.solicitudButacasNivel) return;
+
+        this.butacasNivel.set(respuesta.Data);
+        this.cargandoButacasNivel.set(false);
+      },
+      error: error => {
+        if (solicitudActual !== this.solicitudButacasNivel) return;
+
+        console.error('Error al cargar butacas del nivel:', error);
+        this.cargandoButacasNivel.set(false);
+      },
+    });
+  }
+
 
   // Estado de colación
   readonly colacion = signal<Colacion | null>(null);
@@ -143,56 +261,65 @@ export class ListaAsignaciones {
 
   // ✅ COMPUTED PARA AGRUPAR ASIGNACIONES POR FILA Y COLUMNA (Para el Plano)
   readonly filasAsignadas = computed(() => {
-    const asignaciones = this.listAsignaciones();
-    const grupos = new Map<string, any[]>();
+    const nivelId = this.nivelSeleccionadoId();
 
-    for (const asignacion of asignaciones) {
-      const nombreFila = String(asignacion.butaca.fila);
+    if (!nivelId) return [];
 
-      if (!grupos.has(nombreFila)) {
-        grupos.set(nombreFila, []);
-      }
+    const nivel = this.nivelesSala().find(
+      nivel => nivel.id === nivelId
+    );
 
-      grupos.get(nombreFila)!.push(asignacion);
-    }
+    if (!nivel) return [];
 
-    return Array.from(grupos.entries())
-      .sort(([filaA], [filaB]) =>
-        filaA.localeCompare(filaB, undefined, {
-          numeric: true,
-          sensitivity: 'base',
-        })
-      )
-      .map(([nombre, asignacionesFila]) => {
-        const ordenadas = [...asignacionesFila].sort(
-          (a, b) => Number(a.butaca.columna) - Number(b.butaca.columna)
-        );
+    const butacas = this.butacasNivel();
+    const asignaciones = this.asignacionesDelNivel();
 
-        const porColumna = new Map(
-          ordenadas.map(asignacion => [Number(asignacion.butaca.columna), asignacion])
-        );
+    // Relacionar cada butaca con su asignación mediante el ID
+    const asignacionesPorButaca = new Map(
+      asignaciones.map(asignacion => [
+        asignacion.butaca.id,
+        asignacion,
+      ])
+    );
 
-        const maxColumna = Math.max(
-          0,
-          ...ordenadas.map(asignacion => Number(asignacion.butaca.columna))
-        );
+    // Relacionar cada posición con su butaca registrada
+    const butacasPorPosicion = new Map(
+      butacas.map(butaca => [
+        `${butaca.fila}-${butaca.columna}`,
+        butaca,
+      ])
+    );
 
-        const columnas = Array.from(
-          { length: maxColumna },
-          (_, indice) => {
-            const numeroColumna = indice + 1;
-            return {
-              numero: numeroColumna,
-              asignacion: porColumna.get(numeroColumna) ?? null,
-            };
-          }
-        );
+    // Construir todas las filas y columnas configuradas del nivel
+    return Array.from({ length: nivel.filas }, (_, indiceFila) => {
+      const numeroFila = indiceFila + 1;
 
-        return {
-          nombre,
-          columnas,
-        };
-      });
+      const columnas = Array.from(
+        { length: nivel.columnas },
+        (_, indiceColumna) => {
+          const numeroColumna = indiceColumna + 1;
+
+          const butaca = butacasPorPosicion.get(
+            `${numeroFila}-${numeroColumna}`
+          ) ?? null;
+
+          const asignacion = butaca
+            ? asignacionesPorButaca.get(butaca.id) ?? null
+            : null;
+
+          return {
+            numero: numeroColumna,
+            butaca,
+            asignacion,
+          };
+        }
+      );
+
+      return {
+        nombre: numeroFila,
+        columnas,
+      };
+    });
   });
 
   // =========================

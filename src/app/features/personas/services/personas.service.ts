@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environment/environment';
 import type { Persona } from '../models/persona.interface';
@@ -31,6 +31,24 @@ export class PersonasService {
       );
     }
 
+    /** OBTENER TITULADO DE PERSONA QUE NO ESTE ASINGADO A UNA BUTACA */
+    getPersonasDisponibles(
+      idColacion: string,
+      idAsignacion?: string
+    ): Observable<RespuestaApi<Persona[]>> {
+
+      let params = new HttpParams()
+        .set('id_colacion', idColacion);
+
+      if (idAsignacion) {
+        params = params.set('id_asignacion', idAsignacion);
+      }
+
+      return this.http.get<RespuestaApi<Persona[]>>(
+        `${this.apiUrl}disponibles/`,
+        { params }
+      );
+    }
     //metodo para buscar personas por termino
     // AHORA
     getBuscarPersonas(termino: string): Observable<RespuestaApi<PaginacionResponse<Persona>>> {

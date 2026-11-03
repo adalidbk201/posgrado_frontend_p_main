@@ -32,6 +32,11 @@ export class AsignacionForm {
 
     private readonly fb = inject(FormBuilder);
 
+
+    private solicitudPersonas = 0;
+    private solicitudButacas = 0;
+
+
     readonly formulario = this.fb.nonNullable.group({
     colacion: [
     '',
@@ -154,20 +159,37 @@ export class AsignacionForm {
 
     // Ejecutar cuando el usuario cambia de colación.
     alCambiarColacion(idColacion: string): void {
-    this.colacionSeleccionadaId.set(idColacion || null);
+      // Actualizar la colación seleccionada.
+      this.colacionSeleccionadaId.set(idColacion || null);
+      this.formulario.controls.colacion.setValue(idColacion);
 
-    // Reiniciar el nivel seleccionado.
-    this.nivelSeleccionadoId.set(null);
+      // Limpiar la selección anterior.
+      this.formulario.patchValue({
+        titulado: '',
+        butaca: ''
+      });
 
-    // Reiniciar las butacas.
-    this.butacas.set([]);
+      // Limpiar las personas anteriores.
+      this.personas.set([]);
+      this.paginaPersona.set(1);
 
-    // Limpiar la butaca del formulario.
-    this.formulario.controls.butaca.setValue('');
+      // Invalidar solicitudes anteriores.
+      this.solicitudPersonas++;
 
-    // Limpiar el estado de carga.
-    this.cargandoButacas.set(false);
+      // Limpiar niveles y butacas.
+      this.nivelSeleccionadoId.set(null);
+      this.butacas.set([]);
 
+      this.solicitudButacas++;
+      this.cargandoButacas.set(false);
+      this.cargandoMasPersonas.set(false);
+
+      if (!idColacion) {
+        return;
+      }
+
+      // Cargar titulados disponibles para esta colación.
+      this.cargarPersonas(1);
     }
 
     // =========================================================
@@ -178,7 +200,7 @@ export class AsignacionForm {
     readonly paginaPersona = signal(1);
     readonly busquedaPersona = signal('');
     readonly cargandoMasPersonas = signal(false);
-
+    
     private readonly personasService = inject(PersonasService);
 
     readonly personasFiltradas = computed(() => {
@@ -201,9 +223,9 @@ export class AsignacionForm {
 
     this.cargandoMasPersonas.set(true);
 
-    this.personasService.getPersonas(pagina, 100).subscribe({
+    this.personasService.getPersonasDisponibles(this.colacionSeleccionadaId()!).subscribe({
       next: respuesta => {
-        const nuevas = respuesta.Data.filas;
+        const nuevas = respuesta.Data;
 
         this.personas.update(actuales => {
           const idsExistentes = new Set(actuales.map(p => p.id));
@@ -343,7 +365,7 @@ export class AsignacionForm {
     this.cargandoButacas.set(true);
     this.butacas.set([]);
 
-    this.butacasService.getButacas(idNivel, 1, 100).subscribe({
+    this.butacasService.getButacasDisponibles(idNivel, this.colacionSeleccionadaId()!).subscribe({
       next: respuesta => {
         // Evitar aplicar una respuesta antigua si el usuario
         // seleccionó otro nivel mientras se realizaba la petición.

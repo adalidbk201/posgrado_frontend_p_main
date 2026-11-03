@@ -153,24 +153,31 @@ export class AsignacionEditarForm {
     alCambiarColacion(idColacion: string): void {
       console.log('Cambio de colación:', idColacion);
 
-      // Actualizar el estado y el formulario.
+      // 1. Actualizar la colación seleccionada.
       this.colacionSeleccionadaId.set(idColacion || null);
       this.formulario.controls.colacion.setValue(idColacion);
 
-      // Invalidar respuestas de solicitudes anteriores.
+      // 2. Invalidar solicitudes anteriores.
       this.solicitudButacas++;
+      this.solicitudPersonas++;
 
-      // Limpiar las selecciones anteriores.
+      // 3. Limpiar selecciones anteriores.
       this.nivelSeleccionadoId.set(null);
 
       this.formulario.patchValue({
         nivel: '',
-        butaca: ''
+        butaca: '',
+        titulado: ''
       });
 
-      // Vaciar las listas anteriores.
+      // 4. Limpiar listas anteriores.
       this.nivelesSala.set([]);
       this.butacas.set([]);
+      this.personas.set([]);
+
+      // 5. Reiniciar estados.
+      this.paginaPersona.set(1);
+      this.cargandoMasPersonas.set(false);
       this.cargandoButacas.set(false);
 
       if (!idColacion) {
@@ -178,6 +185,7 @@ export class AsignacionEditarForm {
         return;
       }
 
+      // 6. Buscar la colación seleccionada.
       const colacion = this.colaciones().find(
         c => String(c.id) === String(idColacion)
       );
@@ -191,10 +199,11 @@ export class AsignacionEditarForm {
 
       console.log('Sala de la nueva colación:', idSala);
 
+      // 7. Cargar niveles de la sala.
       this.cargarNivelesSala(idSala);
 
-      console.log('Nivel después del cambio:', this.formulario.controls.nivel.value);
-      console.log('Butaca después del cambio:', this.formulario.controls.butaca.value);
+      // 8. Cargar personas disponibles para la nueva colación.
+      this.cargarPersonas(1);
     }
 
     // =========================================================
@@ -222,35 +231,55 @@ export class AsignacionEditarForm {
     });
 
     private cargarPersonas(pagina: number): void {
-    if (this.cargandoMasPersonas()) {
-    return;
-    }
+      const idColacion = this.colacionSeleccionadaId();
 
-    this.cargandoMasPersonas.set(true);
+      // No realizar petición si no existe una colación seleccionada.
+      if (!idColacion || idColacion === 'null') {
+        console.warn('No se cargan personas: falta seleccionar una colación.');
+        return;
+      }
 
-    this.personasService.getPersonas(pagina, 100).subscribe({
-      next: respuesta => {
-        const nuevas = respuesta.Data.filas;
+      if (this.cargandoMasPersonas()) {
+        return;
+      }
 
-        this.personas.update(actuales => {
-          const idsExistentes = new Set(actuales.map(p => p.id));
+      this.cargandoMasPersonas.set(true);
 
-          return [
-            ...actuales,
-            ...nuevas.filter(p => !idsExistentes.has(p.id)),
-          ];
-        });
+      const solicitudActual = ++this.solicitudPersonas;
 
-        this.paginaPersona.set(pagina);
-        this.cargandoMasPersonas.set(false);
-      },
+      this.personasService.getPersonasDisponibles(
+        idColacion,
+        this.asignacion()?.id
+      ).subscribe({
+        next: respuesta => {
+          if (solicitudActual !== this.solicitudPersonas) {
+            return;
+          }
 
-      error: error => {
-        console.error('Error al cargar personas:', error);
-        this.cargandoMasPersonas.set(false);
-      },
-    });
+          const nuevas = respuesta.Data;
 
+          this.personas.update(actuales => {
+            const idsExistentes = new Set(actuales.map(p => p.id));
+
+            return [
+              ...actuales,
+              ...nuevas.filter(p => !idsExistentes.has(p.id)),
+            ];
+          });
+
+          this.paginaPersona.set(pagina);
+          this.cargandoMasPersonas.set(false);
+        },
+
+        error: error => {
+          if (solicitudActual !== this.solicitudPersonas) {
+            return;
+          }
+
+          console.error('Error al cargar personas disponibles:', error);
+          this.cargandoMasPersonas.set(false);
+        },
+      });
     }
 
     cargarMasPersonas(): void {
@@ -405,7 +434,7 @@ export class AsignacionEditarForm {
       this.butacas.set([]);
       this.formulario.controls.butaca.setValue('');
 
-      this.butacasService.getButacas(idNivel, 1, 100).subscribe({
+      this.butacasService.getButacasDisponibles(idNivel, this.colacionSeleccionadaId()!, this.asignacion()?.id).subscribe({
         next: respuesta => {
           // Ignorar respuestas de solicitudes anteriores.
           if (solicitudActual !== this.solicitudButacas) {
@@ -451,12 +480,14 @@ export class AsignacionEditarForm {
 
   private inicializacionAplicada = false;
   private solicitudButacas = 0;
+  private solicitudPersonas = 0;
+
   constructor() {
     // Cargar colaciones.
     this.cargarColaciones(1);
 
     // Cargar personas.
-    this.cargarPersonas(1);
+    // this.cargarPersonas(1);
 
     // Cargar salas y sus niveles.
     this.cargarSalas(1);
@@ -492,20 +523,31 @@ export class AsignacionEditarForm {
       // Marcar antes de restaurar los datos.
       this.inicializacionAplicada = true;
 
-      this.colacionSeleccionadaId.set(idColacion);
+        // Establecer la colación que se está editando.
+        this.colacionSeleccionadaId.set(idColacion);
 
-      this.formulario.patchValue({
-        colacion: idColacion,
-        titulado: String(asignacion.titulado),
-        nivel: idNivel,
-        butaca: idButaca
-      });
+        // Limpiar la lista anterior e invalidar solicitudes pendientes.
+        this.solicitudPersonas++;
+        this.personas.set([]);
+        this.cargandoMasPersonas.set(false);
+        this.paginaPersona.set(1);
 
-      this.cargarNivelesSala(
-        idSala,
-        idNivel,
-        idButaca
-      );
+        // Restaurar los valores del formulario.
+        this.formulario.patchValue({
+          colacion: idColacion,
+          titulado: String(asignacion.titulado),
+          nivel: idNivel,
+          butaca: idButaca
+        });
+
+        // Cargar personas disponibles, excluyendo la asignación actual.
+        this.cargarPersonas(1);
+
+        this.cargarNivelesSala(
+          idSala,
+          idNivel,
+          idButaca
+        );
     });
   }
 
