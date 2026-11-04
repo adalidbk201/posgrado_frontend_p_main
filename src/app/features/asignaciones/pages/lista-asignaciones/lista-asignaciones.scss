@@ -643,6 +643,73 @@
   }
 }
 
+
+/* Butaca disponible (estilo diferente a la asignada) */
+.butaca-card--available {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 90px;
+  min-height: 85px;
+  padding: 8px;
+  background: var(--color-background);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: default;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background: var(--color-surface);
+    border-color: var(--color-text-muted);
+  }
+}
+
+.butaca-card--available .butaca-code {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-family: 'SF Mono', Monaco, monospace;
+}
+
+.butaca-card--available .person-name-small {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* Leyenda - Butaca disponible */
+.legend-icon.legend-available {
+  background: var(--color-background);
+  border: 2px dashed var(--color-border);
+}
+
+/* Mensajes del plano */
+.plano-mensaje {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-muted);
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--color-border);
+    border-right-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    margin-right: 8px;
+    vertical-align: text-bottom;
+  }
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

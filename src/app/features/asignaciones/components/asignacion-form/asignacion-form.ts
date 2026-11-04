@@ -11,6 +11,7 @@ import { SalasService } from '../../../salas/services/salas.service';
 import { Butaca } from '../../../butacas/models/butaca.interface';
 import { Sala } from '../../../salas/models/sala.interface';
 import { Nivel } from '../../../niveles/models/nivel.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -20,6 +21,8 @@ import { Nivel } from '../../../niveles/models/nivel.interface';
   styleUrl: './asignacion-form.scss',
 })
 export class AsignacionForm {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
       // =========================================================
     // ASIGNACIÓN Y FORMULARIO
     // =========================================================
@@ -437,6 +440,9 @@ export class AsignacionForm {
 
     }
 
+    cancelar(): void {
+      this.router.navigate(['/dashboard/asignaciones']);
+    }
     // =========================================================
     // ENVIAR FORMULARIO
     // =========================================================

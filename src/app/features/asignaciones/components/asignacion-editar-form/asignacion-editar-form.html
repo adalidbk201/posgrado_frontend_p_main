@@ -1,204 +1,305 @@
-<form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-
-     <!-- colacion -->
-    <div class="colacion">
-        <div class="form-group row">
-            <label for="colacion" class="col-sm-3 col-form-label">Colacion</label>
-
-            <div class="col-sm-9">
-
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por descripcion colacion..."
-                    [value]="busquedaColacion()"
-                    (input)="busquedaColacion.set($any($event.target).value)">
-
-                <!-- select -->
-                <select
-                id="colacion"
-                class="form-control"
-                formControlName="colacion"
-                (change)="alCambiarColacion($any($event.target).value)"
-                >
-                <option value="">Selecciona una colación</option>
-
-                @for (colacion of colacionesFiltradas(); track colacion.id) {
-                    <option [value]="colacion.id">
-                    {{ colacion.descripcion }}
-                    </option>
-                }
-                </select>
-
-                @if (formulario.controls.colacion.invalid &&
-                    formulario.controls.colacion.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.colacion.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo programa es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaColacion()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasColaciones()"
-                        [disabled]="cargandoMasColaciones()">
-                        {{ cargandoMasColaciones() ? 'Cargando...' : 'Cargar más colaciones' }}
-                    </button>
-                }
-
-            </div>
-        </div>
+<div class="form-container">
+  
+  <!-- HEADER DINÁMICO (Modo Edición) -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon title-icon--edit">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar Asignación
+      </h1>
+      <p class="form-subtitle">
+        Modifica la asignación del titulado a su butaca para esta colación
+      </p>
     </div>
+  </div>
 
-     <!-- titulado - de persona -->
-    <div class="colacion">
-        <div class="form-group row">
-            <label for="colacion" class="col-sm-3 col-form-label">Titulado</label>
-
-            <div class="col-sm-9">
-
-                <!-- buscador -->
-                <input
-                    type="text"
-                    class="form-control mb-2"
-                    placeholder="Buscar por nombre titulado..."
-                    [value]="busquedaPersona()"
-                    (input)="busquedaPersona.set($any($event.target).value)">
-
-                <!-- select -->
-                <select
-                    id="titulado"
-                    name="titulado"
-                    formControlName="titulado"
-                    class="form-control"
-                    >
-
-                    <option value="" disabled>Selecciona titulado</option>
-
-                    @for (persona of personasFiltradas(); track persona.id) {
-                        <option [value]="persona.titulado.id">
-                            {{ persona.nombres }}
-                        </option>
-                    }       
-                      
-                </select>
-
-                @if (formulario.controls.titulado.invalid &&
-                    formulario.controls.titulado.touched) {
-
-                    <div class="class-error">
-                        @if (formulario.controls.titulado.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo titulado es obligatorio</div>
-                        }
-                    </div>
-                }
-
-                @if (!busquedaPersona()) {
-                    <button
-                        type="button"
-                        class="btn btn-link btn-sm mt-1 p-0"
-                        (click)="cargarMasPersonas()"
-                        [disabled]="cargandoMasPersonas()">
-                        {{ cargandoMasPersonas() ? 'Cargando...' : 'Cargar más personas' }}
-                    </button>
-                }
-
-            </div>
-        </div>
-    </div>
-
-<!-- Mostrar nombre de la sala asociada a la colación -->
-    <div class="sala">
-        <div class="form-group row">
-
-            <label class="form-label col-sm-3 col-form-label">Sala</label>
-            
-            <div class="col-sm-9">
-                <input
-                    type="text"
-                    class="form-control"
-                    [value]="salas().find(sala => sala.id === salaSeleccionadoId())?.nombre_sala ?? ''"
-                    placeholder="Selecciona una colación primero"
-                    readonly
-                >
-            </div>
-            
-
-        </div>
-        
-    </div>
-
-    <!-- Seleccionar nivel -->
-    <div class="nivel">
-        <div class="form-group row">
-            <label class="form-label col-sm-3 col-form-label">Nivel</label>
-
-            <div class="col-sm-9">
-                 <select
-                id="nivel"
-                class="form-control"
-                [formControl]="formulario.controls.nivel"
-                [disabled]="!salaSeleccionadoId() || nivelesSala().length === 0"
-                (change)="alCambiarNivel($any($event.target).value)"
-                >
-                <option value="">Selecciona un nivel</option>
-
-                @for (nivel of nivelesSala(); track nivel.id) {
-                    <option [value]="nivel.id">
-                    {{ nivel.nombre_nivel }} - Butacas: {{ nivel.filas * nivel.columnas }}
-                    </option>
-                }
-                </select>
-                  
-            </div>
-        </div>
-    </div>
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
     
-    <div class="butaca">
-        <div class="form-group row">
-            <label class="form-label col-sm-3 col-form-label">Butaca</label>
+    <!-- ==================== SECCIÓN: DATOS DEL EVENTO ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+        <h2 class="section-title">Evento y Titulado</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Colación -->
+        <div class="form-group form-group--full">
+          <label for="colacion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Colación
+            <span class="required">*</span>
+          </label>
 
-            <div class="col-sm-9">
-                <!-- selecionar butaca -->
-                <select
-                id="butaca"
-                class="form-control"
-                formControlName="butaca"
-                [disabled]="!formulario.controls.nivel.value || cargandoButacas()"
-                >
-                <option value="">Selecciona una butaca</option>
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por descripción de colación..."
+              [value]="busquedaColacion()"
+              (input)="busquedaColacion.set($any($event.target).value)">
+          </div>
 
-                @for (butaca of butacas(); track butaca.id) {
-                    <option [value]="butaca.id">
-                    {{ butaca.codigo_butaca }}
-                    </option>
-                }
-                </select>
-                @if (formulario.controls.butaca.invalid &&
-                    formulario.controls.butaca.touched) {
+          <select
+            id="colacion"
+            name="colacion"
+            formControlName="colacion"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.colacion.invalid && formulario.controls.colacion.touched"
+            (change)="alCambiarColacion($any($event.target).value)">
 
-                    <div class="class-error">
-                        @if (formulario.controls.butaca.errors?.['required']) {
-                            <div class="alert alert-danger" role="alert">El campo butaca es obligatorio</div>
-                        }
-                    </div>
-                }
+            <option value="" disabled>Selecciona una colación</option>
+
+            @for (colacion of colacionesFiltradas(); track colacion.id) {
+              <option [value]="colacion.id">
+                {{ colacion.descripcion }}
+              </option>
+            }       
+          </select>
+
+          @if (formulario.controls.colacion.invalid && formulario.controls.colacion.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.colacion.errors?.['required']) {
+                <div class="error-message error-message--small">El campo colación es obligatorio</div>
+              }
             </div>
+          }
+
+          @if (!busquedaColacion()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasColaciones()"
+              [disabled]="cargandoMasColaciones()">
+              @if (cargandoMasColaciones()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más colaciones
+              }
+            </button>
+          }
         </div>
+
+        <!-- Titulado -->
+        <div class="form-group form-group--full">
+          <label for="titulado" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Titulado
+            <span class="required">*</span>
+          </label>
+
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por nombre del titulado..."
+              [value]="busquedaPersona()"
+              (input)="busquedaPersona.set($any($event.target).value)">
+          </div>
+
+          <select
+            id="titulado"
+            name="titulado"
+            formControlName="titulado"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.titulado.invalid && formulario.controls.titulado.touched">
+
+            <option value="" disabled>Selecciona un titulado</option>
+
+            @for (persona of personasFiltradas(); track persona.id) {
+              <option [value]="persona.titulado.id">
+                {{ persona.nombres }} {{ persona.primer_apellido }} {{ persona.segundo_apellido }}
+              </option>
+            }       
+          </select>
+
+          @if (formulario.controls.titulado.invalid && formulario.controls.titulado.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.titulado.errors?.['required']) {
+                <div class="error-message error-message--small">El campo titulado es obligatorio</div>
+              }
+            </div>
+          }
+
+          @if (!busquedaPersona()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasPersonas()"
+              [disabled]="cargandoMasPersonas()">
+              @if (cargandoMasPersonas()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más personas
+              }
+            </button>
+          }
+        </div>
+      </div>
     </div>
 
-        
+    <!-- ==================== SECCIÓN: UBICACIÓN ==================== -->
+    <div class="form-section">
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <h2 class="section-title">Ubicación en la Sala</h2>
+      </div>
+      
+      <div class="form-grid form-grid--two-columns">
+        <!-- Sala (Readonly) -->
+        <div class="form-group">
+          <label for="sala" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Sala Asignada
+          </label>
+          <input
+            type="text"
+            class="form-control form-control--readonly"
+            [value]="salas().find(sala => sala.id === salaSeleccionadoId())?.nombre_sala ?? ''"
+            placeholder="Selecciona una colación primero"
+            readonly>
+        </div>
 
+        <!-- Nivel -->
+        <div class="form-group">
+          <label for="nivel" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="3" y1="15" x2="21" y2="15"/>
+            </svg>
+            Nivel
+            <span class="required">*</span>
+          </label>
+          
+          <!-- ✅ MANTENEMOS [formControl] EXACTAMENTE COMO EN TU ORIGINAL -->
+          <select
+            id="nivel"
+            name="nivel"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.nivel.invalid && formulario.controls.nivel.touched"
+            [formControl]="formulario.controls.nivel"
+            [disabled]="!salaSeleccionadoId() || nivelesSala().length === 0"
+            (change)="alCambiarNivel($any($event.target).value)">
+            
+            <option value="">Selecciona un nivel</option>
 
+            @for (nivel of nivelesSala(); track nivel.id) {
+              <option [value]="nivel.id">
+                {{ nivel.nombre_nivel }} 
+              </option>
+            }
+          </select> 
+        </div>
 
+        <!-- Butaca -->
+        <div class="form-group form-group--full">
+          <label for="butaca" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Butaca
+            <span class="required">*</span>
+          </label>
+          
+          <!-- ✅ MANTENEMOS LA LÓGICA DE DISABLED ORIGINAL CON cargandoButacas() -->
+          <select 
+            name="butaca" 
+            id="butaca"
+            formControlName="butaca"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.butaca.invalid && formulario.controls.butaca.touched"
+            [disabled]="!formulario.controls.nivel.value || cargandoButacas()">
+            
+            <option value="">Selecciona una butaca</option>
+            
+            @for (butaca of butacas(); track butaca.id) {
+              <option [value]="butaca.id">
+                {{ butaca.codigo_butaca }}
+              </option>
+            }
+          </select>
 
-    <button  class="btn btn-success" >
-        Guardar
-    </button>
+          @if (cargandoButacas()) {
+            <div class="helper-message helper-message--info">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+              Cargando butacas del nivel...
+            </div>
+          }
 
-</form>
+          @if (formulario.controls.butaca.invalid && formulario.controls.butaca.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.butaca.errors?.['required']) {
+                <div class="error-message error-message--small">El campo butaca es obligatorio</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Guardar Cambios
+      </button>
+    </div>
+
+  </form>
+</div>
