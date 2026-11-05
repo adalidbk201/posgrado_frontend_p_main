@@ -481,4 +481,48 @@ export class ListaAsignaciones {
       },
     });
   }
+
+  // =====================================================
+  // ASIGNACIÓN AUTOMÁTICA DE BUTACAS
+  // =====================================================
+  readonly asignacionColacionId = signal<string | null>(null);
+
+  asignarAutomaticamenteColacionSeleccionada(id: string): void {
+    this.asignacionColacionId.set(id);
+  }
+
+  confirmarAsignacionAutomatica(): void {
+
+    const id = this.asignacionColacionId();
+
+    if (!id) return;
+
+    this.asignacionesService.crearAsignacionAutomatica(id).subscribe({
+
+      next: (respuesta) => {
+
+        console.log(respuesta.Message);
+
+        // Limpiar los datos anteriores
+        this.asignaciones.set([]);
+        this.paginaActual.set(0);
+
+        // Recargar asignaciones de la colación seleccionada
+        this.cargarAsignaciones(1);
+
+        // Limpiar identificador temporal
+        this.asignacionColacionId.set(null);
+
+      },
+
+      error: (error) => {
+        console.error(
+          'Error al crear la asignación automática:',
+          error
+        );
+      },
+
+    });
+  }
+
 }

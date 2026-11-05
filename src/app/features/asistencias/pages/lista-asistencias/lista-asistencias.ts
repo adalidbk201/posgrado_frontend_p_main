@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AsistenciasService } from '../../services/asistencias.service';
 import type { Asistencia } from '../../models/asistencia.interface';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [],
@@ -12,6 +13,7 @@ import type { Asistencia } from '../../models/asistencia.interface';
   templateUrl: './lista-asistencias.html',
 })
 export class ListaAsistencias {
+  private readonly router = inject(Router);
   //  consumir api
 
   // inyectar servicio 
@@ -106,5 +108,18 @@ export class ListaAsistencias {
     });
 
   }
+
+
+
+  // =========================
+  // NAVEGACIÓN Y ELIMINACIÓN
+  // =========================
+
+  crearAsistencia(): void {
+    this.router.navigate(['/dashboard/asistencias/crear']);
+  }
+
+
+
 }
 

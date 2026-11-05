@@ -51,6 +51,16 @@ export class AsignacionesService {
     }
 
     // =========================
+    // POST - CREAR ASIGNACION AUTOMÁTICA
+    // POST - CREAR ASIGNACIÓN AUTOMÁTICA
+    crearAsignacionAutomatica(id_colacion: string): Observable<RespuestaApi<Asignacion[]>> {
+    return this.http.post<RespuestaApi<Asignacion[]>>(
+        `${this.apiUrl}asignacion-automatica/`,
+        { colacion: id_colacion }
+    );
+    }
+
+    // =========================
     // PUT - ACTUALIZAR
     actualizarAsignacion(id: string,datos: AsignacionRequest): Observable<Asignacion> {
     return this.http.put<Asignacion>(`${this.apiUrl}${id}/`,datos);

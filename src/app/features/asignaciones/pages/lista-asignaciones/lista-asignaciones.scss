@@ -121,10 +121,24 @@
 
 .filters-grid {
   display: grid;
+  /* Por defecto: 2 columnas (Select ocupa 1 parte, Buscador ocupa 1.5 partes) */
   grid-template-columns: 1fr 1.5fr;
   gap: 16px;
+  align-items: end; /* Alinea todos los elementos a la base (donde están los inputs) */
   
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  /* Cuando se activa la clase, agrega una 3ra columna que se ajusta al tamaño del botón */
+  &.grid-3-cols {
+    grid-template-columns: 1fr 1.5fr auto;
+  }
+  
+  @media (max-width: 768px) { 
+    grid-template-columns: 1fr; 
+    align-items: stretch;
+    
+    &.grid-3-cols {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 
 .select-wrapper {
@@ -707,6 +721,76 @@
     animation: spin 0.75s linear infinite;
     margin-right: 8px;
     vertical-align: text-bottom;
+  }
+}
+
+/* =========================
+   BOTÓN DE ASIGNACIÓN AUTOMÁTICA
+========================= */
+.assignment-actions {
+  display: flex;
+  align-items: flex-end; /* Alinea con la base de los inputs */
+}
+
+.btn-auto-assign {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--color-purple);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  
+  /* Altura fija de 42px para igualar exactamente la altura de los inputs/select */
+  height: 42px; 
+  
+  &:hover {
+    background: #7c3aed; /* Morado un poco más oscuro */
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    
+    svg {
+      transform: rotate(90deg); /* Efecto de engranaje girando */
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  svg {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Ajuste responsive para móvil */
+@media (max-width: 768px) {
+  .assignment-actions {
+    justify-content: center;
+    margin-top: 8px;
+  }
+  
+  .btn-auto-assign {
+    width: 100%;
+  }
+}
+/* Ajuste responsive para que el botón no se desborde en móvil */
+@media (max-width: 768px) {
+  .assignment-actions {
+    justify-content: center;
+  }
+  
+  .btn-auto-assign {
+    width: 100%;
+    justify-content: center;
   }
 }
 

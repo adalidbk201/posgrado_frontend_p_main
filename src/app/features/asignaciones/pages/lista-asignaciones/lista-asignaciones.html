@@ -1,5 +1,3 @@
-
-
 <section class="asignaciones-container">
 
   <!-- HEADER DE LA SECCIÓN -->
@@ -30,69 +28,96 @@
 
 
   <!-- FILTROS DE BÚSQUEDA Y SELECCIÓN -->
-  <div class="filters-section">
-    <div class="filters-grid">
+<div class="filters-section">
+  <!-- Agregamos la clase condicional grid-3-cols cuando hay colación seleccionada -->
+  <div class="filters-grid" [class.grid-3-cols]="colacionSeleccionada()">
 
-      <!-- FILTRO POR COLACIÓN -->
-      <div class="select-wrapper">
-        <label for="filtroColacion" class="select-label">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-          </svg>
-          Filtrar por Colación
-        </label>
-
-        <select
-          id="filtroColacion"
-          class="form-select"
-          [value]="colacionSeleccionada()"
-          (change)="alCambiarColacion($any($event.target).value)"
-        >
-          <option value="">Todas las colaciones</option>
-
-          @for (colacion of colaciones(); track colacion.id) {
-            <option [value]="colacion.id">
-              {{ colacion.turno }} - {{ colacion.descripcion }}
-            </option>
-          }
-        </select>
-      </div>
-
-
-      <!-- BUSCADOR -->
-      <div class="search-wrapper">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="M21 21l-4.35-4.35"/>
+    <!-- 1. FILTRO POR COLACIÓN -->
+    <div class="select-wrapper">
+      <label for="filtroColacion" class="select-label">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
+        Filtrar por Colación
+      </label>
 
-        <input
-          type="text"
-          class="search-input"
-          #txtBuscar
-          placeholder="Buscar por nombre de titulado o código de butaca..."
-          (input)="ejecutarBusqueda(txtBuscar.value)"
-          aria-label="Buscar asignaciones"
-        >
+      <select
+        id="filtroColacion"
+        class="form-select"
+        [value]="colacionSeleccionada()"
+        (change)="alCambiarColacion($any($event.target).value)"
+      >
+        <option value="">Todas las colaciones</option>
 
-        @if (txtBuscar.value) {
-          <button
-            type="button"
-            class="clear-search"
-            (click)="txtBuscar.value=''; ejecutarBusqueda('')"
-            aria-label="Limpiar búsqueda"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
+        @for (colacion of colaciones(); track colacion.id) {
+          <option [value]="colacion.id">
+            {{ colacion.turno }} - {{ colacion.descripcion }}
+          </option>
         }
-      </div>
-
+      </select>
     </div>
+
+    <!-- 2. BUSCADOR -->
+    <div class="search-wrapper">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+
+      <input
+        type="text"
+        class="search-input"
+        #txtBuscar
+        placeholder="Buscar por nombre de titulado o código de butaca..."
+        (input)="ejecutarBusqueda(txtBuscar.value)"
+        aria-label="Buscar asignaciones"
+      >
+
+      @if (txtBuscar.value) {
+        <button
+          type="button"
+          class="clear-search"
+          (click)="txtBuscar.value=''; ejecutarBusqueda('')"
+          aria-label="Limpiar búsqueda"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+    </div>
+
+    <!-- 3. ACCIÓN: ASIGNAR AUTOMÁTICAMENTE -->
+    @if (colacionSeleccionada()) {
+      <div class="assignment-actions">
+        <button
+          type="button"
+          class="btn-auto-assign"
+          data-toggle="modal"
+          data-target="#modalAsignacionAutomatica"
+          (click)="asignarAutomaticamenteColacionSeleccionada(colacionSeleccionada())"
+          aria-label="Asignar butacas automáticamente"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3v3"/>
+            <path d="M5.6 5.6l2.1 2.1"/>
+            <path d="M3 12h3"/>
+            <path d="M18 12h3"/>
+            <path d="M16.3 7.7l2.1-2.1"/>
+            <path d="M12 18v3"/>
+            <path d="M8 12a4 4 0 1 1 8 0c0 1.5-1 2.5-2 3.5V17h-4v-1.5c-1-1-2-2-2-3.5z"/>
+          </svg>
+          <span>Asignar automáticamente</span>
+        </button>
+      </div>
+    }
+
   </div>
+</div>
+
+    
 
 
   <!-- SELECTOR DE VISTAS -->
@@ -684,6 +709,87 @@
           (click)="confirmarEliminacion()"
         >
           Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Modal para confirmar asignación automática -->
+<div
+  class="modal fade"
+  id="modalAsignacionAutomatica"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalAsignacionAutomaticaTitulo"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+  >
+
+    <div class="modal-content">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <h5
+          class="modal-title"
+          id="modalAsignacionAutomaticaTitulo"
+        >
+          Confirmar asignación automática
+        </h5>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cerrar"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-body">
+
+        <p class="mb-2">
+          ¿Está seguro de realizar la asignación automática de butacas
+          para esta colación?
+        </p>
+
+        <p class="text-muted mb-0">
+          Se asignarán automáticamente los titulados que todavía no
+          tengan una butaca asignada. Las asignaciones existentes
+          se conservarán.
+        </p>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="confirmarAsignacionAutomatica()"
+        >
+          Asignar automáticamente
         </button>
 
       </div>

@@ -8,13 +8,22 @@
     placeholder="Buscar..."
     (input)="ejecutarBusqueda(txtBuscar.value)">
 
+      
+    <button type="button" class="btn-primary" (click)="crearAsistencia()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva Asistencia
+    </button>
+
     <table class="table">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">ID</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Transacción</th>
+                <!-- <th scope="col">Estado</th> -->
+                <!-- <th scope="col">Transacción</th> -->
                 <th scope="col">Asistencia</th>
             </tr>
         </thead>
@@ -23,8 +32,8 @@
                 <tr class="contenido">
                     <th scope="row">{{ idx + 1 }}</th>
                     <td>{{ asistencia.id }}</td>
-                    <td>{{ asistencia.estado }}</td>
-                    <td>{{ asistencia.transaccion }}</td>
+                    <!-- <td>{{ asistencia.estado }}</td> -->
+                    <!-- <td>{{ asistencia.transaccion }}</td> -->
                     <td>{{ asistencia.asistencia }}</td>
                 </tr>
             }
