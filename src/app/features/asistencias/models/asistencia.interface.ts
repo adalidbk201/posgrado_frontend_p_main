@@ -3,6 +3,29 @@ export interface Asistencia{
     asistencia:string,
     asignacion_butaca: {
         id: string,
+         colacion: {
+          id: string,
+          fecha_colacion: string,
+          turno: string,
+          descripcion: string,
+          estado: string,
+          sala: {
+            id: string,
+            nombre_sala: string
+          },
+          programa: {
+            estado: string,
+            id: string,
+            nombre_programa: string,
+            grado: {
+              estado: string,
+              id: 0,
+              grado_academico: string,
+              jerarquia: 0
+            },
+            menciones: string
+          }
+        },
         butaca: {
             id: string,
             fila: number | null,

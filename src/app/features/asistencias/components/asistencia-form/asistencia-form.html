@@ -1,1 +1,108 @@
-<p>asistencia-form works!</p>,
+ <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    <!-- Colación -->
+        <div class="form-group form-group--full">
+          <label for="colacion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Colación
+            <span class="required">*</span>
+          </label>
+
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon-input">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              class="form-control form-control--search"
+              placeholder="Buscar por descripción de colación..."
+              [value]="busquedaColacion()"
+              (input)="busquedaColacion.set($any($event.target).value)">
+          </div>
+
+          <!-- ✅ USAMOS [value] EN LUGAR DE [ngValue] PARA MANTENER TU LÓGICA ORIGINAL -->
+          <select
+            id="colacion"
+            name="colacion"
+            formControlName="colacion"
+            class="form-select"
+            [class.form-select-error]="formulario.controls.colacion.invalid && formulario.controls.colacion.touched"
+             >
+
+            <option value="" disabled>Selecciona una colación</option>
+
+            @for (colacion of colacionesFiltradas(); track colacion.id) {
+              <option [value]="colacion.id">
+                {{ colacion.descripcion }}
+              </option>
+            }       
+          </select>
+
+          @if (formulario.controls.colacion.invalid && formulario.controls.colacion.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.colacion.errors?.['required']) {
+                <div class="error-message error-message--small">El campo colación es obligatorio</div>
+              }
+            </div>
+          }
+
+          @if (!busquedaColacion()) {
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="cargarMasColaciones()"
+              [disabled]="cargandoMasColaciones()">
+              @if (cargandoMasColaciones()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Cargando...
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Cargar más colaciones
+              }
+            </button>
+          }
+        </div>
+
+     <!-- ci -->
+    <div class="ci">
+        <div class="form-group row">
+            <label for="ci"class="col-sm-3 col-form-label">Cédula de Identidad</label>
+            <div class="col-sm-9">
+                <input type="text" 
+                name="ci" 
+                id="ci"
+                class="form-control"
+                formControlName="ci"
+                placeholder="Ingrese cédula de identidad">
+                @if (formulario.controls.ci.invalid &&
+                     formulario.controls.ci.touched) {
+                        
+                    <div class="class-error">
+                        @if (formulario.controls.ci.errors?.['required']) {
+                            <div class="alert alert-danger" role="alert">La cédula de identidad es obligatoria</div>
+                        }
+                        @if (formulario.controls.ci.errors?.['minlength']) {
+                            <div class="alert alert-danger" role="alert">La cédula de identidad debe tener al menos 4 caracteres </div>
+                        }
+                        @if (formulario.controls.ci.errors?.['maxlength']) {
+                            <div class="alert alert-danger" role="alert">La cédula de identidad no debe superar los 10 caracteres</div>
+                        }
+                    </div>    
+                }
+            </div>
+        </div>   
+    </div>
+        
+    <button  class="btn btn-success" >
+        Guardar
+    </button>
+
+</form> 

@@ -1,5 +1,6 @@
-import { Component, effect, inject, signal } from '@angular/core';
- 
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { ColacionesService } from '../../../colaciones/services/colaciones.service';
+import { Colacion } from '../../../colaciones/models/colacion.interface';
 import { Observable } from 'rxjs';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AsistenciasService } from '../../services/asistencias.service';
@@ -13,113 +14,212 @@ import { Router } from '@angular/router';
   templateUrl: './lista-asistencias.html',
 })
 export class ListaAsistencias {
+   // inyectar asistenciasService
+  private readonly asistenciasService = inject(AsistenciasService);
+
+  // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
-  //  consumir api
-
-  // inyectar servicio 
-  private readonly asistenciaService=inject(AsistenciasService);
-
-  // crear  señal list para guardar datos
-  readonly listAsist = signal<Asistencia[]>([]);
-
-  // total asistencias
-  readonly totalAsistencias = signal(0);
-
-  // llamar al metodo get de service
-   readonly getAsistencias = rxResource({
-    stream: () => this.asistenciaService.getPost(),
-  });
-
-  //--------------------------------------------
-  // crear señla temrinobuscar
-  readonly terminoBuscar = signal('');
-
-  // metodo get de busqueda
-  readonly getAsistBuscar = rxResource({
-    params: () => ({
-      termino: this.terminoBuscar().trim(),
-    }),
-
-    stream: ({ params }) => {
-      if (params.termino.length === 0) {
-        return this.asistenciaService.getPost();
-      }
-
-      return this.asistenciaService.getPostBuscar(params.termino);
-    },
-  });
-
-  // metodo ejecutar Busqueda
-  ejecutarBusqueda(termino:string):void{
-    // actualiza señal terminoBuscar
-    this.terminoBuscar.set(termino)
-  }
-
-  constructor(){
-     effect(() => {
-
-    console.log(
-      'Estado:',
-      this.getAsistencias.status(),
-    );
-
-    console.log(
-      'Valor:',
-      this.getAsistencias.value(),
-    );
-
-    console.log(
-      'Error:',
-      this.getAsistencias.error(),
-    );
-
-  });
-
-    //verificar cambios de señal
-     effect(() => {
-      if (this.getAsistencias.hasValue()) {
-        const respuesta = this.getAsistencias.value();
-
-        console.log('RESPUESTA COMPLETA:', respuesta);
-        console.log('FILAS:', respuesta.Data.filas);
-        console.log('TOTAL:', respuesta.Data.total);
-
-        // Guardar las 10 filas de la página actual
-        this.listAsist.set(respuesta.Data.filas);
-
-        // Guardar el total real de registros
-        this.totalAsistencias.set(respuesta.Data.total);
-      }
-    });
-
-    // verificar cambios de señal
-    effect(() => {
-    // verificar si getAsistBuscar tiene valor
-    if (this.getAsistBuscar.hasValue()) {
-      // obtener el valor de getAsistBuscar
-      const respuesta = this.getAsistBuscar.value();
-      console.log('RESPUESTA COMPLETA BUSQUEDA:', respuesta);
-      console.log('FILAS BUSQUEDA:', respuesta.Data.filas);
-      console.log('TOTAL BUSQUEDA:', respuesta.Data.total);
-      this.listAsist.set(respuesta.Data.filas);
-      this.totalAsistencias.set(respuesta.Data.total);
-    }
-
-    });
-
-  }
-
-
 
   // =========================
-  // NAVEGACIÓN Y ELIMINACIÓN
+  // Cargar y filtrar
+  // =========================
+
+  // todas las asistencias cargadas desde el backend (paginado, acumulativo)
+  readonly asistencias = signal<Asistencia[]>([]);
+
+  // página actual cargada
+  readonly paginaActual = signal(1);
+
+  // total real de registros que reporta el backend (para saber si hay más páginas)
+  readonly totalBackend = signal(0);
+
+  // indica si se está trayendo una página adicional
+  readonly cargando = signal(false);
+
+  // texto del buscador
+  readonly terminoBuscar = signal('');
+
+
+  // lista final que se muestra en la tabla, filtrada en el cliente
+  // computed crea un signal derivado - resultado depende de terminoBuscar y roles
+  readonly listAsistencias = computed(() => {
+
+  const termino = this.terminoBuscar().trim().toLowerCase();
+  const idColacion = this.colacionSeleccionada();
+
+  const base = this.asistencias().filter(asistencia => {
+
+    // FILTRO POR COLACIÓN
+    const coincideColacion =
+      !idColacion ||
+      asistencia.asignacion_butaca.colacion?.id === idColacion;
+
+    // DATOS DE LA PERSONA
+    const persona = asistencia.asignacion_butaca.titulado.persona;
+
+    const nombreCompleto = [
+      persona.nombres,
+      persona.primer_apellido,
+      persona.segundo_apellido,
+    ].join(' ');
+
+    // TEXTO PARA BUSCAR
+    const texto = [
+      nombreCompleto,
+      persona.nro_documento,
+      asistencia.asistencia,
+    ].join(' ').toLowerCase();
+
+    const coincideBusqueda =
+      !termino || texto.includes(termino);
+
+    return coincideColacion && coincideBusqueda;
+  });
+
+  return base;
+});
+
+  
+
+  // se llama directo desde el (input), sin debounce — el filtro es en memoria, no HTTP
+  ejecutarBusqueda(termino: string): void {
+    this.terminoBuscar.set(termino);
+  }
+
+
+  // calcula qué número mostrar como total de asistencias.
+  readonly totalAsistencias = computed(() => {
+    const hayFiltros =
+      this.terminoBuscar().trim() !== '' ||
+      this.colacionSeleccionada() !== '';
+
+    return hayFiltros
+      ? this.listAsistencias().length
+      : this.totalBackend();
+  });
+
+
+  constructor() {
+    // cargar la primera pagina
+    this.cargarAsistencias(1);
+
+    this.cargarColaciones();
+  }
+
+  private cargarAsistencias(pagina: number): void {
+    // cuando empieza la peticion -> true 
+    this.cargando.set(true);
+
+    // Solicitar datos a Django-Como getPersonas() devuelve un Observable, necesitas suscribirte:
+    this.asistenciasService.getAsistencias(pagina, 100).subscribe({
+
+      next: (respuesta) => {
+
+        // obtener asistencias
+        const nuevas = respuesta.Data.filas;
+
+        // actualizar señal asistencias -> Angular te entrega el valor actual mediante: actual
+        this.asistencias.update(actual => {
+
+          //          crea un conjunto de los IDs extraidos.
+          const idsExistentes = new Set(actual.map(p => p.id));
+
+          // De los roles nuevos, quédate solamente con aquellas cuyo ID todavía no existe en roles.
+          const sinDuplicar = nuevas.filter(p => !idsExistentes.has(p.id));
+
+          // Agregar las nuevos roles
+          return [...actual, ...sinDuplicar];
+        });
+
+        // Guardar el total real de Django
+        this.totalBackend.set(respuesta.Data.total);
+        // Guardar la página actual
+        this.paginaActual.set(pagina);
+        // Terminar la carga
+        this.cargando.set(false);
+      },
+      error: () => this.cargando.set(false),
+    });
+  }
+
+
+  cargarMasAsistencias(): void {
+    this.cargarAsistencias(this.paginaActual() + 1);
+  }
+
+  /** COLACIONES */
+  private readonly colacionesService = inject(ColacionesService);
+
+  // COLACIONES
+  readonly colaciones = signal<Colacion[]>([]);
+  readonly colacionSeleccionada = signal<string>('');
+
+  private cargarColaciones(): void {
+    this.colacionesService.getColaciones(1, 100).subscribe({
+      next: respuesta => {
+        this.colaciones.set(respuesta.Data.filas);
+      },
+      error: error => {
+        console.error('Error al cargar las colaciones:', error);
+      },
+    });
+  }
+
+  // CAMBIAR COLACIÓN
+  alCambiarColacion(id: string): void {
+    this.colacionSeleccionada.set(id);
+  }
+
+
+  // Método para asignar clase CSS según el tipo de asistencia
+  // getAsistenciaClass(asistencia: string): string {
+  //   const asistenciaMap: { [key: string]: string } = {
+  //     'ADMINISTRADOR': 'admin',
+  //     'ESTUDIANTE': 'estudiante',
+  //   };
+  //   return asistenciaMap[asistencia?.toUpperCase()] || 'default';
+  // }
+
+  
+
+  // =========================
+  // NAVEGACIÓN Y ELIMINACIÓN —  
   // =========================
 
   crearAsistencia(): void {
     this.router.navigate(['/dashboard/asistencias/crear']);
   }
 
+  editarAsistencia(id: number): void {
+    this.router.navigate(['/dashboard/asistencias/editar', id]);
+  }
 
+
+  /** Eliminar asistencia */
+  // readonly asistenciaEliminarId = signal<string | null>(null);
+
+  // seleccionarAsistenciaEliminar(id: string): void {
+  //   this.asistenciaEliminarId.set(id);
+  // }
+
+  // confirmarEliminacion(): void {
+  //   const id = this.asistenciaEliminarId();
+  //   if (!id) return;
+
+  //   this.asistenciasService.eliminarAsistencia(id).subscribe({
+  //     next: () => {
+  //       console.log('Asistencia eliminada correctamente');
+  //       // recarga desde el inicio para reflejar el borrado
+  //       this.asistencias.set([]);
+  //       this.paginaActual.set(0);
+  //       this.cargarAsistencias(1);
+  //       this.asistenciaEliminarId.set(null);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error al eliminar la asistencia:', error);
+  //     },
+  //   });
+  // }
 
 }
 

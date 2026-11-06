@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environment/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import type { Asistencia } from '../models/asistencia.interface';
 import type { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
@@ -22,10 +22,16 @@ export class AsistenciasService {
     private apiUrl= `${environment.API}/asistencias/`
   
     // metodo get de services
-    getPost(): Observable<RespuestaApi<PaginacionResponse<Asistencia>>> {
+    getAllAsistencias(): Observable<RespuestaApi<PaginacionResponse<Asistencia>>> {
         return this.http.get<
         RespuestaApi<PaginacionResponse<Asistencia>>
         >(this.apiUrl);
+    }
+    // AHORA — con parámetros opcionales, no rompe otros lugares que ya lo llamen sin argumentos
+    getAsistencias(pagina = 1, limite = 100): Observable<RespuestaApi<PaginacionResponse<Asistencia>>> {
+        return this.http.get<RespuestaApi<PaginacionResponse<Asistencia>>>(
+        `${this.apiUrl}?pagina=${pagina}&limite=${limite}`
+        );
     }
 
     // metood buscar de service
@@ -35,7 +41,19 @@ export class AsistenciasService {
 
     // =========================
     // POST - CREAR
-    crearAsistencia(datos: AsistenciaRequest): Observable<Asistencia> {
-        return this.http.post<Asistencia>(this.apiUrl, datos);
+    // =========================
+    crearAsistencia(
+        datos: AsistenciaRequest,
+        idColacion: string
+    ): Observable<Asistencia> {
+
+        const params = new HttpParams()
+            .set('id_colacion', idColacion);
+
+        return this.http.post<Asistencia>(
+            this.apiUrl,
+            datos,
+            { params }
+        );
     }
 }

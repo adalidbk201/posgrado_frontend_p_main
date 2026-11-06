@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { AsistenciasService } from '../../services/asistencias.service';
 import { Router } from '@angular/router';
 import { AsistenciaRequest } from '../../models/asistencia-request.interfacace';
+import { AsistenciaForm } from '../../components/asistencia-form/asistencia-form';
 
 @Component({
   selector: 'app-crear-asistencia',
-  imports: [],
+  imports: [AsistenciaForm],
   templateUrl: './crear-asistencia.html',
   styleUrl: './crear-asistencia.scss',
 })
@@ -18,17 +19,19 @@ export class CrearAsistencia {
   private readonly router = inject(Router);
 
   // metodo crearAsistencia
-  crearAsistencia(datos: AsistenciaRequest): void {
+  crearAsistencia(evento: {
+    datos: AsistenciaRequest;
+    id_colacion: string;
+  }): void {
 
-    // llamamos al metodo crearAsistencia: usamos .susbribe para recibir la resopuesta http Post
-    this.asistenciasService.crearAsistencia(datos).subscribe({
+    this.asistenciasService.crearAsistencia(
+      evento.datos,
+      evento.id_colacion
+    ).subscribe({
       next: () => {
         console.log('Asistencia creada correctamente');
-
-        // Volver al listado
         this.router.navigate(['/dashboard/asistencias']);
       },
-
       error: (error) => {
         console.error('Error al crear la asistencia:', error);
       },
