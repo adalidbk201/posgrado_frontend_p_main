@@ -1,1 +1,18 @@
-<p>editar-asistencia works!</p>,
+ 
+
+    @if (asistencia()) {
+
+      <app-asistencia-editar-form
+        [asistencia]="asistencia()"
+        (guardar)="actualizarAsistencia($event)"
+        nombre_titulado="{{ nombre_titulado }}"
+      />
+
+    } @else {
+
+      <p>Cargando asistencia...</p>
+
+    }
+ 
+
+

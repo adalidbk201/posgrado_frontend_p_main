@@ -170,7 +170,15 @@ export class ListaAsistencias {
     this.colacionSeleccionada.set(id);
   }
 
+  getInitials(nombre: string, primerApellido: string, segundoApellido: string): string {
+    const iniciales = [
+      nombre.charAt(0),
+      primerApellido.charAt(0),
+      segundoApellido.charAt(0)
+    ].join('');
 
+    return iniciales.toUpperCase();
+  }
   // Método para asignar clase CSS según el tipo de asistencia
   // getAsistenciaClass(asistencia: string): string {
   //   const asistenciaMap: { [key: string]: string } = {
@@ -190,8 +198,8 @@ export class ListaAsistencias {
     this.router.navigate(['/dashboard/asistencias/crear']);
   }
 
-  editarAsistencia(id: number): void {
-    this.router.navigate(['/dashboard/asistencias/editar', id]);
+  editarAsistencia(id: string,nombre: string): void {
+    this.router.navigate(['/dashboard/asistencias/editar', id, nombre]);
   }
 
 

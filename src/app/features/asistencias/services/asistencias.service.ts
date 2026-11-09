@@ -6,7 +6,7 @@ import type { Asistencia } from '../models/asistencia.interface';
 import type { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
 import type { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { Observable } from 'rxjs';
-import { AsistenciaRequest } from '../models/asistencia-request.interfacace';
+import { AsistenciaEditarRequest, AsistenciaRequest } from '../models/asistencia-request.interfacace';
 
 @Injectable({
     // ejecute desde la raiz
@@ -34,6 +34,12 @@ export class AsistenciasService {
         );
     }
 
+    // =========================
+        // GET - POR ID
+        getAsistenciaPorId(id: string): Observable<RespuestaApi<Asistencia>> {
+          return this.http.get<RespuestaApi<Asistencia>>(`${this.apiUrl}${id}/`);
+        }
+
     // metood buscar de service
     getPostBuscar(termino: string): Observable<RespuestaApi<PaginacionResponse<Asistencia>>> {
         return this.http.get<RespuestaApi<PaginacionResponse<Asistencia>>>(`${this.apiUrl}?q=${encodeURIComponent(termino)}/`);
@@ -55,5 +61,11 @@ export class AsistenciasService {
             datos,
             { params }
         );
+    }
+
+    // =========================
+    // PATCH - ACTUALIZAR PARCIALMENTE
+    actualizarParcialAsistencia(id: string,datos: Partial<AsistenciaEditarRequest>): Observable<Asistencia> {
+        return this.http.patch<Asistencia>(`${this.apiUrl}${id}/`,datos);
     }
 }

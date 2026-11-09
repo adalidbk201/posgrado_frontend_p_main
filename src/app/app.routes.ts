@@ -235,7 +235,7 @@ export const routes: Routes = [
                 loadComponent:()=>import('./features/asistencias/pages/crear-asistencia/crear-asistencia').then((m)=>m.CrearAsistencia),
             },
             {
-                path:'asistencias/editar/:id',
+                path:'asistencias/editar/:id/:nombre',
                 loadComponent:()=>import('./features/asistencias/pages/editar-asistencia/editar-asistencia').then((m)=>m.EditarAsistencia),
             },
             
