@@ -1,7 +1,10 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { UsuariosService } from '../../features/usuarios/services/usuarios.service';
+import { PerfilResponse } from '../../features/usuarios/models/usuario.interface';
+import { environment } from '../../../environment/environment';
 
 interface ItemMenu {
   label: string;
@@ -23,7 +26,11 @@ interface CategoriaMenu {
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
+  ngOnInit(): void {
+    this.cargarPerfil();
+  }
+
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
@@ -104,4 +111,38 @@ export class Dashboard {
     this.authService.logout();
     this.router.navigate(['/login'], { replaceUrl: true });
   }
+
+
+  /** DATOS DEL PERFIL QUE INICIO SESSION */
+  private readonly UsuariosService = inject(UsuariosService);
+
+  readonly perfil = signal<PerfilResponse | null>(null);
+
+ readonly fotoPerfilUrl = computed(() => {
+  const filename = this.perfil()?.url_foto;
+
+  const url = filename
+    ? `${environment.API}/uploads/profile-photos/${filename}`
+    : 'img/user.png';
+
+  console.log('URL de fotografía:', url);
+
+  return url;
+});
+
+  /** CARGAR PERFIL */
+  cargarPerfil(): void {
+    this.UsuariosService.obtenerPerfil().subscribe({
+      next: (respuesta) => {
+        console.log('Respuesta completa del perfil:', respuesta);
+        console.log('Datos del perfil:', respuesta.Data);
+
+        this.perfil.set(respuesta.Data);
+      },
+      error: (error) => {
+        console.error('Error al obtener el perfil:', error);
+      },
+    });
+  }
+
 }

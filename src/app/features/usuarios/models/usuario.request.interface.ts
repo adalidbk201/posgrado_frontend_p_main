@@ -11,3 +11,6 @@ export interface UsuarioRequest  {
   persona:string,
 
 }
+export interface FotoPerfilRequest {
+  foto: File;
+}

@@ -164,6 +164,11 @@ export class ListaUsuarios {
     activarUsuario(usuario: string): void {
       this.router.navigate(['/dashboard/usuarios/activar', usuario]);
     }
+
+    // subir foto de perfil
+    subirFoto(usuario: string): void {
+      this.router.navigate(['/dashboard/usuarios/foto-usuario']);
+    }
   
     /** Eliminar persona */
     readonly personaEliminarId = signal<string | null>(null);

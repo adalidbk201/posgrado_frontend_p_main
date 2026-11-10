@@ -56,6 +56,11 @@ export const routes: Routes = [
                     import('./features/usuarios/pages/activar-usuario/activar-usuario')
                         .then((m) => m.ActivarUsuario),
             },
+            // Subir foto de usuario
+            {
+                path:'usuarios/foto-usuario',
+                loadComponent:()=>import('./features/usuarios/pages/foto-usuario/foto-usuario').then((m)=>m.FotoUsuario),
+            },
 
 
 

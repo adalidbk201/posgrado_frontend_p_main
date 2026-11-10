@@ -1,1 +1,18 @@
-<p>editar-comunicado works!</p>,
+ 
+
+    @if (comunicado()) {
+
+      <app-comunicado-editar-form
+        [comunicado]="comunicado()"
+        (guardar)="actualizarComunicado($event)"
+    
+      />
+
+    } @else {
+
+      <p>Cargando comunicado...</p>
+
+    }
+ 
+
+

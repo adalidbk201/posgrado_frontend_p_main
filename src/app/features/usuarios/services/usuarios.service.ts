@@ -4,8 +4,8 @@ import { environment } from '../../../../environment/environment';
 import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
-import { Usuario } from '../models/usuario.interface';
-import { UsuarioRequest } from '../models/usuario.request.interface';
+import { PerfilResponse, Usuario } from '../models/usuario.interface';
+import { FotoPerfilRequest, UsuarioRequest } from '../models/usuario.request.interface';
 @Injectable({
     // ejecute desde la raiz
     providedIn:'root'
@@ -65,5 +65,31 @@ export class UsuariosService {
   // DELETE - ELIMINAR
   eliminarUsuario(id: string): Observable<void> {
     return this.http.delete<void>(`${this.api}${id}/`);
+  }
+
+  // url subir foto de perfil
+    private api2=`${environment.API}/`;
+  /** SUBIR IMAGEN DE LA CUENTA */
+  subirFotoPerfil(datos: FotoPerfilRequest) {
+    const formData = new FormData();
+    formData.append('imagen', datos.foto);
+
+    return this.http.post(
+      `${this.api2}uploads/profile-photos/`,
+      formData
+    );
+  }
+
+  /** OBTENER DATOS DEL PERFIL */
+  obtenerPerfil(): Observable<RespuestaApi<PerfilResponse>> {
+    return this.http.get<RespuestaApi<PerfilResponse>>(
+      `${this.api}perfil/`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+        withCredentials: true,
+      }
+    );
   }
 }

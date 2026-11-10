@@ -4,7 +4,7 @@ import { environment } from '../../../../environment/environment';
 import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
-import { Comunicado } from '../models/comunicado.interface';
+import { Comunicado, ComunicadoResponse } from '../models/comunicado.interface';
 import { ComunicadoRequest } from '../models/comunicado-request.interface';
 
 @Injectable({
@@ -46,8 +46,21 @@ export class ComunicadosService {
 
     // =========================
     // POST - CREAR
-    crearComunicado(datos: ComunicadoRequest): Observable<Comunicado> {
-    return this.http.post<Comunicado>(this.apiUrl, datos);
+    crearComunicado(datos: ComunicadoRequest): Observable<RespuestaApi<ComunicadoResponse>> {
+        const formData = new FormData();
+
+        formData.append('foto', datos.foto);
+        formData.append('fecha_expiracion', datos.fecha_expiracion);
+        formData.append('descripcion', datos.descripcion);
+
+        datos.colaciones.forEach((id) => {
+            formData.append('colaciones', id);
+        });
+
+        return this.http.post<RespuestaApi<ComunicadoResponse>>(
+            `${this.apiUrl}`,
+            formData
+        );
     }
 
     // =========================

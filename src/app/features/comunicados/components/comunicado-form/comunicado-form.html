@@ -1,1 +1,347 @@
  
+<div class="form-container">
+
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="form-header-content">
+      <h1 class="form-title">
+        <svg width="28" height="28" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          class="title-icon">
+          <path d="M4 4h16v16H4z"/>
+          <path d="M8 8h8M8 12h8M8 16h5"/>
+        </svg>
+        Nuevo Comunicado
+      </h1>
+
+      <p class="form-subtitle">
+        Registre un comunicado y seleccione las colaciones a las que estará dirigido
+      </p>
+    </div>
+  </div>
+
+  <form
+    [formGroup]="formulario"
+    (ngSubmit)="enviarFormulario()"
+    class="modern-form">
+
+    <!-- ==================== INFORMACIÓN DEL COMUNICADO ==================== -->
+    <div class="form-section">
+
+      <div class="section-header">
+        <svg width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          class="section-icon">
+          <path d="M4 4h16v16H4z"/>
+          <path d="M8 8h8M8 12h8M8 16h5"/>
+        </svg>
+
+        <h2 class="section-title">Información del Comunicado</h2>
+      </div>
+
+      <div class="form-grid">
+
+        <!-- Fotografía -->
+        <div class="form-group form-group--full">
+
+          <label for="foto" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              class="label-icon">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="m21 15-5-5L5 21"/>
+            </svg>
+
+            Fotografía del comunicado
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="file"
+            id="foto"
+            class="form-control"
+            accept="image/jpeg,image/png,image/webp"
+            [class.form-control-error]="
+              formulario.controls.foto.invalid &&
+              formulario.controls.foto.touched
+            "
+            (change)="seleccionarFoto($event)">
+
+          @if (formulario.controls.foto.invalid &&
+               formulario.controls.foto.touched) {
+            <div class="error-messages">
+              <div class="error-message">
+                Debe seleccionar una fotografía para el comunicado.
+              </div>
+            </div>
+          }
+
+          <small class="form-hint">
+            Seleccione una imagen JPG, PNG o WebP.
+          </small>
+
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group form-group--full">
+
+          <label for="descripcion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              class="label-icon">
+              <path d="M4 4h16v16H4z"/>
+              <path d="M8 8h8M8 12h8M8 16h5"/>
+            </svg>
+
+            Descripción
+            <span class="required">*</span>
+          </label>
+
+          <textarea
+            id="descripcion"
+            class="form-control"
+            rows="5"
+            formControlName="descripcion"
+            placeholder="Escriba el contenido del comunicado..."
+            [class.form-control-error]="
+              formulario.controls.descripcion.invalid &&
+              formulario.controls.descripcion.touched
+            ">
+          </textarea>
+
+          @if (formulario.controls.descripcion.invalid &&
+               formulario.controls.descripcion.touched) {
+            <div class="error-messages">
+
+              @if (formulario.controls.descripcion.errors?.['required']) {
+                <div class="error-message">
+                  La descripción es obligatoria.
+                </div>
+              }
+
+              @if (formulario.controls.descripcion.errors?.['minlength']) {
+                <div class="error-message">
+                  La descripción debe tener al menos 3 caracteres.
+                </div>
+              }
+
+              @if (formulario.controls.descripcion.errors?.['maxlength']) {
+                <div class="error-message">
+                  La descripción no puede superar los 500 caracteres.
+                </div>
+              }
+
+            </div>
+          }
+
+        </div>
+
+        <!-- Fecha de expiración -->
+        <div class="form-group form-group--full">
+
+          <label for="fecha_expiracion" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              class="label-icon">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+
+            Fecha y hora de expiración
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="datetime-local"
+            id="fecha_expiracion"
+            class="form-control"
+            formControlName="fecha_expiracion"
+            [class.form-control-error]="
+              formulario.controls.fecha_expiracion.invalid &&
+              formulario.controls.fecha_expiracion.touched
+            ">
+
+          @if (formulario.controls.fecha_expiracion.invalid &&
+               formulario.controls.fecha_expiracion.touched) {
+            <div class="error-messages">
+              <div class="error-message">
+                Debe seleccionar la fecha y hora de expiración.
+              </div>
+            </div>
+          }
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== COLACIONES ASOCIADAS ==================== -->
+    <div class="form-section">
+
+      <div class="section-header">
+
+        <div class="section-header-left">
+          <svg width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            class="section-icon">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 9h18M9 21V9"/>
+          </svg>
+
+          <h2 class="section-title">
+            Colaciones asociadas
+
+            <span
+              class="section-counter"
+              [class.section-counter--active]="colaciones.length > 0">
+              {{ colaciones.length }}
+              colación{{ colaciones.length !== 1 ? 'es' : '' }}
+            </span>
+          </h2>
+        </div>
+
+        <button
+          type="button"
+          class="btn-add-level"
+          (click)="agregarColacion()">
+
+          <svg width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+
+          Agregar Colación
+        </button>
+
+      </div>
+
+      <div formArrayName="colaciones" class="niveles-container">
+
+        @for (colacionControl of colaciones.controls; track $index; let i = $index) {
+
+          <div class="nivel-card">
+
+            <!-- CABECERA DE LA TARJETA -->
+            <div class="nivel-card-header">
+
+              <div class="nivel-card-title">
+                <span class="nivel-number">
+                  Colación {{ i + 1 }}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                class="btn-remove-level"
+                [disabled]="colaciones.length === 1"
+                (click)="eliminarColacion(i)"
+                [attr.aria-label]="'Eliminar colación ' + (i + 1)"
+                title="Eliminar colación">
+
+                <svg width="16" height="16" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+
+              </button>
+
+            </div>
+
+            <!-- CUERPO DE LA TARJETA -->
+            <div class="nivel-card-body">
+
+              <div class="nivel-grid">
+
+                <div class="form-group form-group--full">
+
+                  <label
+                    [for]="'colacion_' + i"
+                    class="form-label">
+
+                    Seleccionar colación
+                    <span class="required">*</span>
+
+                  </label>
+
+                  <select
+                    class="form-control"
+                    [formControlName]="i"
+                    >
+                    <option value="">Seleccione una colación</option>
+
+                    @for (colacion of colacionesDisponibles; track colacion.id) {
+                        <option
+                        [value]="colacion.id"
+                        [disabled]="colacionSeleccionadaEnOtroSelect(colacion.id, i)"
+                        >
+                        {{ colacion.descripcion }} -
+                        {{ colacion.fecha_colacion }} -
+                        {{ colacion.turno }}
+                        </option>
+                    }
+                    </select>
+
+                  @if (colacionControl.invalid &&
+                       colacionControl.touched) {
+                    <div class="error-messages">
+                      <div class="error-message error-message--small">
+                        Debe seleccionar una colación.
+                      </div>
+                    </div>
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+    <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="cancelar()">
+
+        <svg width="18" height="18" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="formulario.invalid">
+
+        <svg width="18" height="18" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+        </svg>
+
+        Guardar Comunicado
+
+      </button>
+
+    </div>
+
+  </form>
+</div>

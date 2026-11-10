@@ -1,0 +1,39 @@
+<div class="formulario-foto">
+
+  <h3>Actualizar fotografía de perfil</h3>
+
+  <div class="campo-foto">
+    <label for="foto">Seleccionar fotografía</label>
+
+    <input
+      id="foto"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      (change)="seleccionarFoto($event)"
+    />
+
+    @if (nombreFoto()) {
+      <p>
+        Archivo seleccionado: {{ nombreFoto() }}
+      </p>
+    }
+  </div>
+
+  <div class="acciones">
+    <button
+      type="button"
+      (click)="cancelar()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      [disabled]="!fotoSeleccionada()"
+      (click)="enviarFormulario()"
+    >
+      Guardar fotografía
+    </button>
+  </div>
+
+</div>

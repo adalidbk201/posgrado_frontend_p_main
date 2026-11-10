@@ -1,111 +1,139 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { Comunicado } from '../../models/comunicado.interface';
+
+import { Component, inject, output } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { Router, ActivatedRoute } from '@angular/router';
 import { ComunicadoRequest } from '../../models/comunicado-request.interface';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ComunicadosService } from '../../services/comunicados.service';
+import { Colacion } from '../../../colaciones/models/colacion.interface';
+import { ColacionesService } from '../../../colaciones/services/colaciones.service';
 
 @Component({
   selector: 'app-comunicado-form',
-  imports: [],
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './comunicado-form.html',
   styleUrl: './comunicado-form.scss',
 })
 export class ComunicadoForm {
-  // Recibe un comunicado cuando estamos editando
-  readonly comunicado=input<Comunicado | null>(null);
-
-  // Envia los datos al componente Padre
-  readonly guardar =output<ComunicadoRequest>();
-
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
-  private readonly comunicadosService = inject(ComunicadosService);
-  // todas los comunicados cargados una vez, para comparar documentos en memoria
-  private readonly todasLasComunicados = signal<Comunicado[]>([]);
+  private readonly colacionesService = inject(ColacionesService);
+  readonly guardar = output<ComunicadoRequest>();
+  colacionesDisponibles: Colacion[] = [];
+  cargarColaciones(): void {
+    this.colacionesService.getColaciones().subscribe({
+      next: (respuesta) => {
+        console.log('Respuesta de colaciones:', respuesta);
+        this.colacionesDisponibles = respuesta.Data.filas;
+        console.log('Respuesta completa:', respuesta);
+  console.log('Data:', respuesta.Data);
+  console.log('Colaciones:', respuesta.Data.filas);
 
-  
-  // Crear Formulario con los datos
-  readonly formulario=this.fb.nonNullable.group({
-     foto:[
-      '',
-      [
-        Validators.required,
-    
-      ]
-    ],
-    fecha_expiracion:[
-      '',
-      [
-        Validators.required,
-        
-      ],
-       
-    ],
-    descripcion:[
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(150),
-      ]
-    ],
-    colaciones:[
-      [''],
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ]
-    ],
-    
-     
-  })
+  this.colacionesDisponibles = respuesta.Data.filas;
 
-
-  constructor(){
- 
-
-    effect(()=>{
-      // Almacenar Comunicado a editar
-      const ComunicadoActual =this.comunicado();
-
-      // verificar si hay datos en Comunicado Actual
-      if(ComunicadoActual){
-        // Almacenar los Valores a Editar en Formulario
-        this.formulario.patchValue({
-          foto:'',
-          fecha_expiracion:ComunicadoActual.fecha_expiracion,
-          descripcion:ComunicadoActual.descripcion,
-          colaciones:[ComunicadoActual.colaciones[0].id],
-         
-        })
-      }
-      else{
-        // Si no hay datos el formulario esta vacio
-        this.formulario.reset({
-          foto:'',
-          fecha_expiracion:'',
-          descripcion:'',
-          colaciones:[''],
-        })
-      }
-    })
+  console.log('Colaciones cargadas:', this.colacionesDisponibles);
+      },
+      error: (error) => {
+        console.error('Error al cargar colaciones:', error);
+      },
+    });
   }
 
+  // Crear el control de una colación.
+  private crearColacionForm() {
+    return this.fb.nonNullable.control('', Validators.required);
+  }
 
+  // Formulario principal.
+  readonly formulario = this.fb.group({
+    foto: this.fb.control<File | null>(null, Validators.required),
 
-  // Metodo Enviar Formulario
-  enviarFormulario():void{
-    // verificar formulario
+    fecha_expiracion: this.fb.nonNullable.control('', [
+      Validators.required,
+    ]),
+
+    descripcion: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(500),
+    ]),
+
+    colaciones: this.fb.array([
+      this.crearColacionForm(),
+    ]),
+  });
+
+  colacionSeleccionadaEnOtroSelect(
+    idColacion: string,
+    indiceActual: number
+  ): boolean {
+    return this.colaciones.controls.some(
+      (control, indice) =>
+        indice !== indiceActual && control.value === idColacion
+    );
+  }
+
+  // Acceso directo al FormArray.
+  get colaciones(): FormArray<FormControl<string>> {
+    return this.formulario.controls.colaciones;
+  }
+
+  // Agregar otra colación.
+  agregarColacion(): void {
+    this.colaciones.push(this.crearColacionForm());
+  }
+
+  // Eliminar una colación.
+  eliminarColacion(indice: number): void {
+    if (this.colaciones.length > 1) {
+      this.colaciones.removeAt(indice);
+    }
+  }
+
+  // Obtener la fotografía seleccionada.
+  seleccionarFoto(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0] ?? null;
+
+    this.formulario.controls.foto.setValue(archivo);
+    this.formulario.controls.foto.markAsTouched();
+    this.formulario.controls.foto.updateValueAndValidity();
+  }
+
+  cancelar(): void {
+    this.router.navigate(['/dashboard/comunicados']);
+  }
+
+  enviarFormulario(): void {
     if (this.formulario.invalid || this.formulario.pending) {
       this.formulario.markAllAsTouched();
       return;
     }
 
-    // si no es invalido guardar los datos y emitirlos
-    const datos: ComunicadoRequest= this.formulario.getRawValue();
+    const v = this.formulario.getRawValue();
+
+    if (!v.foto) {
+      return;
+    }
+
+    const datos: ComunicadoRequest = {
+      foto: v.foto,
+      fecha_expiracion: new Date(v.fecha_expiracion).toISOString(),
+      descripcion: v.descripcion.trim(),
+      colaciones: v.colaciones,
+    };
 
     this.guardar.emit(datos);
   }
 
-  
+  constructor() {
+    this.cargarColaciones();
+  }
 }

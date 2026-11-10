@@ -1,6 +1,13 @@
 export interface ComunicadoRequest{
-    foto:string,
+    foto: File;
     fecha_expiracion:string,
     descripcion:string,
     colaciones:string[],
+}
+
+export interface ComunicadoActualizarRequest {
+  foto?: File;
+  fecha_expiracion: string;
+  descripcion: string;
+  colaciones: string[];
 }

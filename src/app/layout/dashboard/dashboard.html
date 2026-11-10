@@ -202,8 +202,11 @@
     <div class="sidebar-footer">
       <div class="usuario">
         <div class="avatar">
-          <img src="img/user.png" alt="Avatar del administrador">
-        </div>
+        <img
+          [src]="fotoPerfilUrl()"
+          alt="Avatar del administrador"
+        >
+      </div>
         <div class="usuario-info">
           <strong>Administrador</strong>
           <span>Posgrado UPEA</span>

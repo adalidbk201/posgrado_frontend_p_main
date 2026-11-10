@@ -12,3 +12,10 @@ export interface Comunicado{
         }
     ]
 }
+export interface ComunicadoResponse {
+  id: string;
+  foto: File;
+  fecha_expiracion: string;
+  descripcion: string;
+  colaciones: string[];
+}
