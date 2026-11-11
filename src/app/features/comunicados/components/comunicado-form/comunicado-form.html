@@ -270,22 +270,24 @@
 
                   <select
                     class="form-control"
+                    [class.is-empty]="!colacionControl.value"
                     [formControlName]="i"
-                    >
-                    <option value="">Seleccione una colación</option>
+                    required>
+                    
+                    <option value="" disabled hidden>
+                      Selecciona una colación
+                    </option>
 
-                    @for (colacion of colacionesDisponibles; track colacion.id) {
-                        <option
+                    @for (colacion of colacionesDisponibles(); track colacion.id) {
+                      <option
                         [value]="colacion.id"
-                        [disabled]="colacionSeleccionadaEnOtroSelect(colacion.id, i)"
-                        >
+                        [disabled]="colacionSeleccionadaEnOtroSelect(colacion.id, i)">
                         {{ colacion.descripcion }} -
                         {{ colacion.fecha_colacion }} -
                         {{ colacion.turno }}
-                        </option>
+                      </option>
                     }
-                    </select>
-
+                  </select>
                   @if (colacionControl.invalid &&
                        colacionControl.touched) {
                     <div class="error-messages">

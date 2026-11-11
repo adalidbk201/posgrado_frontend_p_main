@@ -1,11 +1,11 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Comunicado } from '../../models/comunicado.interface';
 import { ComunicadoActualizarRequest, ComunicadoRequest } from '../../models/comunicado-request.interface';
 import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ColacionesService } from '../../../colaciones/services/colaciones.service';
 import { Colacion } from '../../../colaciones/models/colacion.interface';
-
+import { environment } from '../../../../../environment/environment';
 @Component({
   selector: 'app-comunicado-editar-form',
   imports: [ReactiveFormsModule],
@@ -19,26 +19,31 @@ export class ComunicadoEditarForm {
    private readonly colacionesService = inject(ColacionesService);
   readonly guardar = output<ComunicadoActualizarRequest>();
 
-    colacionesDisponibles: Colacion[] = [];
-    cargarColaciones(): void {
-      this.colacionesService.getColaciones().subscribe({
-        next: (respuesta) => {
-          console.log('Respuesta de colaciones:', respuesta);
-          this.colacionesDisponibles = respuesta.Data.filas;
-          console.log('Respuesta completa:', respuesta);
-    console.log('Data:', respuesta.Data);
-    console.log('Colaciones:', respuesta.Data.filas);
-  
-    this.colacionesDisponibles = respuesta.Data.filas;
-  
-    console.log('Colaciones cargadas:', this.colacionesDisponibles);
-        },
-        error: (error) => {
-          console.error('Error al cargar colaciones:', error);
-        },
-      });
-    }
-  
+  // Obtener url foto // api url
+  readonly urlFoto = `${environment.API}/uploads/comunicados/`;
+
+  readonly colacionesDisponibles = signal<Colacion[]>([]);
+
+  cargarColaciones(): void {
+    this.colacionesService.getColaciones().subscribe({
+      next: (respuesta) => {
+        this.colacionesDisponibles.set(respuesta.Data.filas);
+
+        console.log('COLACIONES DISPONIBLES:',
+          this.colacionesDisponibles().map(c => ({
+            id: c.id,
+            descripcion: c.descripcion
+          }))
+        );
+
+        console.log('VALORES DEL FORMARRAY:',
+          this.colaciones.controls.map(control => control.value)
+        );
+      },
+      error: (error) => console.error('Error al cargar colaciones:', error),
+    });
+  }
+      
 
   private readonly fb = inject(FormBuilder);
 
@@ -108,7 +113,22 @@ export class ComunicadoEditarForm {
     this.router.navigate(['/dashboard/comunicados']);
   }
 
-  constructor() {
+  private convertirFechaLocal(fecha: string): string {
+    const date = new Date(fecha);
+
+    const año = date.getFullYear();
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const dia = String(date.getDate()).padStart(2, '0');
+    const horas = String(date.getHours()).padStart(2, '0');
+    const minutos = String(date.getMinutes()).padStart(2, '0');
+
+    return `${año}-${mes}-${dia}T${horas}:${minutos}`;
+  }
+
+
+ constructor() {
+  this.cargarColaciones();
+
   effect(() => {
     const comunicado = this.comunicado();
 
@@ -116,21 +136,21 @@ export class ComunicadoEditarForm {
 
     this.formulario.patchValue({
       descripcion: comunicado.descripcion,
-      fecha_expiracion: comunicado.fecha_expiracion,
+      fecha_expiracion: this.convertirFechaLocal(
+        comunicado.fecha_expiracion
+      ),
       foto: null,
     });
 
-    // Limpiar las colaciones anteriores.
     this.colaciones.clear();
 
-    // Cargar las colaciones del comunicado.
     comunicado.colaciones.forEach((colacion) => {
       this.colaciones.push(
-        this.crearColacionForm()
+        this.fb.nonNullable.control(
+          colacion.id,
+          Validators.required
+        )
       );
-
-      this.colaciones.at(this.colaciones.length - 1)
-        .setValue(colacion.id);
     });
   });
 }

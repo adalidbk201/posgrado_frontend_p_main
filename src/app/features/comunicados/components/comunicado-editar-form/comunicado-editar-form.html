@@ -57,6 +57,19 @@
             <span class="required">*</span>
           </label>
 
+          @if (comunicado(); as c) {
+            <div class="mb-3 align-center">
+               
+
+              <img
+                [src]="urlFoto + comunicado()?.foto"
+                alt="Fotografía del comunicado"
+                class="img-fluid"
+                style="max-width: 250px;  display: block; margin: 0 auto;"
+              />
+            </div>
+          }
+
           <input
             type="file"
             id="foto"
@@ -271,20 +284,20 @@
                   <select
                     class="form-control"
                     [formControlName]="i"
-                    >
+                  >
                     <option value="">Seleccione una colación</option>
 
-                    @for (colacion of colacionesDisponibles; track colacion.id) {
-                        <option
+                    @for (colacion of colacionesDisponibles(); track colacion.id) {
+                      <option
                         [value]="colacion.id"
                         [disabled]="colacionSeleccionadaEnOtroSelect(colacion.id, i)"
-                        >
+                      >
                         {{ colacion.descripcion }} -
                         {{ colacion.fecha_colacion }} -
                         {{ colacion.turno }}
-                        </option>
+                      </option>
                     }
-                    </select>
+                  </select>
 
                   @if (colacionControl.invalid &&
                        colacionControl.touched) {

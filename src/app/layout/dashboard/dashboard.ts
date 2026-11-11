@@ -78,14 +78,14 @@ export class Dashboard implements OnInit {
       ],
       collapse: '',
     },
-    {
-      id: 'seguridad',
-      titulo: 'Seguridad',
-      items: [
-        { label: 'Módulos', ruta: '/dashboard/modulos', icono: '🧩' },
-      ],
-      collapse: '',
-    },
+    // {
+    //   id: 'seguridad',
+    //   titulo: 'Seguridad',
+    //   items: [
+    //     { label: 'Módulos', ruta: '/dashboard/modulos', icono: '🧩' },
+    //   ],
+    //   collapse: '',
+    // },
   ]);
 
   abrirCerrarMenu(): void {

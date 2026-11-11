@@ -2,10 +2,11 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ComunicadosService } from '../../services/comunicados.service';
 import { Router } from '@angular/router';
 import { Comunicado } from '../../models/comunicado.interface';
-
+import { LowerCasePipe } from '@angular/common';
+import { environment } from '../../../../../environment/environment';
 @Component({
   selector: 'app-lista-comunicados',
-  imports: [],
+  imports: [LowerCasePipe],
   templateUrl: './lista-comunicados.html',
   styleUrl: './lista-comunicados.scss',
 })
@@ -15,6 +16,9 @@ export class ListaComunicados {
 
   // inyectar Roter para navegacion entre paginas
   private readonly router = inject(Router);
+
+  // Obtener url foto // api url
+    readonly urlFoto = `${environment.API}/uploads/comunicados/`;
 
   // =========================
   // Cargar y filtrar
@@ -163,6 +167,58 @@ export class ListaComunicados {
       },
       error: (error) => {
         console.error('Error al eliminar el comunicado:', error);
+      },
+    });
+  }
+
+  
+  /** Activar comunicado */
+  readonly comunicadoActivarId = signal<string | null>(null);
+
+  seleccionarComunicadoActivar(id: string): void {
+    this.comunicadoActivarId.set(id);
+  }
+
+  /** Desactivar comunicado */
+  readonly comunicadoDesactivarId = signal<string | null>(null);
+  seleccionarComunicadoDesactivar(id: string): void {
+    this.comunicadoDesactivarId.set(id);
+  }
+
+  confirmarActivar(): void {
+    const id = this.comunicadoActivarId();
+    if (!id) return;
+
+    this.comunicadosService.activarComunicado(id).subscribe({
+      next: () => {
+        console.log('Comunicado activado correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.comunicados.set([]);
+        this.paginaActual.set(0);
+        this.cargarComunicados(1);
+        this.comunicadoActivarId.set(null);
+      },
+      error: (error) => {
+        console.error('Error al activar el comunicado:', error);
+      },
+    });
+  }
+
+  confirmarDesactivar(): void {
+    const id = this.comunicadoDesactivarId();
+    if (!id) return;
+
+    this.comunicadosService.desactivarComunicado(id).subscribe({
+      next: () => {
+        console.log('Comunicado desactivado correctamente');
+        // recarga desde el inicio para reflejar el borrado
+        this.comunicados.set([]);
+        this.paginaActual.set(0);
+        this.cargarComunicados(1);
+        this.comunicadoDesactivarId.set(null);
+      },
+      error: (error) => {
+        console.error('Error al desactivar el comunicado:', error);
       },
     });
   }

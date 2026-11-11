@@ -1,5 +1,5 @@
 
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -26,19 +26,20 @@ export class ComunicadoForm {
   private readonly fb = inject(FormBuilder);
   private readonly colacionesService = inject(ColacionesService);
   readonly guardar = output<ComunicadoRequest>();
-  colacionesDisponibles: Colacion[] = [];
+
+  readonly colacionesDisponibles = signal<Colacion[]>([]);
   cargarColaciones(): void {
     this.colacionesService.getColaciones().subscribe({
       next: (respuesta) => {
-        console.log('Respuesta de colaciones:', respuesta);
-        this.colacionesDisponibles = respuesta.Data.filas;
-        console.log('Respuesta completa:', respuesta);
-  console.log('Data:', respuesta.Data);
-  console.log('Colaciones:', respuesta.Data.filas);
+        this.colacionesDisponibles.set(respuesta.Data.filas);
 
-  this.colacionesDisponibles = respuesta.Data.filas;
-
-  console.log('Colaciones cargadas:', this.colacionesDisponibles);
+        console.log(
+          'COLACIONES DISPONIBLES:',
+          this.colacionesDisponibles().map(c => ({
+            id: c.id,
+            descripcion: c.descripcion
+          }))
+        );
       },
       error: (error) => {
         console.error('Error al cargar colaciones:', error);

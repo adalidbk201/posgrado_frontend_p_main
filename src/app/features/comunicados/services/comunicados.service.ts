@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
 import { Comunicado, ComunicadoResponse } from '../models/comunicado.interface';
-import { ComunicadoRequest } from '../models/comunicado-request.interface';
+import { ComunicadoActualizarRequest, ComunicadoRequest } from '../models/comunicado-request.interface';
 
 @Injectable({
     // se ejecute desde la raiz
@@ -71,13 +71,46 @@ export class ComunicadosService {
 
     // =========================
     // PATCH - ACTUALIZAR PARCIALMENTE
-    actualizarParcialComunicado(id: string,datos: Partial<ComunicadoRequest>): Observable<Comunicado> {
-    return this.http.patch<Comunicado>(`${this.apiUrl}${id}/`,datos);
+    actualizarParcialComunicado(
+    id: string,
+    datos: ComunicadoActualizarRequest
+    ) {
+    const formData = new FormData();
+
+    // La fotografía es opcional al editar
+    if (datos.foto) {
+        formData.append('foto', datos.foto);
+    }
+
+    formData.append('fecha_expiracion', datos.fecha_expiracion);
+    formData.append('descripcion', datos.descripcion);
+
+    // Enviar cada colación por separado
+    datos.colaciones.forEach(idColacion => {
+        formData.append('colaciones', idColacion);
+    });
+
+    return this.http.patch<RespuestaApi<Comunicado>>(
+        `${this.apiUrl}${id}/`,
+        formData
+    );
     }
 
     // =========================
     // DELETE - ELIMINAR
     eliminarComunicado(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}${id}/`);
+    }
+
+    // =========================
+    // PATCH - ACTIVAR
+    activarComunicado(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}${id}/activar/`, {});
+    }
+
+    // =========================
+    // PATCH - DESACTIVAR
+    desactivarComunicado(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}${id}/desactivar/`, {});
     }
 }
