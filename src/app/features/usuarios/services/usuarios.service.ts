@@ -4,7 +4,7 @@ import { environment } from '../../../../environment/environment';
 import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
-import { PerfilResponse, Usuario } from '../models/usuario.interface';
+import { PerfilPersonalResponse, PerfilResponse, Usuario } from '../models/usuario.interface';
 import { FotoPerfilRequest, UsuarioRequest } from '../models/usuario.request.interface';
 @Injectable({
     // ejecute desde la raiz
@@ -81,8 +81,8 @@ export class UsuariosService {
   }
 
   /** OBTENER DATOS DEL PERFIL */
-  obtenerPerfil(): Observable<RespuestaApi<PerfilResponse>> {
-    return this.http.get<RespuestaApi<PerfilResponse>>(
+  obtenerPerfil(): Observable<RespuestaApi<PerfilPersonalResponse>> {
+    return this.http.get<RespuestaApi<PerfilPersonalResponse>>(
       `${this.api}perfil/`,
       {
         headers: {
@@ -92,4 +92,6 @@ export class UsuariosService {
       }
     );
   }
+
+
 }

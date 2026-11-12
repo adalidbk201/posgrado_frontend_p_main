@@ -1,0 +1,69 @@
+@if (perfil(); as usuario) {
+
+  <h3>1. Datos de la cuenta</h3>
+  <h4>- Usuario: {{ usuario.nombre_usuario }}</h4>
+  <!-- <h4>- ID de usuario {{usuario.id}}</h4> -->
+  <h4>- Correo: {{ usuario.correo_electronico }}</h4>
+  <!-- <h4>- Fotografía</h4> -->
+   <h4>- Roles:{{usuario.roles[0].nombre}}</h4>
+   <h4>- Descripcción: {{usuario.roles[0].descripcion}}</h4>
+   <h4></h4>
+  
+  <hr>
+
+  <h3>2. Datos personales</h3>
+  <h4>- Nombres y apellidos : {{usuario.persona.nombres}}
+                              {{usuario.persona.primer_apellido}}
+                              {{usuario.persona.segundo_apellido}}
+  </h4>
+  <h4>- Documento de identidad: {{usuario.persona.nro_documento}}
+                                {{usuario.persona.expedido}}
+  </h4>
+  <h4>- Género: {{usuario.persona.genero}}</h4>
+  <h4>- Fecha de nacimiento: {{usuario.persona.fecha_nacimiento}}</h4>
+  <h4>- Celular: {{usuario.persona.celular}}</h4>
+  <h4>- Observación: {{usuario.persona.observacion}}</h4>
+
+  <hr>
+    <h3>3. Datos académicos</h3>
+    <h4>- Información del titulado:{{ usuario.persona.titulado.serie}}</h4>
+    <!-- <h4>- Grado académico: </h4> -->
+    
+    <h4>- Número de título: {{ usuario.persona.titulado.nro_titulo }}</h4>
+
+  <hr>
+    <h3>4. Historial de asignaciones</h3>
+    @for (asignacion of usuario.persona.titulado.asignaciones; track $index) {
+         Colacion {{$index + 1}}
+        <h4>- Programa: {{asignacion.colacion.programa.nombre_programa}}</h4>
+        <h4>- Colación: {{asignacion.colacion.descripcion}}</h4>
+        <h4>- Fecha y turno: {{asignacion.colacion.fecha_colacion}}
+                            {{asignacion.colacion.turno}}
+        </h4>
+        <h4>- Sala: {{asignacion.colacion.sala.nombre_sala}}</h4>
+        <h4>- Nivel: {{asignacion.butaca.nivel.nombre_nivel}}</h4>
+        
+        <h4>- Butaca: {{asignacion.butaca.codigo_butaca}}</h4>
+        <h4>- Fila y columna: {{asignacion.butaca.fila}} -
+                            {{asignacion.butaca.columna}}
+        </h4>
+
+        <hr>
+        <h3>5. Asistencias</h3>
+        <h4>- Estado de asistencia: {{asignacion.asistencias[0].asistencia}}</h4>
+        <h4>- Fecha registro: {{asignacion.asistencias[0].fecha_registro}}</h4>
+    }
+    
+     
+        
+        
+        
+            
+
+
+} 
+
+  
+
+  
+
