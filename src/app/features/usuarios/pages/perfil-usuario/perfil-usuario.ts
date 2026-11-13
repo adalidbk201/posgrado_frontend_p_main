@@ -39,10 +39,10 @@ export class PerfilUsuario implements OnInit{
     this.usuariosService.obtenerPerfil().subscribe({
 
       next: (respuesta) => {
-          console.log(
-            'Datos del perfil:',
-            JSON.stringify(respuesta.Data, null, 2)
-          );
+          // console.log(
+          //   'Datos del perfil:',
+          //   JSON.stringify(respuesta.Data, null, 2)
+          // );
 
           this.perfil.set(respuesta.Data);
 
@@ -123,8 +123,8 @@ export class PerfilUsuario implements OnInit{
     cargarPerfil(): void {
       this.UsuariosService.obtenerPerfil().subscribe({
         next: (respuesta) => {
-          console.log('Respuesta completa del perfil:', respuesta);
-          console.log('Datos del perfil:', respuesta.Data);
+          // console.log('Respuesta completa del perfil:', respuesta);
+          // console.log('Datos del perfil:', respuesta.Data);
   
           this.perfilFoto.set(respuesta.Data);
         },

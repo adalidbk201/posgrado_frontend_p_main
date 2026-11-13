@@ -139,8 +139,8 @@ export class Dashboard implements OnInit {
   cargarPerfil(): void {
     this.UsuariosService.obtenerPerfil().subscribe({
       next: (respuesta) => {
-        console.log('Respuesta completa del perfil:', respuesta);
-        console.log('Datos del perfil:', respuesta.Data);
+        // console.log('Respuesta completa del perfil:', respuesta);
+        // console.log('Datos del perfil:', respuesta.Data);
 
         this.perfil.set(respuesta.Data);
       },
