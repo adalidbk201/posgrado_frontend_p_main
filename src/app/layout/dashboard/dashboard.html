@@ -59,126 +59,127 @@
       <!-- CATEGORÍAS COLAPSABLES -->
       <div class="menu-section">
         <p class="menu-title">Gestión del Sistema</p>
-        
-        @for (categoria of categorias(); track categoria.id) {
-          <div class="menu-category">
-            <button
-              class="menu-toggle"
-              type="button"
-              (click)="toggleCategoria(categoria.id)"
-              [attr.aria-expanded]="categoria.collapse === 'show'"
-              [attr.aria-controls]="'cat-' + categoria.id">
-              <span class="menu-toggle-text">{{ categoria.titulo }}</span>
-              <span class="chevron" [class.chevron-rotated]="categoria.collapse === 'show'">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              </span>
-            </button>
+        @if (esAdministrador()) {
+          @for (categoria of categorias(); track categoria.id) {
+            <div class="menu-category">
+              <button
+                class="menu-toggle"
+                type="button"
+                (click)="toggleCategoria(categoria.id)"
+                [attr.aria-expanded]="categoria.collapse === 'show'"
+                [attr.aria-controls]="'cat-' + categoria.id">
+                <span class="menu-toggle-text">{{ categoria.titulo }}</span>
+                <span class="chevron" [class.chevron-rotated]="categoria.collapse === 'show'">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </span>
+              </button>
 
-            <div
-              [id]="'cat-' + categoria.id"
-              class="menu-subitems"
-              [class.show]="categoria.collapse === 'show'">
-              @for (item of categoria.items; track item.ruta) {
-                <a 
-                  [routerLink]="item.ruta"
-                  routerLinkActive="active"
-                  (click)="cerrarMenu()"
-                  class="menu-item menu-item--sub">
-                  <span class="icon" aria-hidden="true">
-                    @if (item.icono === '👤') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                      </svg>
-                    } @else if (item.icono === '👥') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                      </svg>
-                    } @else if (item.icono === '🔐') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                      </svg>
-                    } @else if (item.icono === '🎓') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                      </svg>
-                    } @else if (item.icono === '📚') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                      </svg>
-                    } @else if (item.icono === '') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                      </svg>
-                    } @else if (item.icono === '🏛') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 21h18"/>
-                        <path d="M5 21V7l8-4 8 4v14"/>
-                        <path d="M17 21v-8H7v8"/>
-                      </svg>
-                    } @else if (item.icono === '▤') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <path d="M3 9h18M9 21V9"/>
-                      </svg>
-                    } @else if (item.icono === '💺') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/>
-                        <path d="M3 11h18v10H3z"/>
-                      </svg>
-                    } @else if (item.icono === '📜') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                        <polyline points="10 9 9 9 8 9"/>
-                      </svg>
-                    } @else if (item.icono === '▦') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7"/>
-                        <rect x="14" y="3" width="7" height="7"/>
-                        <rect x="14" y="14" width="7" height="7"/>
-                        <rect x="3" y="14" width="7" height="7"/>
-                      </svg>
-                    } @else if (item.icono === '✓') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"/>
-                      </svg>
-                    } @else if (item.icono === '📢') {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                      </svg>
-                    } @else if (item.icono === '🧩') {
-                      <!--  Icono de Módulos (Pieza de rompecabezas) -->
-                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="14" width="7" height="7" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1"/>
-                      </svg>
-                    } @else {
-                      <!-- Icono por defecto -->
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                      </svg>
-                    }
-                  </span>
-                  <span>{{ item.label }}</span>
-                </a>
-              }
+              <div
+                [id]="'cat-' + categoria.id"
+                class="menu-subitems"
+                [class.show]="categoria.collapse === 'show'">
+                @for (item of categoria.items; track item.ruta) {
+                  <a 
+                    [routerLink]="item.ruta"
+                    routerLinkActive="active"
+                    (click)="cerrarMenu()"
+                    class="menu-item menu-item--sub">
+                    <span class="icon" aria-hidden="true">
+                      @if (item.icono === '👤') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                      } @else if (item.icono === '👥') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                      } @else if (item.icono === '🔐') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      } @else if (item.icono === '🎓') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                      } @else if (item.icono === '📚') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                      } @else if (item.icono === '') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                      } @else if (item.icono === '🏛') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M3 21h18"/>
+                          <path d="M5 21V7l8-4 8 4v14"/>
+                          <path d="M17 21v-8H7v8"/>
+                        </svg>
+                      } @else if (item.icono === '▤') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/>
+                          <path d="M3 9h18M9 21V9"/>
+                        </svg>
+                      } @else if (item.icono === '💺') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/>
+                          <path d="M3 11h18v10H3z"/>
+                        </svg>
+                      } @else if (item.icono === '📜') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <polyline points="14 2 14 8 20 8"/>
+                          <line x1="16" y1="13" x2="8" y2="13"/>
+                          <line x1="16" y1="17" x2="8" y2="17"/>
+                          <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                      } @else if (item.icono === '▦') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="7" height="7"/>
+                          <rect x="14" y="3" width="7" height="7"/>
+                          <rect x="14" y="14" width="7" height="7"/>
+                          <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                      } @else if (item.icono === '✓') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      } @else if (item.icono === '📢') {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        </svg>
+                      } @else if (item.icono === '🧩') {
+                        <!--  Icono de Módulos (Pieza de rompecabezas) -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="7" height="7" rx="1"/>
+                          <rect x="14" y="3" width="7" height="7" rx="1"/>
+                          <rect x="14" y="14" width="7" height="7" rx="1"/>
+                          <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                      } @else {
+                        <!-- Icono por defecto -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                      }
+                    </span>
+                    <span>{{ item.label }}</span>
+                  </a>
+                }
+              </div>
             </div>
-          </div>
+          }
         }
       </div>
 

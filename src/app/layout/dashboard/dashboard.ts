@@ -34,7 +34,12 @@ export class Dashboard implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
+  // verificar qe es administrador
+  readonly esAdministrador = computed(
+        () => this.authService.roles().includes('ADMINISTRADOR')
+    );
   readonly menuAbierto = signal(false);
+  
   readonly categorias = signal<CategoriaMenu[]>([
     {
       id: 'administracion',

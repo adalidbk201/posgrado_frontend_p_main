@@ -1,0 +1,70 @@
+  <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="modern-form">
+    <!-- Correo Electrónico -->
+
+        <div class="form-group">
+            <h4>Si el correo está registrado, recibirás un código de recuperación</h4>
+          <label for="correo_electronico" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Correo Electrónico
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="email" 
+            name="correo_electronico" 
+            id="correo_electronico"
+            formControlName="correo_electronico"
+            placeholder="correo@ejemplo.com"
+            class="form-control"
+            [class.form-control-error]="formulario.controls.correo_electronico.invalid && formulario.controls.correo_electronico.touched">
+          
+          @if (formulario.controls.correo_electronico.invalid && formulario.controls.correo_electronico.touched) {
+            <div class="error-messages">
+              @if (formulario.controls.correo_electronico.errors?.['required']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El correo es obligatorio
+                </div>
+              }
+              @if (formulario.controls.correo_electronico.errors?.['email']) {
+                <div class="error-message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  El correo debe ser válido
+                </div>
+              }
+            </div>
+          }
+        
+        </div>
+
+
+        <!-- ==================== BOTONES DE ACCIÓN ==================== -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Cancelar
+      </button>
+      
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid || formulario.pristine">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+         Reuperar Cuenta
+      </button>
+    </div>
+</form>

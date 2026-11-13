@@ -98,6 +98,30 @@ export const routes: Routes = [
                     roles: ['ADMINISTRADOR', 'ESTUDIANTE']
                 },
             },
+            // Actualizar Password
+            {
+                path:'usuarios/actualizarPassword',
+                loadComponent:()=>import('./features/usuarios/pages/actualizar-password-perfil/actualizar-password-perfil').then((m)=>m.ActualizarPasswordPerfil),
+                data: {
+                    roles: ['ADMINISTRADOR', 'ESTUDIANTE']
+                },
+            },
+            // Recuperar Cuenta
+            {   
+                path:'usuarios/recuperarCuenta/:email',
+                loadComponent:()=>import('./features/usuarios/pages/recuperarCuenta/recuperarCuenta').then((m)=>m.RecuperarCuenta),
+                data: {
+                    roles: ['ADMINISTRADOR', 'ESTUDIANTE']
+                },
+            },
+            // Validar Recuperacion
+            {
+                path:'usuarios/validarRecuperacion',
+                loadComponent:()=>import('./features/usuarios/pages/validar-recuperacion/validar-recuperacion').then((m)=>m.ValidarRecuperacion),
+                data: {
+                    roles: ['ADMINISTRADOR', 'ESTUDIANTE']
+                },
+            },
 
 
 

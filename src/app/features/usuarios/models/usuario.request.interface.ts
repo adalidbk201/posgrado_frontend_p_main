@@ -14,3 +14,16 @@ export interface UsuarioRequest  {
 export interface FotoPerfilRequest {
   foto: File;
 }
+
+export interface PasswordPerfil {
+  contrasena_actual: string,
+  contrasena_nueva: string
+}
+
+export interface RecuperarCuentaRequest{
+  correo_electronico:string
+}
+
+export interface ValidarRecuperarRequest{
+  codigo:string
+}

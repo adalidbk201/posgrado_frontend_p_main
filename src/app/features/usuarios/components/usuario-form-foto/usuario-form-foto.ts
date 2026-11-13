@@ -49,7 +49,7 @@ export class UsuarioFormFoto {
   }
 
   cancelar(): void {
-    this.router.navigate(['/dashboard/usuarios']);
+    this.router.navigate(['/dashboard/inicio']);
   }
 
   enviarFormulario(): void {

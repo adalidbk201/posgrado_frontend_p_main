@@ -24,7 +24,7 @@ export class FotoUsuario {
       next: (respuesta) => {
         console.log('Foto de perfil subida correctamente', respuesta);
 
-        this.router.navigate(['/dashboard/usuarios']);
+        this.router.navigate(['/dashboard/inicio']);
       },
 
       error: (error) => {

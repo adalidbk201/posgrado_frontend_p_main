@@ -4,7 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthApiService } from '../../services/auth-api.service';
-
+import { AuthService } from '../../../../core/services/auth.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 @Component({
   imports: [
     ReactiveFormsModule,
@@ -15,6 +16,10 @@ import { AuthApiService } from '../../services/auth-api.service';
   templateUrl: './login.html',
 })
 export class Login {
+
+  private readonly authService = inject(AuthService);
+
+  private readonly usuariosService = inject(UsuariosService);
 
   // Servicio para consumir la API de autenticación
   private readonly authApiService = inject(AuthApiService);
@@ -83,88 +88,101 @@ export class Login {
     // Realizamos el login
     this.authApiService.login(datos).subscribe({
 
-      next: (respuesta) => {
+      
+    next: (respuesta) => {
 
         console.log('Login correcto');
-        console.log(
-          'Respuesta del backend:',
-          respuesta,
-        );
+        console.log('Respuesta del backend:', respuesta);
 
-        // Extraemos el access token
+        // 1. Guardar access token
         const token = respuesta.Data.access;
 
-        // Guardamos el access token
-        localStorage.setItem(
-          'access_token',
-          token,
-        );
+        this.authService.guardarToken(token);
 
-        console.log(
-          'Token guardado correctamente:',
-          token,
-        );
-
-        /*
-         * Después del login solicitamos a Django
-         * que genere la cookie CSRF.
-         *
-         * Django ejecuta:
-         *
-         * get_token(request)
-         *
-         * y crea la cookie:
-         *
-         * csrftoken
-         */
+        // 2. Generar cookie CSRF
         this.authApiService.obtenerCsrfToken().subscribe({
 
-          next: () => {
+            next: () => {
 
-            console.log(
-              '✅ Token CSRF generado correctamente',
-            );
+                console.log('Token CSRF generado correctamente');
 
-            /*
-             * Ya tenemos:
-             *
-             * access_token
-             * refresh_token (HttpOnly)
-             * csrftoken
-             *
-             * Ahora podemos entrar al dashboard.
-             */
-            this.cargando.set(false);
+                // 3. Obtener datos del perfil
+                this.usuariosService.obtenerPerfil().subscribe({
 
-            this.router.navigate([
-              '/dashboard',
-            ]);
-          },
+                    next: (respuestaPerfil) => {
 
-          error: (error: HttpErrorResponse) => {
+                        console.log('Datos del perfil:', respuestaPerfil);
 
-            console.error(
-              '❌ Error al generar CSRF',
-              error,
-            );
+                        // 4. Obtener roles del usuario
+                        const roles = respuestaPerfil.Data.roles.map(
+                            rol => rol.rol
+                        );
 
-            /*
-             * Si no podemos preparar el CSRF,
-             * eliminamos el access token porque
-             * la sesión no quedó correctamente preparada.
-             */
-            localStorage.removeItem(
-              'access_token',
-            );
+                        console.log('Roles del usuario:', roles);
 
-            this.cargando.set(false);
+                        // 5. Verificar que tenga un rol reconocido
+                        const rolValido = roles.some(
+                            rol => ['ADMINISTRADOR', 'ESTUDIANTE'].includes(rol)
+                        );
 
-            this.mensajeError.set(
-              'No se pudo establecer correctamente la sesión.',
-            );
-          },
+                        if (!rolValido) {
+
+                            this.authService.limpiarToken();
+
+                            this.cargando.set(false);
+
+                            this.mensajeError.set(
+                                'El usuario no tiene un rol autorizado para ingresar.'
+                            );
+
+                            return;
+                        }
+
+                        // 6. Guardar roles en AuthService
+                        this.authService.guardarRoles(roles);
+
+                        // 7. Finalizar carga
+                        this.cargando.set(false);
+
+                        // 8. Redirigir al perfil
+                        this.router.navigate([
+                            '/dashboard/perfil'
+                        ]);
+                    },
+
+                    error: (error: HttpErrorResponse) => {
+
+                        console.error(
+                            'Error al obtener el perfil:',
+                            error
+                        );
+
+                        this.authService.limpiarToken();
+
+                        this.cargando.set(false);
+
+                        this.mensajeError.set(
+                            'No se pudieron obtener los datos del perfil.'
+                        );
+                    }
+                });
+            },
+
+            error: (error: HttpErrorResponse) => {
+
+                console.error('Error al generar CSRF:', error);
+
+                this.authService.limpiarToken();
+
+                this.cargando.set(false);
+
+                this.mensajeError.set(
+                    'No se pudo establecer correctamente la sesión.'
+                );
+            }
         });
-      },
+    },
+
 
       error: (error: HttpErrorResponse) => {
 

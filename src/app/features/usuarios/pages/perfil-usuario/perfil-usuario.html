@@ -1,5 +1,22 @@
 @if (perfil(); as usuario) {
-
+  <div>
+    <img
+          [src]="fotoPerfilUrl()"
+          alt="Avatar del administrador"
+        >
+    <button class="btn btn-outline-secondary" (click)="subirFoto()">
+                    Subir foto
+    </button>
+    <button class="btn btn-outline-secondary" (click)="actualizarPassword()">
+                    Actualizar Contraseña
+    </button>
+    <button class="btn btn-outline-secondary" (click)="recuperarCuenta(usuario.correo_electronico)">
+                    Recuperar Cuenta
+    </button>
+    <button class="btn btn-outline-secondary" (click)="validarRecuperacion()">
+                    Validar Recuperacion
+    </button>
+  </div>
   <h3>1. Datos de la cuenta</h3>
   <h4>- Usuario: {{ usuario.nombre_usuario }}</h4>
   <!-- <h4>- ID de usuario {{usuario.id}}</h4> -->
