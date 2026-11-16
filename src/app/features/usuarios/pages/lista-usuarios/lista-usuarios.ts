@@ -165,6 +165,42 @@ export class ListaUsuarios {
       this.router.navigate(['/dashboard/usuarios/activar', usuario]);
     }
 
+
+
+    // restaurar password
+    // inyectar usuariosService
+    private readonly usuariosService=inject(UsuariosService)
+
+    restaurarPassword(usuario_id: string): void {
+      this.router.navigate(['/dashboard/usuarios/activar', usuario_id]);
+    }
+     /** rstarurar contraseña */
+    readonly usuarioRestaurarId = signal<string | null>(null);
+  
+    seleccionarRestaurarPassword(id: string): void {
+      this.usuarioRestaurarId.set(id);
+    }
+  
+    confirmarRestaurarPassword(): void {
+      const id = this.usuarioRestaurarId();
+      if (!id) return;
+  
+      this.usuariosService.restaurarPassword(id).subscribe({
+        next: () => {
+          console.log('Contraseña restaurada conrrrectamente');
+          // recarga desde el inicio para reflejar el borrado
+          this.personas.set([]);
+          this.paginaActual.set(0);
+          this.cargarPersonas(1);
+          this.personaEliminarId.set(null);
+        },
+        error: (error) => {
+          console.error('Error al restaurar contraseña:', error);
+        },
+      });
+    }
+
+
     // subir foto de perfil
     subirFoto(usuario: string): void {
       this.router.navigate(['/dashboard/usuarios/foto-usuario']);

@@ -1,86 +1,236 @@
 @if (perfil(); as usuario) {
-  <div>
-    <img
-          [src]="fotoPerfilUrl()"
-          alt="Avatar del administrador"
-        >
-    <button class="btn btn-outline-secondary" (click)="subirFoto()">
-                    Subir foto
-    </button>
-    <button class="btn btn-outline-secondary" (click)="actualizarPassword()">
-                    Actualizar Contraseña
-    </button>
-    <button class="btn btn-outline-secondary" (click)="recuperarCuenta(usuario.correo_electronico)">
-                    Recuperar Cuenta
-    </button>
-    <button class="btn btn-outline-secondary" (click)="validarRecuperacion()">
-                    Validar Recuperacion
-    </button>
+  <div class="profile-container">
+    
+    <!-- ==================== CABECERA DEL PERFIL ==================== -->
+    <div class="profile-header-card">
+      <div class="profile-avatar-section">
+        <div class="avatar-wrapper">
+          <img 
+            [src]="fotoPerfilUrl() || 'assets/img/default-avatar.png'" 
+            alt="Avatar del administrador" 
+            class="profile-avatar"
+          >
+          <button class="btn-icon-overlay" (click)="subirFoto()" title="Cambiar foto">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </button>
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">
+            @if (usuario.persona) {
+              {{ usuario.persona.nombres }} {{ usuario.persona.primer_apellido }}
+            } @else {
+              {{ usuario.nombre_usuario }}
+            }
+          </h1>
+          <span class="profile-role-badge">
+            {{ usuario.roles[0]?.nombre || 'Sin rol asignado' }}
+          </span>
+          <p class="profile-email">{{ usuario.correo_electronico }}</p>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-action" (click)="actualizarPassword()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Actualizar Contraseña
+        </button>
+        <button class="btn-action" (click)="recuperarCuenta(usuario.correo_electronico)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Recuperar Cuenta
+        </button>
+        <button class="btn-action btn-action--validate" (click)="validarRecuperacion()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Validar Recuperación
+        </button>
+      </div>
+    </div>
+
+    <div class="profile-content-grid">
+      
+      <!-- ==================== 1. DATOS DE LA CUENTA ==================== -->
+      <div class="profile-section">
+        <div class="section-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <h2 class="section-title">Datos de la Cuenta</h2>
+        </div>
+        <div class="data-grid">
+          <div class="data-item">
+            <span class="data-label">Usuario</span>
+            <span class="data-value">{{ usuario.nombre_usuario }}</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">Correo Electrónico</span>
+            <span class="data-value">{{ usuario.correo_electronico }}</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">Rol</span>
+            <span class="data-value">
+              <span class="badge badge-primary">{{ usuario.roles[0]?.nombre }}</span>
+            </span>
+          </div>
+          <div class="data-item data-item--full">
+            <span class="data-label">Descripción del Rol</span>
+            <span class="data-value">{{ usuario.roles[0]?.descripcion || 'Sin descripción' }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (usuario.persona) {
+        <!-- ==================== 2. DATOS PERSONALES ==================== -->
+        <div class="profile-section">
+          <div class="section-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <h2 class="section-title">Datos Personales</h2>
+          </div>
+          <div class="data-grid">
+            <div class="data-item data-item--full">
+              <span class="data-label">Nombres y Apellidos</span>
+              <span class="data-value">
+                {{ usuario.persona.nombres }} {{ usuario.persona.primer_apellido }} {{ usuario.persona.segundo_apellido }}
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Documento de Identidad</span>
+              <span class="data-value">
+                {{ usuario.persona.nro_documento }} 
+                @if (usuario.persona.expedido) { <span class="text-muted">({{ usuario.persona.expedido }})</span> }
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Género</span>
+              <span class="data-value">
+                <span class="badge badge-info">{{ usuario.persona.genero }}</span>
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Fecha de Nacimiento</span>
+              <span class="data-value">{{ usuario.persona.fecha_nacimiento }}</span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Celular</span>
+              <span class="data-value">{{ usuario.persona.celular || 'No registrado' }}</span>
+            </div>
+            <div class="data-item data-item--full">
+              <span class="data-label">Observación</span>
+              <span class="data-value text-muted">{{ usuario.persona.observacion || 'Sin observaciones' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== 3. DATOS ACADÉMICOS ==================== -->
+        <div class="profile-section">
+          <div class="section-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            <h2 class="section-title">Datos Académicos</h2>
+          </div>
+          <div class="data-grid">
+            <div class="data-item">
+              <span class="data-label">Serie de Titulación</span>
+              <span class="data-value">{{ usuario.persona.titulado?.serie || 'No registrado' }}</span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Número de Título</span>
+              <span class="data-value font-mono">{{ usuario.persona.titulado?.nro_titulo || 'No registrado' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== 4. HISTORIAL DE ASIGNACIONES Y ASISTENCIAS ==================== -->
+        @if (usuario.persona.titulado?.asignaciones?.length) {
+          <div class="profile-section">
+            <div class="section-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <h2 class="section-title">Historial de Asignaciones y Asistencias</h2>
+            </div>
+
+            <div class="assignments-list">
+              @for (asignacion of usuario.persona.titulado.asignaciones; track $index; let idx = $index) {
+                <div class="assignment-card">
+                  <div class="assignment-header">
+                    <span class="assignment-number">Asignación #{{ idx + 1 }}</span>
+                    @if (asignacion.asistencias?.[0]?.asistencia === 'ASISTIO' || asignacion.asistencias?.[0]?.asistencia === 'Asistio') {
+                      <span class="badge badge-success">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Presente
+                      </span>
+                    } @else if (asignacion.asistencias?.[0]?.asistencia === 'AUSENTE' || asignacion.asistencias?.[0]?.asistencia === 'Ausente') {
+                      <span class="badge badge-danger">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Ausente
+                      </span>
+                    } @else {
+                      <span class="badge badge-warning">Pendiente</span>
+                    }
+                  </div>
+
+                  <div class="data-grid data-grid--compact">
+                    <div class="data-item">
+                      <span class="data-label">Programa</span>
+                      <span class="data-value">{{ asignacion.colacion?.programa?.nombre_programa }}</span>
+                    </div>
+                    <div class="data-item">
+                      <span class="data-label">Mencion</span>
+                      <span class="data-value">{{ asignacion.colacion?.programa?.menciones[0].mencion }}</span>
+                    </div>
+                    <div class="data-item">
+                      <span class="data-label">Colación</span>
+                      <span class="data-value">{{ asignacion.colacion?.descripcion }}</span>
+                    </div>
+                    <div class="data-item">
+                      <span class="data-label">Fecha y Turno</span>
+                      <span class="data-value">{{ asignacion.colacion?.fecha_colacion }} - {{ asignacion.colacion?.turno }}</span>
+                    </div>
+                    <div class="data-item">
+                      <span class="data-label">Sala y Nivel</span>
+                      <span class="data-value">{{ asignacion.colacion?.sala?.nombre_sala }} ({{ asignacion.butaca?.nivel?.nombre_nivel }})</span>
+                    </div>
+                    <div class="data-item">
+                      <span class="data-label">Butaca</span>
+                      <span class="data-value font-mono">{{ asignacion.butaca?.codigo_butaca }}</span>
+                    </div>
+                    <div class="data-item">
+                      <span class="data-label">Ubicación</span>
+                      <span class="data-value">Fila {{ asignacion.butaca?.fila }}, Col {{ asignacion.butaca?.columna }}</span>
+                    </div>
+                    @if (asignacion.asistencias?.[0]?.fecha_registro) {
+                      <div class="data-item">
+                        <span class="data-label">Fecha de Registro de Asistencia</span>
+                        <span class="data-value">{{ asignacion.asistencias[0].fecha_registro }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
   </div>
-  <h3>1. Datos de la cuenta</h3>
-  <h4>- Usuario: {{ usuario.nombre_usuario }}</h4>
-  <!-- <h4>- ID de usuario {{usuario.id}}</h4> -->
-  <h4>- Correo: {{ usuario.correo_electronico }}</h4>
-  <!-- <h4>- Fotografía</h4> -->
-   <h4>- Roles:{{usuario.roles[0].nombre}}</h4>
-   <h4>- Descripcción: {{usuario.roles[0].descripcion}}</h4>
-   <h4></h4>
-  
-  <hr>
-
-  <h3>2. Datos personales</h3>
-  <h4>- Nombres y apellidos : {{usuario.persona.nombres}}
-                              {{usuario.persona.primer_apellido}}
-                              {{usuario.persona.segundo_apellido}}
-  </h4>
-  <h4>- Documento de identidad: {{usuario.persona.nro_documento}}
-                                {{usuario.persona.expedido}}
-  </h4>
-  <h4>- Género: {{usuario.persona.genero}}</h4>
-  <h4>- Fecha de nacimiento: {{usuario.persona.fecha_nacimiento}}</h4>
-  <h4>- Celular: {{usuario.persona.celular}}</h4>
-  <h4>- Observación: {{usuario.persona.observacion}}</h4>
-
-  <hr>
-    <h3>3. Datos académicos</h3>
-    <h4>- Información del titulado:{{ usuario.persona.titulado.serie}}</h4>
-    <!-- <h4>- Grado académico: </h4> -->
-    
-    <h4>- Número de título: {{ usuario.persona.titulado.nro_titulo }}</h4>
-
-  <hr>
-    <h3>4. Historial de asignaciones</h3>
-    @for (asignacion of usuario.persona.titulado.asignaciones; track $index) {
-         Colacion {{$index + 1}}
-        <h4>- Programa: {{asignacion.colacion.programa.nombre_programa}}</h4>
-        <h4>- Colación: {{asignacion.colacion.descripcion}}</h4>
-        <h4>- Fecha y turno: {{asignacion.colacion.fecha_colacion}}
-                            {{asignacion.colacion.turno}}
-        </h4>
-        <h4>- Sala: {{asignacion.colacion.sala.nombre_sala}}</h4>
-        <h4>- Nivel: {{asignacion.butaca.nivel.nombre_nivel}}</h4>
-        
-        <h4>- Butaca: {{asignacion.butaca.codigo_butaca}}</h4>
-        <h4>- Fila y columna: {{asignacion.butaca.fila}} -
-                            {{asignacion.butaca.columna}}
-        </h4>
-
-        <hr>
-        <h3>5. Asistencias</h3>
-        <h4>- Estado de asistencia: {{asignacion.asistencias[0].asistencia}}</h4>
-        <h4>- Fecha registro: {{asignacion.asistencias[0].fecha_registro}}</h4>
-    }
-    
-     
-        
-        
-        
-            
-
-
-} 
-
-  
-
-  
-
+}

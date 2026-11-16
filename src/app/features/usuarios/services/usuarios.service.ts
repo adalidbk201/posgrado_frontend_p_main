@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { RespuestaApi } from '../../../core/models/respuesta-api.interface';
 import { PaginacionResponse } from '../../../core/models/paginacion-response.interface';
 import { PerfilPersonalResponse, PerfilResponse, Usuario } from '../models/usuario.interface';
-import { FotoPerfilRequest, PasswordPerfil, RecuperarCuentaRequest, UsuarioRequest, ValidarRecuperarRequest } from '../models/usuario.request.interface';
+import { ActivarCuentaRequest, FotoPerfilRequest, PasswordPerfil, RecuperarCuentaRequest, UsuarioRequest, ValidarRecuperarRequest } from '../models/usuario.request.interface';
 @Injectable({
     // ejecute desde la raiz
     providedIn:'root'
@@ -109,5 +109,19 @@ export class UsuariosService {
       validarRecuperacionCuenta(datos:ValidarRecuperarRequest):Observable<Usuario>{
         return this.http.post<Usuario>(`${this.api}validar/recuperar/`,datos)
       }
+    
+    // =========================
+    // POST - ACTIVAR CUENTA
+    // url de la api usuarios 
+    private apiActivar=`${environment.API}/activar-cuenta/`;
+      activarCuenta(datos:ActivarCuentaRequest):Observable<Usuario>{
+        return this.http.post<Usuario>(`${this.apiActivar}`,datos)
+      }
+    
+    // =========================
+      // PATCH - ACTUALIZAR Contraseña
+    restaurarPassword(id: string): Observable<Usuario> {
+      return this.http.patch<Usuario>(`${this.api}${id}/restauracion/`, {});
+    }
 
 }

@@ -12,6 +12,13 @@ export const routes: Routes = [
         path:'login',
         loadComponent:()=>import('./features/auth/pages/login/login').then((m)=>m.Login)
     },
+    // Activar usuario
+    {
+        path: 'activarCuenta/:usuario',
+        loadComponent: () =>
+            import('./features/usuarios/pages/activar-usuario/activar-usuario')
+                .then((m) => m.ActivarUsuario)
+    },
     {
         path:'dashboard',
         loadComponent:()=>import('./layout/dashboard/dashboard').then((m)=>m.Dashboard), 

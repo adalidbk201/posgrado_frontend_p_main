@@ -27,3 +27,8 @@ export interface RecuperarCuentaRequest{
 export interface ValidarRecuperarRequest{
   codigo:string
 }
+
+export interface ActivarCuentaRequest{
+  nombre_usuario:string,
+  codigo:string,
+}

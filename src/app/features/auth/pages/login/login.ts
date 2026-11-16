@@ -214,4 +214,12 @@ export class Login {
       },
     });
   }
+
+
+  // activar usuario
+  readonly Estudiante=signal('Estudiante')
+  
+    activarUsuario(usuario: string): void {
+      this.router.navigate(['activarCuenta', usuario]);
+    }
 }
