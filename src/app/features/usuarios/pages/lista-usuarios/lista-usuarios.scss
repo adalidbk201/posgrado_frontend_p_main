@@ -259,10 +259,29 @@
 }
 
 .col-actions {
-  width: 140px;
+  width: 160px; /*  Aumentado para acomodar 3 botones de icono */
   text-align: right;
+  white-space: nowrap;
 }
-
+/* =========================
+   CELDA CORREO ELECTRÓNICO
+========================= */
+.cell-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  .email-icon {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+  
+  .email-text {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    word-break: break-all; /*  Evita que correos largos rompan la tabla */
+  }
+}
 /* CELDA ESTADO */
 .cell-status {
   .status-badge {
@@ -403,14 +422,14 @@
 /* BOTONES DE ACCIÓN */
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   justify-content: flex-end;
   align-items: center;
 }
 
 .btn-icon {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -418,57 +437,78 @@
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
+  position: relative;
+  flex-shrink: 0;
   
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
   
-  &.btn-edit {
-    background: rgba(245, 158, 11, 0.1);
+  // Tooltip personalizado (mismo que en otros módulos)
+  &::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--color-text-primary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition-fast);
+    z-index: 10;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  // Restaurar Contraseña - Ámbar
+  &.btn-restore {
+    background: rgba(245, 158, 11, 0.12);
     color: var(--color-warning);
     
     &:hover {
       background: var(--color-warning);
       color: white;
-      transform: scale(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
     }
   }
-}
-
-.btn-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
   
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
-  
-  &.btn-activate {
-    background: var(--color-success);
-    color: white;
+  // Reenviar Correo - Azul
+  &.btn-email {
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--color-info);
     
     &:hover {
-      background: #059669;
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
+      background: var(--color-info);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
     }
+  }
+  
+  // Activar - Verde
+  &.btn-activate {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--color-success);
     
-    &:active {
-      transform: translateY(0);
+    &:hover {
+      background: var(--color-success);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
     }
   }
 }
-
 /* =========================
    ESTADO VACÍO
 ========================= */
@@ -587,5 +627,231 @@
   
   .modern-table {
     border: 2px solid var(--color-border);
+  }
+}
+
+
+
+/* =========================
+   MODAL — override de Bootstrap
+========================= */
+.modal-restaurar {
+
+  .modal-content {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+    font-family: inherit;
+    animation: modalIn var(--transition-base) both;
+  }
+
+  /* ---------- Header ---------- */
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.125rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .modal-header__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+    flex-shrink: 0;
+  }
+
+  .modal-title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .modal-close {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast),
+                color var(--transition-fast);
+
+    &:hover {
+      background: var(--color-background);
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-border-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  /* ---------- Body ---------- */
+  .modal-body {
+    padding: 1.25rem;
+
+    &__pregunta {
+      margin: 0 0 0.75rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      line-height: 1.5;
+    }
+
+    &__detalle {
+      margin: 0 0 1rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+
+      strong {
+        color: var(--color-text-primary);
+        font-weight: 600;
+      }
+    }
+
+    &__nota {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-warning-light);
+      border: 1px solid color-mix(in srgb, var(--color-warning), white 55%);
+      color: color-mix(in srgb, var(--color-warning), black 35%);
+      font-size: 0.8125rem;
+      line-height: 1.4;
+
+      svg { flex-shrink: 0; }
+    }
+  }
+
+  /* ---------- Footer ---------- */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    padding: 0.875rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-background);
+  }
+}
+
+/* =========================
+   BOTONES del modal
+========================= */
+.modal-restaurar .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+
+  &:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--ghost {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+
+    &:hover:not(:disabled) {
+      background: var(--color-background);
+      border-color: var(--color-text-muted);
+    }
+  }
+
+  &--danger {
+    background: var(--color-danger);
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: var(--color-danger-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  &__spinner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgb(255 255 255 / 0.4);
+    border-top-color: #fff;
+    animation: spin 0.7s linear infinite;
+  }
+}
+
+/* =========================
+   Animaciones
+========================= */
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Backdrop más suave y con blur (override de Bootstrap) */
+.modal-backdrop.show {
+  opacity: 0.5;
+  backdrop-filter: blur(2px);
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 480px) {
+  .modal-restaurar {
+    .modal-header,
+    .modal-body {
+      padding-inline: 1rem;
+    }
+
+    .modal-footer {
+      flex-direction: column-reverse;
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   }
 }

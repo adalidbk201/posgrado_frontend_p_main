@@ -32,3 +32,8 @@ export interface ActivarCuentaRequest{
   nombre_usuario:string,
   codigo:string,
 }
+
+export interface ReenviarCorreoActivacionRequest{
+  nombre_usuario:string,
+  url_foto:string | '',
+}

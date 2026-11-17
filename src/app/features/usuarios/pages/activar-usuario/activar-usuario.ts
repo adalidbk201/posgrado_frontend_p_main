@@ -31,9 +31,14 @@ export class ActivarUsuario {
       this.usuariosService.activarCuenta(datos).subscribe({
         next: () => {
           console.log('Cuenta Activada correctamente');
-  
-          // Volver al listado
-          this.router.navigate(['/login']);
+
+          if(this.usuario!='Estudiante'){
+             this.router.navigate(['/dashboard/usuarios']);
+                 
+          }else{
+             this.router.navigate(['/login']);
+          }
+          
         },
   
         error: (error) => {

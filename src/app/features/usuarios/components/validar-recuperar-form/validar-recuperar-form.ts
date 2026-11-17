@@ -19,11 +19,14 @@ export class ValidarRecuperarForm {
      
   // El formulario  
   readonly formulario = this.fb.nonNullable.group({
-     codigo: ['',
-        Validators.required,
-        Validators.minLength(30),
-        Validators.maxLength(100),
-     ],
+    codigo: [
+    '',
+    [
+      Validators.required,
+      Validators.minLength(30),
+      Validators.maxLength(100),
+    ],
+  ],
   });
 
  

@@ -227,7 +227,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           const nuevoToken = respuesta.Data.access;
 
           console.log(
-            '✅ Access token renovado correctamente',
+            ' Access token renovado correctamente',
           );
 
           /*

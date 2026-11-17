@@ -291,9 +291,9 @@
 }
 
 .col-actions {
-  width: 160px; /* ✅ AUMENTADO de 120px a 160px */
+  width: 160px; /*  AUMENTADO de 120px a 160px */
   text-align: right;
-  white-space: nowrap; /* ✅ Evita que los botones se rompan */
+  white-space: nowrap; /*  Evita que los botones se rompan */
 }
 /* CELDA ESTADO */
 .cell-status {
@@ -411,7 +411,7 @@
   justify-content: center;
   transition: all var(--transition-fast);
   position: relative;
-  flex-shrink: 0; /* ✅ Evita que los botones se encojan */
+  flex-shrink: 0; /*  Evita que los botones se encojan */
   
   &:focus-visible {
     outline: 2px solid var(--color-primary);

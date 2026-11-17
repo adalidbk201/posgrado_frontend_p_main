@@ -5,6 +5,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { PersonasService } from '../../../personas/services/personas.service';
 import { Persona } from '../../../personas/models/persona.interface';
+import { ReenviarCorreoActivacionRequest } from '../../models/usuario.request.interface';
 
 @Component({
   imports: [],
@@ -165,7 +166,43 @@ export class ListaUsuarios {
       this.router.navigate(['/dashboard/usuarios/activar', usuario]);
     }
 
+    // Reenviar correo de Activación
+    readonly reenviarCorreoId = signal<string | null>(null);
+    readonly reenviarCorreoUsuario = signal<string | null>(null);
 
+    seleccionarReenviarCorreo(id: string, usuario:string): void {
+      this.reenviarCorreoId.set(id);
+      this.reenviarCorreoUsuario.set(usuario);
+    }
+  
+    confirmarReenviarCorreo(): void {
+      const usuario_id = this.reenviarCorreoId();
+      const usuario = this.reenviarCorreoUsuario();
+      // Validar antes de construir el objeto
+      if (!usuario_id || !usuario) return;
+
+      const datos: ReenviarCorreoActivacionRequest = {
+            nombre_usuario: usuario,
+            url_foto:''
+          };
+
+      
+      if (!usuario_id) return;
+  
+      this.usuariosService.reenviarCorreoActivar(usuario_id,datos).subscribe({
+        next: () => {
+          console.log('Se reenvio correo de activación');
+          // recarga desde el inicio para reflejar el borrado
+          this.personas.set([]);
+          this.paginaActual.set(0);
+          this.cargarPersonas(1);
+          this.personaEliminarId.set(null);
+        },
+        error: (error) => {
+          console.error('Error al reenviar Correo de activación:', error);
+        },
+      });
+    }
 
     // restaurar password
     // inyectar usuariosService
@@ -174,20 +211,26 @@ export class ListaUsuarios {
     restaurarPassword(usuario_id: string): void {
       this.router.navigate(['/dashboard/usuarios/activar', usuario_id]);
     }
+
      /** rstarurar contraseña */
     readonly usuarioRestaurarId = signal<string | null>(null);
   
     seleccionarRestaurarPassword(id: string): void {
       this.usuarioRestaurarId.set(id);
     }
-  
-    confirmarRestaurarPassword(): void {
+    // Señal para manejar la notificación inline (exito o error)
+ 
+    readonly procesando = signal<boolean>(false);
+
+    async confirmarRestaurarPassword(): Promise<void> {
+      this.procesando.set(true);
       const id = this.usuarioRestaurarId();
       if (!id) return;
   
       this.usuariosService.restaurarPassword(id).subscribe({
         next: () => {
           console.log('Contraseña restaurada conrrrectamente');
+         
           // recarga desde el inicio para reflejar el borrado
           this.personas.set([]);
           this.paginaActual.set(0);
