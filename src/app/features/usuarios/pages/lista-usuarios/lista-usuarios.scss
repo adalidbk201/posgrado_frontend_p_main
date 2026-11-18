@@ -635,7 +635,7 @@
 /* =========================
    MODAL — override de Bootstrap
 ========================= */
-.modal-restaurar {
+.modal {
 
   .modal-content {
     border: 1px solid var(--color-border);
@@ -756,7 +756,7 @@
 /* =========================
    BOTONES del modal
 ========================= */
-.modal-restaurar .btn {
+.modal .btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -797,7 +797,7 @@
     color: #fff;
 
     &:hover:not(:disabled) {
-      background: var(--color-danger-hover);
+      background: var(--color-success);
       transform: translateY(-1px);
       box-shadow: var(--shadow-sm);
     }
@@ -816,7 +816,36 @@
     animation: spin 0.7s linear infinite;
   }
 }
+ 
 
+/* =========================
+   ANIMACIONES
+========================= */
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateX(120%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toastProgress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .toast-container {
+    top: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    max-width: none;
+  }
+}
 /* =========================
    Animaciones
 ========================= */
@@ -839,7 +868,7 @@
    Responsive
 ========================= */
 @media (max-width: 480px) {
-  .modal-restaurar {
+  .modal {
     .modal-header,
     .modal-body {
       padding-inline: 1rem;

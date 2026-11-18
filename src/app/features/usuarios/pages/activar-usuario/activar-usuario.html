@@ -1,8 +1,32 @@
  
-
   <app-activar-cuenta-form
     (guardar)="activarPerfil($event)"
     usuario="{{ usuario }}"
   />
-  
  
+
+@if (cuentaActivada()) {
+  <div class="modal-overlay">
+    <div class="modal-exito">
+
+      <div class="icono-exito">
+        <span>✓</span>
+      </div>
+
+      <h2>¡Cuenta activada!</h2>
+
+      <p>
+        Tu cuenta ha sido activada correctamente.
+      </p>
+
+      <span class="mensaje-redireccion">
+        Serás redirigido al inicio de sesión en unos segundos...
+      </span>
+
+      <div class="barra-tiempo">
+        <div class="barra-progreso"></div>
+      </div>
+
+    </div>
+  </div>
+}

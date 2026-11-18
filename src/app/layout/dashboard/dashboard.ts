@@ -5,7 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { UsuariosService } from '../../features/usuarios/services/usuarios.service';
 import { PerfilResponse } from '../../features/usuarios/models/usuario.interface';
 import { environment } from '../../../environment/environment';
-
+import { ToastGlobal } from '../../components/toast-global/toast-global';
 interface ItemMenu {
   label: string;
   ruta: string;
@@ -22,7 +22,7 @@ interface CategoriaMenu {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet,ToastGlobal],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

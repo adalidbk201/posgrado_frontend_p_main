@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { PersonasService } from '../../../personas/services/personas.service';
 import { Persona } from '../../../personas/models/persona.interface';
 import { ReenviarCorreoActivacionRequest } from '../../models/usuario.request.interface';
-
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   imports: [],
   selector: 'app-lista-usuarios',
@@ -14,6 +14,8 @@ import { ReenviarCorreoActivacionRequest } from '../../models/usuario.request.in
   templateUrl: './lista-usuarios.html',
 })
 export class ListaUsuarios {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   /** LISTAR USUARIOS DESDE PERSONA */
   // inyectar personasService
     private readonly personasService = inject(PersonasService);
@@ -166,82 +168,105 @@ export class ListaUsuarios {
       this.router.navigate(['/dashboard/usuarios/activar', usuario]);
     }
 
+
     // Reenviar correo de Activación
-    readonly reenviarCorreoId = signal<string | null>(null);
-    readonly reenviarCorreoUsuario = signal<string | null>(null);
+      readonly reenviarCorreoId = signal<string | null>(null);
+      readonly reenviarCorreoUsuario = signal<string | null>(null);
 
-    seleccionarReenviarCorreo(id: string, usuario:string): void {
-      this.reenviarCorreoId.set(id);
-      this.reenviarCorreoUsuario.set(usuario);
-    }
-  
-    confirmarReenviarCorreo(): void {
-      const usuario_id = this.reenviarCorreoId();
-      const usuario = this.reenviarCorreoUsuario();
-      // Validar antes de construir el objeto
-      if (!usuario_id || !usuario) return;
+      seleccionarReenviarCorreo(id: string, usuario:string): void {
+        this.reenviarCorreoId.set(id);
+        this.reenviarCorreoUsuario.set(usuario);
+      }
+    
+      confirmarReenviarCorreo(): void {
+        const usuario_id = this.reenviarCorreoId();
+        const usuario = this.reenviarCorreoUsuario();
+        // Validar antes de construir el objeto
+        if (!usuario_id || !usuario) return;
 
-      const datos: ReenviarCorreoActivacionRequest = {
-            nombre_usuario: usuario,
-            url_foto:''
-          };
+        const datos: ReenviarCorreoActivacionRequest = {
+              nombre_usuario: usuario,
+              url_foto:''
+            };
 
-      
-      if (!usuario_id) return;
-  
-      this.usuariosService.reenviarCorreoActivar(usuario_id,datos).subscribe({
-        next: () => {
-          console.log('Se reenvio correo de activación');
-          // recarga desde el inicio para reflejar el borrado
-          this.personas.set([]);
-          this.paginaActual.set(0);
-          this.cargarPersonas(1);
-          this.personaEliminarId.set(null);
-        },
-        error: (error) => {
-          console.error('Error al reenviar Correo de activación:', error);
-        },
-      });
-    }
+        
+        if (!usuario_id) return;
+    
+        this.usuariosService.reenviarCorreoActivar(usuario_id,datos).subscribe({
+          next: () => {
+            console.log('Se reenvio correo de activación');
+            // notificaion toasd
+            this.toast.exito('Se reenvio un codigo de activación al correo del usuario.');
+            this.cerrarModal('modalRestaurar');
+            
+            // recarga desde el inicio para reflejar el borrado
+            this.personas.set([]);
+            this.paginaActual.set(0);
+            this.cargarPersonas(1);
+            this.personaEliminarId.set(null);
+          },
+          error: (err) => {
+            console.error('Error al reenviar Correo de activación:', err);
+            // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al reenviar Correo de activación:';
+            
+            this.toast.error(msg);
+          },
+        });
+      }
 
     // restaurar password
     // inyectar usuariosService
-    private readonly usuariosService=inject(UsuariosService)
+      private readonly usuariosService=inject(UsuariosService)
 
-    restaurarPassword(usuario_id: string): void {
-      this.router.navigate(['/dashboard/usuarios/activar', usuario_id]);
-    }
+      restaurarPassword(usuario_id: string): void {
+        this.router.navigate(['/dashboard/usuarios/activar', usuario_id]);
+      }
 
-     /** rstarurar contraseña */
-    readonly usuarioRestaurarId = signal<string | null>(null);
+      /** rstarurar contraseña */
+      readonly usuarioRestaurarId = signal<string | null>(null);
+    
+      seleccionarRestaurarPassword(id: string): void {
+        this.usuarioRestaurarId.set(id);
+      }
+      // Señal para manejar la notificación inline (exito o error)
   
-    seleccionarRestaurarPassword(id: string): void {
-      this.usuarioRestaurarId.set(id);
-    }
-    // Señal para manejar la notificación inline (exito o error)
- 
-    readonly procesando = signal<boolean>(false);
+      readonly procesando = signal<boolean>(false);
 
-    async confirmarRestaurarPassword(): Promise<void> {
-      this.procesando.set(true);
-      const id = this.usuarioRestaurarId();
-      if (!id) return;
-  
-      this.usuariosService.restaurarPassword(id).subscribe({
-        next: () => {
-          console.log('Contraseña restaurada conrrrectamente');
-         
-          // recarga desde el inicio para reflejar el borrado
-          this.personas.set([]);
-          this.paginaActual.set(0);
-          this.cargarPersonas(1);
-          this.personaEliminarId.set(null);
-        },
-        error: (error) => {
-          console.error('Error al restaurar contraseña:', error);
-        },
-      });
-    }
+      confirmarRestaurarPassword(): void {
+        this.procesando.set(true);
+        const id = this.usuarioRestaurarId();
+        if (!id) return;
+    
+        this.usuariosService.restaurarPassword(id).subscribe({
+          next: () => {
+            console.log('Contraseña restaurada conrrrectamente');
+            //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Se ha enviado una contraseña temporal al correo del usuario.');
+          this.cerrarModal('modalRestaurar');
+
+            // recarga desde el inicio para reflejar el borrado
+            this.personas.set([]);
+            this.paginaActual.set(0);
+            this.cargarPersonas(1);
+            this.personaEliminarId.set(null);
+          },
+          error: (err) => {
+            console.error('Error al restaurar contraseña:', err);
+            //  MOSTRAR TOAST DE ERROR
+            // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'No se pudo restaurar la contraseña. Intente nuevamente.';
+            
+            this.toast.error(msg);
+          },
+        });
+      }
 
 
     // subir foto de perfil
@@ -274,4 +299,33 @@ export class ListaUsuarios {
         },
       });
     }
+
+    /** ejemlo eliminar  */
+    eliminarUsuario(): void {
+      // ...
+      this.toast.warning('El usuario ha sido eliminado.');
+    }
+  
+  /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
+ 
+
 }

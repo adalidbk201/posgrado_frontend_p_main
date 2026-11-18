@@ -6,6 +6,7 @@ import { Persona } from '../../models/persona.interface';
  
 import { ActualizarPerfil, ActualizarPersona } from '../../models/persona-request.interface';
 import { PersonaEditarForm } from '../../components/persona-editar-form/persona-editar-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-persona',
   imports: [ PersonaEditarForm],
@@ -13,6 +14,8 @@ import { PersonaEditarForm } from '../../components/persona-editar-form/persona-
   styleUrl: './editar-persona.scss',
 })
 export class EditarPersona {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // injectar PersonaService
     private readonly personasService= inject(PersonasService)
   
@@ -97,14 +100,22 @@ export class EditarPersona {
   
           // Mostramos mensaje de éxito.
           console.log('Persona actualizada correctamente');
+          this.toast.exito('Persona actualizada correctamente.');
   
           // Volvemos al listado de salas.
           this.router.navigate(['/dashboard/personas']);
         },
   
         // Si ocurrió un error.
-        error: (error) => {
-          console.error('Error al actualizar la persona:', error);
+        error: (err) => {
+          console.error('Error al actualizar la persona:', err);
+          // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al actualizar la persona.';
+            
+            this.toast.error(msg);
         },
       });
     }

@@ -1,3 +1,127 @@
-:host {
+/* Fondo del modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+
+  animation: aparecer 0.3s ease;
+}
+
+/* Ventana */
+.modal-exito {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 40px 30px;
+  border-radius: 20px;
+
+  background: var(--color-superficie, #fff);
+  text-align: center;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+
+  animation: subir 0.4s ease;
+}
+
+/* Icono */
+.icono-exito {
+  width: 75px;
+  height: 75px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0 auto 22px;
+
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+
+  font-size: 42px;
+  font-weight: bold;
+}
+
+/* Título */
+.modal-exito h2 {
+  margin-bottom: 12px;
+  font-size: 23px;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* Descripción */
+.modal-exito p {
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: var(--color-texto, #334155);
+}
+
+/* Mensaje secundario */
+.mensaje-redireccion {
   display: block;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Barra de progreso */
+.barra-tiempo {
+  width: 100%;
+  height: 5px;
+  margin-top: 25px;
+
+  overflow: hidden;
+  border-radius: 10px;
+  background: #e2e8f0;
+}
+
+.barra-progreso {
+  width: 100%;
+  height: 100%;
+
+  background: #16a34a;
+  transform-origin: left;
+
+  animation: reducir 5s linear forwards;
+}
+
+/* Animaciones */
+@keyframes reducir {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
