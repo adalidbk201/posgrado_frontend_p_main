@@ -30,3 +30,34 @@
     </div>
   </div>
 }
+
+<!-- Error de activacion -->
+ @if (errorActivacion()) {
+  <div class="modal-overlay">
+    <div class="modal-exito modal-error">
+
+      <!-- <div class="icono-error">
+        <span>✕</span>
+      </div> -->
+
+      <h2>¡Activación fallida!</h2>
+
+      <p>
+        {{ mensajeerror() }}
+         
+      </p>
+
+      <span class="mensaje-redireccion">
+        Verifica el código e inténtalo nuevamente.
+      </span>
+
+      <button
+        type="button"
+        class="btn-reintentar"
+        (click)="errorActivacion.set(false)">
+        Intentar nuevamente
+      </button>
+
+    </div>
+  </div>
+}

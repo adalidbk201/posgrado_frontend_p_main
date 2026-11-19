@@ -29,6 +29,8 @@ export class ActivarUsuario {
 
     // Mensaje de activación para estudiantes
     readonly cuentaActivada = signal(false);
+    readonly errorActivacion = signal(false);
+    readonly mensajeerror=signal('')
 
     // metodo crearSala
     activarPerfil(datos: ActivarCuentaRequest): void {
@@ -59,13 +61,29 @@ export class ActivarUsuario {
         },
   
         error: (err) => {
-          console.error('Error al activar la cuenta:', err);
-          // Extrae el mensaje del backend si existe, sino usa uno por defecto
-            const msg = err?.error?.Errores.estado
-                    || err?.error?.message 
-                    || err?.message 
-                    || 'Error al activar la cuenta.';
-            this.toast.error(msg);
+
+          if (this.usuario === 'Estudiante') {
+            this.mensajeerror.set(err?.error.Message)
+            // Mostrar modal de error
+            this.errorActivacion.set(true);
+
+          } else {
+
+            
+            // Mostrar toast para administrador
+            console.error('Error al activar la cuenta:', err);
+            // Extrae el mensaje del backend si existe, sino usa uno por defecto
+              const msg = err?.error.Message
+                      || err?.error?.message 
+                      || err?.message 
+                      || 'Error al activar la cuenta.';
+              this.toast.error(msg);
+
+            
+
+          }
+
+          
         },
       });
     }

@@ -380,7 +380,117 @@
 
   font-size: 11px;
 }
+/* ==========================================
+   SEPARADOR "O"
+========================================== */
 
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+  color: #9aa7ae;
+  font-size: 12px;
+  font-weight: 500;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #dce5ea;
+  }
+}
+
+
+/* ==========================================
+   BOTÓN SECUNDARIO (Activar Cuenta)
+========================================== */
+
+.login-button-secondary {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1.5px solid #dce5ea;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #263945;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #168fc8;
+    color: #168fc8;
+    background: #f2f9fc;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #168fc8;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+
+/* ==========================================
+   AJUSTES AL BOTÓN PRINCIPAL (mejorar jerarquía)
+========================================== */
+
+.login-button {
+  // ... tu código existente ...
+  
+  // Asegura que el gradiente sea más vibrante
+  background: linear-gradient(135deg, #1596d1, #0e7ba8);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(21, 144, 198, 0.35);
+  }
+}
+
+
+/* ==========================================
+   AJUSTE AL LOGO IZQUIERDO (reducir tamaño)
+========================================== */
+
+.illustration-wrapper img {
+  width: min(100%, 420px); // Antes: 500px
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 25px rgba(22, 94, 125, 0.10));
+}
+
+
+/* ==========================================
+   MENSAJE DE CAMPO (field-message)
+========================================== */
+
+.field-message {
+  display: block;
+  margin-top: 6px;
+  color: #d44f5c;
+  font-size: 12px;
+  font-weight: 500;
+}
 
 /* ==========================================
    HEADER

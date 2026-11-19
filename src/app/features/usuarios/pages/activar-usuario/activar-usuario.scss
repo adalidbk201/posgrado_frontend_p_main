@@ -125,3 +125,29 @@
     transform: translateY(0) scale(1);
   }
 }
+
+// CODIGO PARA ERROR DE ACTIVACION
+.modal-error .icono-error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.modal-error h2 {
+  color: #dc2626;
+}
+
+.btn-reintentar {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-reintentar:hover {
+  background: #b91c1c;
+}

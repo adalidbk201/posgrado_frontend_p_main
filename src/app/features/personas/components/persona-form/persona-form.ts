@@ -93,7 +93,7 @@ export class PersonaForm {
       Validators.required,
       Validators.min(1),
     ]),
-    fecha_fin: ['', [Validators.required]],
+    // fecha_fin: ['', [Validators.required]],
     id_programa:['',[Validators.required]],
   });
 
@@ -234,7 +234,7 @@ export class PersonaForm {
       id_mencion: Number(v.id_mencion),
       id_rol: Number(v.id_rol),
       id_programa:v.id_programa,
-      fecha_fin: v.fecha_fin,
+      fecha_fin: '9999-12-31',
     };
 
     console.log('DATOS ENVIADOS:', datos);

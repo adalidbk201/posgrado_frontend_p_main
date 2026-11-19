@@ -258,10 +258,9 @@
   }
 }
 
-.col-actions {
+th.col-actions {
   width: 160px; /*  Aumentado para acomodar 3 botones de icono */
-  text-align: right;
-  white-space: nowrap;
+  text-align: right !important;
 }
 /* =========================
    CELDA CORREO ELECTRÓNICO
