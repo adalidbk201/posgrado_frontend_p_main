@@ -4,6 +4,7 @@ import { SalasService } from '../../services/salas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Sala } from '../../models/sala.interface';
 import { SalaEditarRequest } from '../../models/sala-request.interface';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-sala',
   imports: [SalaEditarForm],
@@ -11,6 +12,8 @@ import { SalaEditarRequest } from '../../models/sala-request.interface';
   styleUrl: './editar-sala.scss',
 })
 export class EditarSala {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // injectar SalasService
   private readonly salasService= inject(SalasService)
 
@@ -96,14 +99,23 @@ export class EditarSala {
 
         // Mostramos mensaje de éxito.
         console.log('Sala actualizada correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Sala actualizada correctamente.');
 
         // Volvemos al listado de salas.
         this.router.navigate(['/dashboard/salas']);
       },
 
       // Si ocurrió un error.
-      error: (error) => {
-        console.error('Error al actualizar la sala:', error);
+      error: (err) => {
+        console.error('Error al actualizar la sala:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error.Message 
+                    || err?.message 
+                    || 'Error al actualizar la sala.';
+            
+            this.toast.error(msg);
       },
     });
   }

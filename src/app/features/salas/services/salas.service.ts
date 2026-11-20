@@ -83,6 +83,12 @@ export class SalasService {
     eliminarSala(id: string): Observable<void> {
       return this.http.delete<void>(`${this.url}${id}/eliminar/`);
     }
+
+     // =========================
+    // RESETEAR SALA
+    resetearSala(id: string): Observable<void> {
+      return this.http.delete<void>(`${this.url}${id}/resetear/`);
+    }
     
 
 }

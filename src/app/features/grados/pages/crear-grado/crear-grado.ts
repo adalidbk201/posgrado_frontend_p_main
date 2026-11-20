@@ -3,7 +3,7 @@ import { GradosService } from '../../services/grados.service';
 import { Router } from '@angular/router';
 import { GradoRequest } from '../../models/grado-request.interface';
 import { GradoForm } from '../../components/grado-form/grado-form';
- 
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-crear-grado',
   imports: [GradoForm],
@@ -11,6 +11,8 @@ import { GradoForm } from '../../components/grado-form/grado-form';
   styleUrl: './crear-grado.scss',
 })
 export class CrearGrado {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // inyectar gradosService
   private readonly gradosService = inject(GradosService);
 
@@ -24,13 +26,22 @@ export class CrearGrado {
     this.gradosService.crearGrado(datos).subscribe({
       next: () => {
         console.log('Grado creado correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Grado creado correctamente.');
 
         // Volver al listado
         this.router.navigate(['/dashboard/grados']);
       },
 
-      error: (error) => {
-        console.error('Error al crear el grado:', error);
+      error: (err) => {
+        console.error('Error al crear el grado:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.jerarquia
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al crear el grado.';
+            
+            this.toast.error(msg);
       },
     });
   }

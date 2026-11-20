@@ -5,6 +5,7 @@ import { Programa } from '../../models/programa.interface';
 import { ProgramaRequest } from '../../models/programa-request.interface';
 import { ProgramaForm } from '../../components/programa-form/programa-form';
 import { ProgramaEditarForm } from '../../components/programa-editar-form/programa-editar-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-programa',
   imports: [ProgramaEditarForm],
@@ -12,6 +13,8 @@ import { ProgramaEditarForm } from '../../components/programa-editar-form/progra
   styleUrl: './editar-programa.scss',
 })
 export class EditarPrograma {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // injectar ProgramasService
   private readonly programasService= inject(ProgramasService);
 
@@ -89,14 +92,23 @@ export class EditarPrograma {
   
           // Mostramos mensaje de éxito.
           console.log('Programa actualizado correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Programa actualizado correctamente.');
   
           // Volvemos al listado de programas.
           this.router.navigate(['/dashboard/programas']);
         },
   
         // Si ocurrió un error.
-        error: (error) => {
-          console.error('Error al actualizar el programa:', error);
+        error: (err) => {
+          console.error('Error al actualizar el programa:', err);
+          // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al actualizar el programa.';
+            
+            this.toast.error(msg);
         },
       });
     }

@@ -3,7 +3,7 @@ import { SalasService } from '../../services/salas.service';
 import { Sala } from '../../models/sala.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
- 
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   imports: [],
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
   templateUrl: './lista-salas.html',
 })
 export class ListaSalas { 
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // inyectar salasService
   private readonly salasService = inject(SalasService);
 
@@ -160,14 +162,55 @@ export class ListaSalas {
     this.salasService.eliminarSala(id).subscribe({
       next: () => {
         console.log('Sala eliminada correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Sala eliminada correctamente.');
+          this.cerrarModal('modalRestaurar');
         // recarga desde el inicio para reflejar el borrado
         this.salas.set([]);
         this.paginaActual.set(0);
         this.cargarSalas(1);
         this.salaEliminarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al eliminar la sala:', error);
+      error: (err) => {
+        console.error('Error al eliminar la sala:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = 'Primero debe resetear la Sala.';
+            
+            this.toast.error(msg);
+      },
+    });
+  }
+
+  
+  /** Resetear sala */
+  readonly salaResetearId = signal<string | null>(null);
+
+  seleccionarSalaResetear(id: string): void {
+    this.salaResetearId.set(id);
+  }
+
+  confirmarResetear(): void {
+    const id = this.salaResetearId();
+    if (!id) return;
+
+    this.salasService.resetearSala(id).subscribe({
+      next: () => {
+        console.log('Sala Reseteada correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Sala Reseteada correctamente.');
+          this.cerrarModal('modalRestaurar');
+        // recarga desde el inicio para reflejar el borrado
+        this.salas.set([]);
+        this.paginaActual.set(0);
+        this.cargarSalas(1);
+        this.salaResetearId.set(null);
+      },
+      error: (err) => {
+        console.error('Error al resetear la sala:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = 'Primero debe resetear la Sala.';
+            
+            this.toast.error(msg);
       },
     });
   }
@@ -192,14 +235,24 @@ export class ListaSalas {
     this.salasService.activarSala(id).subscribe({
       next: () => {
         console.log('Sala activada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Sala activada correctamente.');
+          this.cerrarModal('modalRestaurar');
         // recarga desde el inicio para reflejar el borrado
         this.salas.set([]);
         this.paginaActual.set(0);
         this.cargarSalas(1);
         this.salaActivarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al activar la sala:', error);
+      error: (err) => {
+        console.error('Error al activar la sala:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al activar la sala.';
+            
+            this.toast.error(msg);
       },
     });
   }
@@ -211,17 +264,47 @@ export class ListaSalas {
     this.salasService.desactivarSala(id).subscribe({
       next: () => {
         console.log('Sala desactivada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Sala desactivada correctamente.');
+          this.cerrarModal('modalRestaurar');
         // recarga desde el inicio para reflejar el borrado
         this.salas.set([]);
         this.paginaActual.set(0);
         this.cargarSalas(1);
         this.salaActivarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al desactivar la sala:', error);
+      error: (err) => {
+        console.error('Error al desactivar la sala:', err);
+        const msg = err?.error?.Errores.estado
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al desactivar la sala.';
+            
+            this.toast.error(msg);
       },
     });
   }
+
+   /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
 }
 
 

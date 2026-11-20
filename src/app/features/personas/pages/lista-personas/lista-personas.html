@@ -66,7 +66,9 @@
             <th scope="col" class="col-number">#</th>
             <th scope="col">Documento</th>
             <th scope="col">Nombre Completo</th>
-            <th scope="col">Grado Académico</th>
+            <th scope="col">Genero</th>
+            <th scope="col">Fecha Nacimiento</th>
+            <th scope="col">Celular</th>
             <th scope="col" class="col-actions">Acciones</th>
           </tr>
         </thead>
@@ -94,14 +96,30 @@
                 </div>
               </td>
               <td>
-                @if (persona.titulado?.grado?.grado_academico) {
+                 
                   <span class="badge badge-primary">
-                    {{ persona.titulado.grado.grado_academico }}
+                    {{ persona.genero }}
                   </span>
-                } @else {
-                  <span class="badge badge-muted">Sin grado</span>
-                }
+                 
               </td>
+              <td>
+                <div class="cell-fecha">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fecha-icon">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <span class="fecha-text">{{ persona.fecha_nacimiento }}</span>
+                </div>
+              </td>
+
+              <td>
+                <div class="cell-document">
+                  <span class="document-number">{{ persona.celular }}</span>
+                </div>
+              </td>
+
               <td class="col-actions">
                 <div class="action-buttons">
                   <button

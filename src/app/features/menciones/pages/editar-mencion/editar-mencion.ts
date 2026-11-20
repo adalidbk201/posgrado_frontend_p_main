@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Mencion } from '../../models/mencion.interface';
 import { MencionRequest } from '../../models/mencion-request.interface';
 import { MencionForm } from '../../components/mencion-form/mencion-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-mencion',
   imports: [MencionForm],
@@ -11,6 +12,8 @@ import { MencionForm } from '../../components/mencion-form/mencion-form';
   styleUrl: './editar-mencion.scss',
 })
 export class EditarMencion {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // injectar MencionesService
   private readonly mencionesService= inject(MencionesService);
 
@@ -87,14 +90,23 @@ export class EditarMencion {
 
         // Mostramos mensaje de éxito.
         console.log('Mención actualizada correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Mención actualizada correctamente.');
 
         // Volvemos al listado de menciones.
         this.router.navigate(['/dashboard/menciones']);
       },
 
       // Si ocurrió un error.
-      error: (error) => {
-        console.error('Error al actualizar la mención:', error);
+      error: (err) => {
+        console.error('Error al actualizar la mención:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error.Message
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al actualizar la mención.';
+            
+            this.toast.error(msg);
       },
     });
   }

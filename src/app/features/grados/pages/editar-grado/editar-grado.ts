@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Grado } from '../../models/grado.interface';
 import { GradoRequest } from '../../models/grado-request.interface';
 import { GradoForm } from '../../components/grado-form/grado-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-grado',
   imports: [GradoForm],
@@ -11,6 +12,8 @@ import { GradoForm } from '../../components/grado-form/grado-form';
   styleUrl: './editar-grado.scss',
 })
 export class EditarGrado {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // inyectar gradosService
   private readonly gradosService= inject(GradosService)
 
@@ -90,14 +93,23 @@ export class EditarGrado {
   
           // Mostramos mensaje de éxito.
           console.log('Grado actualizado correctamente');
+           //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Grado actualizado correctamente.');
   
           // Volvemos al listado de grados.
           this.router.navigate(['/dashboard/grados']);
         },
   
         // Si ocurrió un error.
-        error: (error) => {
-          console.error('Error al actualizar el grado:', error);
+        error: (err) => {
+          console.error('Error al actualizar el grado:', err);
+           // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.jerarquia
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al actualizar el grado.';
+            
+            this.toast.error(msg);
         },
       });
     }

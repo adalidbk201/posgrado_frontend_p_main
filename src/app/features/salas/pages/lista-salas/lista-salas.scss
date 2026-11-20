@@ -291,9 +291,10 @@
 }
 
 .col-actions {
-  width: 160px; /*  AUMENTADO de 120px a 160px */
-  text-align: right;
+   width: 184px; /*  AUMENTADO de 120px a 160px */
+  text-align: center !important;
   white-space: nowrap; /*  Evita que los botones se rompan */
+  padding-right: 16px !important;
 }
 /* CELDA ESTADO */
 .cell-status {
@@ -395,14 +396,15 @@
 /* BOTONES DE ACCIÓN */
 .action-buttons {
   display: flex;
-  gap: 6px; /*  REDUCIDO de 8px a 6px para que quepan mejor */
+  gap: 3px !important;                /* gap ajustado para que quepan los 4 */
   justify-content: flex-end;
-  flex-wrap: nowrap; /* Evita que los botones salten de línea */
+  align-items: center;
+  flex-wrap: nowrap;    /* Evita que los botones salten de línea */
 }
 
 .btn-icon {
-  width: 34px;
-  height: 34px;
+  width: 32px !important;             /*  34 → 32 para ganar espacio */
+  height: 32px !important;
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -410,80 +412,76 @@
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
-  position: relative;
-  flex-shrink: 0; /*  Evita que los botones se encojan */
-  
+  flex-shrink: 0;          /*  evita que se encojan */
+
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
-  
-  // Editar - Ámbar
+
+  /* Editar - Ámbar */
   &.btn-edit {
     background: rgba(245, 158, 11, 0.12);
     color: var(--color-warning);
-    
     &:hover {
       background: var(--color-warning);
-      color: white;
+      color: #fff;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
     }
-    
-    &:active {
-      transform: translateY(0);
-    }
+    &:active { transform: translateY(0); }
   }
-  
-  // Activar - Verde (success)
+
+  /* Activar - Verde */
   &.btn-activate {
     background: rgba(16, 185, 129, 0.12);
     color: var(--color-success);
-    
     &:hover {
       background: var(--color-success);
-      color: white;
+      color: #fff;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
     }
-    
-    &:active {
-      transform: translateY(0);
-    }
+    &:active { transform: translateY(0); }
   }
-  
-  // Desactivar - Naranja (warning)
+
+  /* Desactivar - Naranja */
   &.btn-deactivate {
-    background: rgba(249, 115, 22, 0.12);
+    background: rgba(234, 88, 12, 0.12);
     color: #ea580c;
-    
     &:hover {
       background: #ea580c;
-      color: white;
+      color: #fff;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(234, 88, 12, 0.3);
     }
-    
-    &:active {
-      transform: translateY(0);
-    }
+    &:active { transform: translateY(0); }
   }
-  
-  // Eliminar - Rojo (danger)
+
+  /* Resetear - Azul info (NUEVO) */
+  &.btn-reset {
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--color-info);
+    &:hover {
+      background: var(--color-info);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+    &:active { transform: translateY(0); }
+  }
+
+  /* Eliminar - Rojo */
   &.btn-delete {
     background: rgba(239, 68, 68, 0.12);
     color: var(--color-danger);
-    
     &:hover {
       background: var(--color-danger);
-      color: white;
+      color: #fff;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
     }
-    
-    &:active {
-      transform: translateY(0);
-    }
+    &:active { transform: translateY(0); }
   }
 }
 /* =========================
@@ -638,6 +636,194 @@
   font-size: 15px;
   color: var(--color-text-secondary);
   max-width: 400px;
+}
+
+
+
+
+/* =========================
+   MODAL — override de Bootstrap
+========================= */
+.modal {
+
+  .modal-content {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+    font-family: inherit;
+    animation: modalIn var(--transition-base) both;
+  }
+
+  /* ---------- Header ---------- */
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.125rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .modal-header__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+    flex-shrink: 0;
+  }
+
+  .modal-title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .modal-close {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast),
+                color var(--transition-fast);
+
+    &:hover {
+      background: var(--color-background);
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-border-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  /* ---------- Body ---------- */
+  .modal-body {
+    padding: 1.25rem;
+
+    &__pregunta {
+      margin: 0 0 0.75rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      line-height: 1.5;
+    }
+
+    &__detalle {
+      margin: 0 0 1rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+
+      strong {
+        color: var(--color-text-primary);
+        font-weight: 600;
+      }
+    }
+
+    &__nota {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-warning-light);
+      border: 1px solid color-mix(in srgb, var(--color-warning), white 55%);
+      color: color-mix(in srgb, var(--color-warning), black 35%);
+      font-size: 0.8125rem;
+      line-height: 1.4;
+
+      svg { flex-shrink: 0; }
+    }
+  }
+
+  /* ---------- Footer ---------- */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    padding: 0.875rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-background);
+  }
+}
+
+/* =========================
+   BOTONES del modal
+========================= */
+.modal .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+
+  &:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--ghost {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+
+    &:hover:not(:disabled) {
+      background: var(--color-background);
+      border-color: var(--color-text-muted);
+    }
+  }
+
+  &--danger {
+    background: var(--color-danger);
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: var(--color-success);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  &__spinner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgb(255 255 255 / 0.4);
+    border-top-color: #fff;
+    animation: spin 0.7s linear infinite;
+  }
 }
 
 /* =========================
