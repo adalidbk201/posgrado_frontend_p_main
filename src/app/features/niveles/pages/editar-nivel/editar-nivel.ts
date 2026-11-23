@@ -5,7 +5,7 @@ import { Nivel } from '../../models/nivel.interface';
 import { SalasService } from '../../../salas/services/salas.service';
 import { NivelRequest } from '../../models/nivel-request.interface';
 import { NivelForm } from '../../components/nivel-form/nivel-form';
-
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-nivel',
   imports: [NivelForm],
@@ -13,6 +13,8 @@ import { NivelForm } from '../../components/nivel-form/nivel-form';
   styleUrl: './editar-nivel.scss',
 })
 export class EditarNivel {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
    // injectar SalasService
     private readonly nivelesService= inject(NivelesService)
   
@@ -72,14 +74,23 @@ export class EditarNivel {
   
           // Mostramos mensaje de éxito.
           console.log('Nivel actualizado correctamente');
+             //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Nivel actualizado correctamente.');
   
           // Volvemos al listado de niveles.
           this.router.navigate(['/dashboard/niveles']);
         },
   
         // Si ocurrió un error.
-        error: (error) => {
-          console.error('Error al actualizar el nivel:', error);
+        error: (err) => {
+          console.error('Error al actualizar el nivel:', err);
+          // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.message 
+                    || err?.message 
+                    || 'Error al actualizar el nivel.';
+            
+            this.toast.error(msg);
         },
       });
     }

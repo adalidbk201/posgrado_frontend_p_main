@@ -181,7 +181,7 @@ export class ListaAsignaciones {
     if (!nivelId) return [];
 
     return this.listAsignaciones().filter(
-      asignacion => asignacion.butaca?.nivel === nivelId
+      asignacion => asignacion.butaca?.nivel?.id === nivelId
     );
   });
 
@@ -363,8 +363,8 @@ export class ListaAsignaciones {
 
   // Obtener solamente las asignaciones del nivel seleccionado.
   const asignacionesDelNivel = asignaciones.filter(
-      asignacion => asignacion.butaca.nivel === idNivel
-    );
+    asignacion => asignacion.butaca?.nivel?.id === idNivel
+  );
 
     // Relacionar cada butaca con su asignación mediante el ID.
     const asignacionesPorButaca = new Map(

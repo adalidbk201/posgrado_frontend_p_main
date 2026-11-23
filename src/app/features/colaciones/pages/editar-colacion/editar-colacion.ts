@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Colacion } from '../../models/colacion.interface';
 import { ColacionRequest } from '../../models/colacion-request.interface';
 import { ColacionForm } from '../../components/colacion-form/colacion-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-colacion',
   imports: [ColacionForm],
@@ -11,6 +12,8 @@ import { ColacionForm } from '../../components/colacion-form/colacion-form';
   styleUrl: './editar-colacion.scss',
 })
 export class EditarColacion {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
    // injectar ColacionesService
   private readonly colacionesService= inject(ColacionesService);
 
@@ -88,14 +91,23 @@ export class EditarColacion {
   
           // Mostramos mensaje de éxito.
           console.log('Colación actualizada correctamente');
+           //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Colación actualizada correctamente.');
   
           // Volvemos al listado de salas.
           this.router.navigate(['/dashboard/colaciones']);
         },
   
         // Si ocurrió un error.
-        error: (error) => {
-          console.error('Error al actualizar la colación:', error);
+        error: (err) => {
+          console.error('Error al actualizar la colación:', err);
+          // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al actualizar la colación.';
+            
+            this.toast.error(msg);
         },
       });
     }

@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ColacionesService } from '../../services/colaciones.service';
 import { Router } from '@angular/router';
 import { Colacion } from '../../models/colacion.interface';
-
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-lista-colaciones',
   imports: [],
@@ -10,6 +10,8 @@ import { Colacion } from '../../models/colacion.interface';
   styleUrl: './lista-colaciones.scss',
 })
 export class ListaColaciones {
+    /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // inyectar colacionesService
   private readonly colacionesService = inject(ColacionesService);
 
@@ -158,14 +160,21 @@ export class ListaColaciones {
     this.colacionesService.eliminarColacion(id).subscribe({
       next: () => {
         console.log('Colación eliminada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Colación eliminada correctamente.');
+          this.cerrarModal('modalEliminar');
         // recarga desde el inicio para reflejar el borrado
         this.colaciones.set([]);
         this.paginaActual.set(0);
         this.cargarColaciones(1);
         this.colacionEliminarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al eliminar la colación:', error);
+      error: (err) => {
+        console.error('Error al eliminar la colación:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg =  'Error al eliminar la colación o ya tiene asignación de butacas.';
+            
+            this.toast.error(msg);
       },
     });
   }
@@ -191,14 +200,24 @@ export class ListaColaciones {
     this.colacionesService.activarColacion(id).subscribe({
       next: () => {
         console.log('Colacion activada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Colacion activada correctamente.');
+          this.cerrarModal('modalActivar');
         // recarga desde el inicio para reflejar el borrado
         this.colaciones.set([]);
         this.paginaActual.set(0);
         this.cargarColaciones(1);
         this.colacionActivarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al activar la sala:', error);
+      error: (err) => {
+        console.error('Error al activar la colación:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al activar la colación.';
+            
+            this.toast.error(msg);
       },
     });
   }
@@ -210,15 +229,48 @@ export class ListaColaciones {
     this.colacionesService.desactivarColacion(id).subscribe({
       next: () => {
         console.log('Colacion desactivada correctamente');
+           //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Colacion desactivada correctamente.');
+          this.cerrarModal('modalDesactivar');
         // recarga desde el inicio para reflejar el borrado
         this.colaciones.set([]);
         this.paginaActual.set(0);
         this.cargarColaciones(1);
         this.colacionActivarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al desactivar la sala:', error);
+      error: (err) => {
+        console.error('Error al desactivar la colación:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al desactivar la colación.';
+            
+            this.toast.error(msg);
       },
     });
   }
+
+
+
+  /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
 }

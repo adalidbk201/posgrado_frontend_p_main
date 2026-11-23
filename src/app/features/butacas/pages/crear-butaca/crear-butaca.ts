@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ButacasService } from '../../services/butacas.service';
 import { ButacaForm } from '../../components/butaca-form/butaca-form';
 import { CrearButacaRequest } from '../../models/butaca-request.interface';
-
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-crear-butaca',
   imports: [ButacaForm],
@@ -12,6 +12,8 @@ import { CrearButacaRequest } from '../../models/butaca-request.interface';
   styleUrl: './crear-butaca.scss',
 })
 export class CrearButaca {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
 
   private readonly butacasService = inject(ButacasService);
   private readonly router = inject(Router);
@@ -26,25 +28,23 @@ export class CrearButaca {
     ).subscribe({
       next: () => {
         console.log('Butaca creada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Butaca creada correctamente.');
 
         // Volver al listado
         this.router.navigate(['/dashboard/butacas']);
       },
 
-     error: (error) => {
-        console.error('Error al crear la butaca:', error);
+     error: (err) => {
+        console.error('Error al crear la butaca:', err);
 
-        console.log('Mensaje:', error.error?.Message);
-
-        console.log(
-          'Errores de validación:',
-          error.error?.Errores
-        );
-
-        console.log(
-          'Respuesta completa del backend:',
-          JSON.stringify(error.error, null, 2)
-        );
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.Message
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al crear la butaca.';
+            
+            this.toast.error(msg);
       }
     });
   }

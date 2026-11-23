@@ -7,6 +7,7 @@ import { Butaca } from '../../models/butaca.interface';
 import { Sala } from '../../../salas/models/sala.interface';
 import { SalasService } from '../../../salas/services/salas.service';
 import { Nivel } from '../../../niveles/models/nivel.interface';
+import { ToastService } from '../../../../core/services/toast.service';
 import { finalize } from 'rxjs';
 @Component({
   selector: 'app-lista-butacas',
@@ -15,6 +16,8 @@ import { finalize } from 'rxjs';
   styleUrl: './lista-butacas.scss',
 })
 export class ListaButacas {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   private readonly butacasService = inject(ButacasService);
   private readonly salasService = inject(SalasService);
   private readonly router = inject(Router);
@@ -233,7 +236,10 @@ private cargarButacas(idNivel: string): void {
   }
 
   editarButaca(id: string, id_nivel:string): void {
+    console.log('ID BUTACA:', id);
+  console.log('NIVEL:', id_nivel);
     this.router.navigate(['/dashboard/butacas/editar', id, id_nivel]);
+    
   }
 
   
@@ -245,30 +251,57 @@ private cargarButacas(idNivel: string): void {
   }
 
   confirmarEliminacion(): void {
-  const id = this.butacaEliminarId();
+    const id = this.butacaEliminarId();
 
-  if (!id) return;
+    if (!id) return;
 
-  this.butacasService.eliminarButaca(id).subscribe({
-    next: () => {
-      console.log('Butaca eliminada correctamente');
+    this.butacasService.eliminarButaca(id).subscribe({
+      next: () => {
+        console.log('Butaca eliminada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Butaca eliminada correctamente.');
+          this.cerrarModal('modalEliminar');
 
-      // Quitar la butaca eliminada de la lista actual.
-      this.butacas.update(butacas =>
-        butacas.filter(butaca => butaca.id !== id)
-      );
+        // Quitar la butaca eliminada de la lista actual.
+        this.butacas.update(butacas =>
+          butacas.filter(butaca => butaca.id !== id)
+        );
 
-      // Limpiar el ID seleccionado para eliminar.
-      this.butacaEliminarId.set(null);
-    },
+        // Limpiar el ID seleccionado para eliminar.
+        this.butacaEliminarId.set(null);
+      },
 
-    error: (error) => {
-      console.error('Error al eliminar la butaca:', error);
-    },
-  });
-}
+      error: (err) => {
+        console.error('Error al eliminar la butaca:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg ='Error al eliminar la butaca o ya tiene asignación.';
+            
+            this.toast.error(msg);
+      },
+    });
 
 
+  }
+
+ /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
 
 
 

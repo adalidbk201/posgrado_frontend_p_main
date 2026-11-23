@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Nivel } from '../../models/nivel.interface';
 import { SalasService } from '../../../salas/services/salas.service';
 import { Sala } from '../../../salas/models/sala.interface';
- 
+import { ToastService } from '../../../../core/services/toast.service'; 
 
 @Component({
   selector: 'app-lista-niveles',
@@ -13,6 +13,8 @@ import { Sala } from '../../../salas/models/sala.interface';
   styleUrl: './lista-niveles.scss',
 })
 export class ListaNiveles {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   /** LISTAR NIVELES */
  // inyectar salasService
    private readonly salasService = inject(SalasService);
@@ -172,15 +174,46 @@ export class ListaNiveles {
      this.nivelesService.eliminarNivel(id).subscribe({
        next: () => {
          console.log('Nivel eliminado correctamente');
+           //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Nivel eliminado correctamente.');
+          this.cerrarModal('modalEliminar');
+
          // recarga desde el inicio para reflejar el borrado
          this.salas.set([]);
          this.paginaActual.set(0);
          this.cargarSalas(1);
          this.nivelEliminarId.set(null);
        },
-       error: (error) => {
-         console.error('Error al eliminar el nivel:', error);
+       error: (err) => {
+         console.error('Error al eliminar el nivel:', err);
+         // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg =   'Error al eliminar el nivel o ya tiene butacas asignadas.';
+            
+            this.toast.error(msg);
        },
      });
    }
+
+
+
+    /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
 }

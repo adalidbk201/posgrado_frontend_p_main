@@ -18,7 +18,13 @@ export interface Asignacion{
         columna: number | null,
         codigo_butaca: string,
         estado_butaca: string,
-        nivel: string,
+        nivel: {
+            id: string,
+            numero_nivel: number,
+            nombre_nivel: string,
+            filas: number,
+            columnas: number,
+        },
     },
     persona:{
         id:string,

@@ -5,6 +5,7 @@ import { Butaca } from '../../models/butaca.interface';
 import { ButacaEditarRequest, CrearButacaRequest } from '../../models/butaca-request.interface';
 // import { ButacaForm } from '../../components/butaca-form/butaca-form';
 import { ButacaEditarForm } from '../../components/butaca-editar-form/butaca-editar-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-butaca',
   imports: [ButacaEditarForm],
@@ -12,6 +13,8 @@ import { ButacaEditarForm } from '../../components/butaca-editar-form/butaca-edi
   styleUrl: './editar-butaca.scss',
 })
 export class EditarButaca {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
    // inyectar butacasService
   private readonly butacasService=inject(ButacasService)
 
@@ -93,14 +96,23 @@ export class EditarButaca {
   
           // Mostramos mensaje de éxito.
           console.log('Butaca actualizado correctamente');
+            //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Butaca actualizado correctamente.');
   
           // Volvemos al listado de roles.
           this.router.navigate(['/dashboard/butacas']);
         },
   
         // Si ocurrió un error.
-        error: (error) => {
-          console.error('Error al actualizar la butaca:', error);
+        error: (err) => {
+          console.error('Error al actualizar la butaca:', err);
+           // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'No se pudo restaurar la contraseña. Intente nuevamente.';
+            
+            this.toast.error(msg);
         },
       });
     }
