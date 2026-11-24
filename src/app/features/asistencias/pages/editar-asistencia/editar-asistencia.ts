@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Asistencia } from '../../models/asistencia.interface';
 import { AsistenciaEditarRequest } from '../../models/asistencia-request.interfacace';
 import { AsistenciaEditarForm } from '../../components/asistencia-editar-form/asistencia-editar-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-asistencia',
   imports: [AsistenciaEditarForm],
@@ -11,6 +12,8 @@ import { AsistenciaEditarForm } from '../../components/asistencia-editar-form/as
   styleUrl: './editar-asistencia.scss',
 })
 export class EditarAsistencia {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
    // injectar AsistenciasService
   private readonly asistenciasService= inject(AsistenciasService)
 
@@ -96,14 +99,23 @@ export class EditarAsistencia {
 
         // Mostramos mensaje de éxito.
         console.log('Asistencia actualizada correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Asistencia actualizada correctamente.');
 
         // Volvemos al listado de asistencias.
         this.router.navigate(['/dashboard/asistencias']);
       },
 
       // Si ocurrió un error.
-      error: (error) => {
-        console.error('Error al actualizar la asistencia:', error);
+      error: (err) => {
+        console.error('Error al actualizar la asistencia:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al actualizar la asistencia.';
+            
+            this.toast.error(msg);
       },
     });
   }

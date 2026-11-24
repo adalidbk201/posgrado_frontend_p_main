@@ -5,6 +5,7 @@ import { Sala } from '../../../salas/models/sala.interface';
 import { Comunicado } from '../../models/comunicado.interface';
 import { ComunicadoActualizarRequest, ComunicadoRequest } from '../../models/comunicado-request.interface';
 import { ComunicadoEditarForm }from '../../components/comunicado-editar-form/comunicado-editar-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-comunicado',
   imports: [ComunicadoEditarForm],
@@ -12,6 +13,8 @@ import { ComunicadoEditarForm }from '../../components/comunicado-editar-form/com
   styleUrl: './editar-comunicado.scss',
 })
 export class EditarComunicado {
+    /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // injectar ComunicadosService
   private readonly comunicadosService= inject(ComunicadosService)
 
@@ -95,14 +98,23 @@ export class EditarComunicado {
 
         // Mostramos mensaje de éxito.
         console.log('Comunicado actualizado correctamente');
+        //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Comunicado actualizado correctamente.');
 
         // Volvemos al listado de comunicados.
         this.router.navigate(['/dashboard/comunicados']);
       },
 
       // Si ocurrió un error.
-      error: (error) => {
-        console.error('Error al actualizar la comunicado:', error);
+      error: (err) => {
+        console.error('Error al actualizar la comunicado:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al actualizar la comunicado.';
+            
+            this.toast.error(msg);
       },
     });
   }

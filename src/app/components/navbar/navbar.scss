@@ -8,8 +8,8 @@
   top: 0;
   z-index: 50;
 
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  background: var(--color-background, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
 
   transition:
     background var(--transition-normal),
@@ -17,10 +17,9 @@
     box-shadow var(--transition-normal);
 
   &--scrolled {
-    background: color-mix(in srgb, var(--color-background) 80%, transparent);
+    background: color-mix(in srgb, var(--color-background) 85%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
     box-shadow: var(--shadow-sm);
   }
 }
@@ -35,10 +34,8 @@
   grid-template-columns: auto 1fr auto;
 
   align-items: center;
-
   gap: 40px;
 }
-
 
 /* =========================================================
    LOGO / MARCA
@@ -47,27 +44,61 @@
 .navbar__brand {
   display: flex;
   align-items: center;
-
   gap: 10px;
 
-  color: var(--color-text-primary);
   text-decoration: none;
-
   white-space: nowrap;
 }
 
-.navbar__brand img {
-  width: 110px;
-  height: 42px;
+/* Círculo azul con el logo */
+.navbar__logo-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+
+  background:   #00518C;
+  color: #ffffff;
+
+  flex-shrink: 0;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
-.navbar__brand span {
-  font-size: 1rem;
-  font-weight: 700;
+.navbar__logo-text {
+  font-size: 0.5rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
 }
 
+/* Texto "Posgrado UPEA" */
+.navbar__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.navbar__brand-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.navbar__brand-institution {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-primary, #1a73e8);
+  letter-spacing: 0.02em;
+}
 
 /* =========================================================
    NAVEGACIÓN
@@ -77,55 +108,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  gap: 30px;
+  gap: 8px;
 }
 
 .navbar__link {
   position: relative;
 
-  padding: 8px 0;
+  padding: 8px 18px;
+  border-radius: 50px;          /* ← Píldora */
 
-  color: var(--color-text-secondary);
+  color: var(--color-text-secondary, #374151);
 
   text-decoration: none;
-
   font-size: 0.92rem;
   font-weight: 600;
 
   transition:
-    color var(--transition-fast);
+    color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  }
+
+  /* Estado activo — píldora azul con texto blanco */
+  &--active {
+    color: #ffffff;
+    background: var(--color-primary);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--color-primary) 35%, transparent);
+
+    &:hover {
+      color: #ffffff;
+      background: var(--color-primary-dark, #1557b0);
+    }
+  }
 }
-
-.navbar__link:hover {
-  color: var(--color-primary);
-}
-
-.navbar__link::after {
-  content: '';
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 0;
-  height: 2px;
-
-  background: var(--color-primary);
-
-  transition: width var(--transition-fast);
-}
-
-.navbar__link:hover::after,
-.navbar__link--active::after {
-  width: 100%;
-}
-
-.navbar__link--active {
-  color: var(--color-primary);
-}
-
 
 /* =========================================================
    ACCIONES DEL NAVBAR
@@ -134,10 +153,8 @@
 .navbar__actions {
   display: flex;
   align-items: center;
-
   gap: 12px;
 }
-
 
 /* =========================================================
    BOTÓN TEMA
@@ -150,16 +167,15 @@
 
   width: 40px;
   height: 40px;
-
   padding: 0;
 
+  /* Mismo lenguaje visual que el botón Ingresar:
+     cuadrado redondeado en lugar de círculo */
   border: 1px solid var(--color-border);
-  border-radius: 50%;
+  border-radius: 10px;
 
   background: var(--color-surface);
-  color: var(--color-text-primary);
-
-  font-size: 1.1rem;
+  color: var(--color-text-secondary);
 
   cursor: pointer;
 
@@ -167,40 +183,51 @@
     background var(--transition-fast),
     color var(--transition-fast),
     border-color var(--transition-fast),
-    transform var(--transition-fast);
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: rotate(15deg);
+  }
+
+  &:active {
+    transform: rotate(15deg) scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
-
-.theme-button:hover {
-  background: var(--color-surface-hover);
-
-  color: var(--color-primary);
-
-  border-color: var(--color-primary);
-
-  transform: rotate(10deg);
-}
-
 
 /* =========================================================
-   BOTÓN INGRESAR NAVBAR
+   BOTÓN INGRESAR
    ========================================================= */
 
 .navbar__login {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 
   min-height: 40px;
-
-  padding: 0 18px;
+  padding: 0 20px;
 
   border-radius: 8px;
 
   background: var(--color-primary);
-  color: #fff;
+  color: #ffffff;
 
   text-decoration: none;
-
   font-size: 0.9rem;
   font-weight: 600;
 
@@ -208,21 +235,24 @@
     background var(--transition-fast),
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
+
+  &:hover {
+    background: var(--color-primary-dark, #1557b0);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: #ffffff;
+  }
 }
 
-.navbar__login:hover {
-  background: var(--color-primary-dark);
-
-  transform: translateY(-1px);
-
-  box-shadow: var(--shadow-md);
+.navbar__login-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
-
-
-// =====================================================
-// BOTÓN HAMBURGUESA
-// =====================================================
+/* =========================================================
+   BOTÓN HAMBURGUESA
+   ========================================================= */
 
 .navbar__burger {
   display: none;
@@ -253,23 +283,15 @@
   }
 
   &--open {
-    span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-    }
-
-    span:nth-child(2) {
-      opacity: 0;
-    }
-
-    span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
-    }
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   }
 }
 
-// =====================================================
-// PANEL MÓVIL
-// =====================================================
+/* =========================================================
+   PANEL MÓVIL
+   ========================================================= */
 
 .navbar__mobile {
   display: none;
@@ -286,7 +308,7 @@
     transition: max-height var(--transition-normal), border-color var(--transition-normal);
 
     &--open {
-      max-height: 24rem; // suficiente para los 5 links; ajusta si agregas más
+      max-height: 28rem;
       border-top-color: var(--color-border);
     }
 
@@ -300,76 +322,78 @@
 }
 
 .navbar__mobile-link {
-  padding: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+
   color: var(--color-text-secondary);
   text-decoration: none;
   font-size: 0.9375rem;
   font-weight: 500;
-  border-bottom: 1px solid var(--color-border);
+
+  transition: background var(--transition-fast), color var(--transition-fast);
 
   &:hover {
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
     color: var(--color-primary);
+  }
+
+  &--active {
+    background: var(--color-primary);
+    color: #ffffff;
+    font-weight: 600;
   }
 }
 
 .navbar__mobile-login {
   margin-top: 0.75rem;
   display: inline-flex;
+  align-items: center;
   justify-content: center;
+  gap: 8px;
+
   padding: 0.75rem 1.25rem;
   border-radius: 0.5rem;
+
   background: var(--color-primary);
-  color: var(--color-white, #fff);
+  color: #ffffff;
   font-weight: 600;
   text-decoration: none;
 
   &:hover {
     background: var(--color-primary-dark);
+    color: #ffffff;
   }
 }
-
-
-
-
 
 /* =========================================================
    RESPONSIVE — TABLET
    ========================================================= */
 
 @media (max-width: 992px) {
-
   .navbar__container {
     width: 94%;
-
-    grid-template-columns: auto 1fr auto;
-
     gap: 20px;
   }
 
   .navbar__nav {
-    gap: 18px;
+    gap: 4px;
   }
 
   .navbar__link {
     font-size: 0.85rem;
+    padding: 7px 14px;
   }
-
-  
 }
-
 
 /* =========================================================
    RESPONSIVE — MÓVIL
    ========================================================= */
 
 @media (max-width: 768px) {
-
   .navbar__container {
     display: flex;
     flex-wrap: wrap;
-
     min-height: auto;
-
     padding: 12px 0;
   }
 
@@ -378,47 +402,35 @@
   }
 
   .navbar__nav {
-    order: 3;
-
-    width: 100%;
-
-    justify-content: center;
-
-    gap: 20px;
-
-    padding-top: 12px;
+    display: none;
   }
 
   .navbar__actions {
     margin-left: 15px;
   }
 
-  .navbar__link {
-    font-size: 0.8rem;
-  }
-
   .navbar__login {
     padding: 0 14px;
+    font-size: 0.85rem;
   }
-
- 
 }
-
 
 /* =========================================================
    RESPONSIVE — MÓVIL PEQUEÑO
    ========================================================= */
 
 @media (max-width: 480px) {
+  .navbar__logo-circle {
+    width: 40px;
+    height: 40px;
 
-  .navbar__brand img {
-    width: 68px;
-    height: 38px;
+    svg { width: 18px; height: 18px; }
   }
 
-  .navbar__brand span {
-    font-size: 0.9rem;
-  }
+  .navbar__logo-text { font-size: 0.42rem; }
+
+  .navbar__brand-name { font-size: 0.75rem; }
+  .navbar__brand-institution { font-size: 0.95rem; }
 
   .theme-button {
     width: 36px;
@@ -427,21 +439,12 @@
 
   .navbar__login {
     min-height: 36px;
-
     padding: 0 12px;
-
     font-size: 0.82rem;
   }
 
-  .navbar__nav {
-    gap: 12px;
-  }
-
-  .navbar__link {
-    font-size: 0.72rem;
-  }
-
-  .navbar__nav{
-    display: none;
+  .navbar__login-icon {
+    width: 16px;
+    height: 16px;
   }
 }

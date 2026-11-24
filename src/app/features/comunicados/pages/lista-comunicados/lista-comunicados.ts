@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Comunicado } from '../../models/comunicado.interface';
 import { LowerCasePipe } from '@angular/common';
 import { environment } from '../../../../../environment/environment';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-lista-comunicados',
   imports: [LowerCasePipe],
@@ -11,6 +12,8 @@ import { environment } from '../../../../../environment/environment';
   styleUrl: './lista-comunicados.scss',
 })
 export class ListaComunicados {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // inyectar comunicadosService
   private readonly comunicadosService = inject(ComunicadosService);
 
@@ -192,14 +195,24 @@ export class ListaComunicados {
     this.comunicadosService.activarComunicado(id).subscribe({
       next: () => {
         console.log('Comunicado activado correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Comunicado activado correctamente.');
+          this.cerrarModal('modalActivar');
         // recarga desde el inicio para reflejar el borrado
         this.comunicados.set([]);
         this.paginaActual.set(0);
         this.cargarComunicados(1);
         this.comunicadoActivarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al activar el comunicado:', error);
+      error: (err) => {
+        console.error('Error al activar el comunicado:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al activar el comunicado.';
+            
+            this.toast.error(msg);
       },
     });
   }
@@ -211,15 +224,48 @@ export class ListaComunicados {
     this.comunicadosService.desactivarComunicado(id).subscribe({
       next: () => {
         console.log('Comunicado desactivado correctamente');
+         //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Comunicado desactivado correctamente.');
+          this.cerrarModal('modalDesactivar');
         // recarga desde el inicio para reflejar el borrado
         this.comunicados.set([]);
         this.paginaActual.set(0);
         this.cargarComunicados(1);
         this.comunicadoDesactivarId.set(null);
       },
-      error: (error) => {
-        console.error('Error al desactivar el comunicado:', error);
+      error: (err) => {
+        console.error('Error al desactivar el comunicado:', err);
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al desactivar el comunicado.';
+            
+            this.toast.error(msg);
       },
     });
   }
+
+
+   /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
+ 
 }

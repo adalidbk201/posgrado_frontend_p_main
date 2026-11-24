@@ -39,7 +39,7 @@ export class ButacaForm {
       '',
       [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(1),
         Validators.maxLength(150)
       ]
     ],

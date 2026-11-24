@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Asignacion } from '../../models/asignacion.interface';
 import { AsignacionRequest } from '../../models/asignacion-request.interface';
 import { AsignacionEditarForm } from '../../components/asignacion-editar-form/asignacion-editar-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-asignacion',
   imports: [AsignacionEditarForm],
@@ -11,6 +12,8 @@ import { AsignacionEditarForm } from '../../components/asignacion-editar-form/as
   styleUrl: './editar-asignacion.scss',
 })
 export class EditarAsignacion {
+  /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
   // injectar SalasService
   private readonly asignacionService= inject(AsignacionesService)
 
@@ -95,14 +98,24 @@ export class EditarAsignacion {
 
         // Mostramos mensaje de éxito.
         console.log('Asignacion actualizada correctamente');
+          //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Asignacion actualizada correctamente.');
 
         // Volvemos al listado de salas.
         this.router.navigate(['/dashboard/asignaciones']);
       },
 
       // Si ocurrió un error.
-      error: (error) => {
-        console.error('Error al actualizar la asignacion:', error);
+      error: (err) => {
+        console.error('Error al actualizar la asignacion:', err);
+
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al actualizar la asignación.';
+            
+            this.toast.error(msg);
       },
     });
   }

@@ -517,7 +517,7 @@ export class AsignacionEditarForm {
       }
 
       const idButaca = String(asignacion.butaca.id);
-      const idNivel = String(asignacion.butaca.nivel);
+      const idNivel = String(asignacion.butaca.nivel.id);
       const idSala = String(colacion.sala.id);
 
       // Marcar antes de restaurar los datos.

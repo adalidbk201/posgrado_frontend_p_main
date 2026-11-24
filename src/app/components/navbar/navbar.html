@@ -1,139 +1,129 @@
 <!-- =========================================================
-NAVBAR
-========================================================= -->
-  <header class="navbar" [class.navbar--scrolled]="scrolled()">
+     NAVBAR
+     ========================================================= -->
+<header class="navbar" [class.navbar--scrolled]="scrolled()">
 
-    <div class="navbar__container">
+  <div class="navbar__container">
 
-      <!-- Logo -->
+    <!-- 1. Logo / Marca -->
+    <a
+      class="navbar__brand"
+      routerLink="/"
+      aria-label="Posgrado UPEA - Inicio"
+    >
+      <span class="navbar__logo-circle">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M20 8 L34 14 L20 20 L6 14 Z" fill="currentColor" opacity="0.9"/>
+          <path d="M12 17 L12 24 C12 24 16 27 20 27 C24 27 28 24 28 24 L28 17" 
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="32" y1="15" x2="32" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="32" cy="24" r="1.5" fill="currentColor"/>
+        </svg>
+        <span class="navbar__logo-text">Posgrado</span>
+      </span>
+
+      <span class="navbar__brand-text">
+        <span class="navbar__brand-name">Posgrado</span>
+        <span class="navbar__brand-institution">UPEA</span>
+      </span>
+    </a>
+
+    <!-- 2. Navegación Desktop (¡Esta es la que faltaba!) -->
+    <nav class="navbar__nav" aria-label="Navegación principal">
       <a
-        class="navbar__brand"
-        routerLink="/"
-        aria-label="Posgrado UPEA - Inicio"
+        routerLink="/inicio"
+        routerLinkActive="navbar__link--active"
+        class="navbar__link"
       >
-        <img
-          [src]="logoSrc"
-          alt="Logo Posgrado UPEA"
-        />
+        Inicio
+      </a>
+      <a routerLink="/" fragment="conocenos"   class="navbar__link">Conócenos</a>
+      <a routerLink="/" fragment="testimonios" class="navbar__link">Testimonios</a>
+      <a routerLink="/" fragment="programas"   class="navbar__link">Programas</a>
+      <a routerLink="/" fragment="ubicacion"   class="navbar__link">Ubicación</a>
+    </nav>
 
-        <!-- <span>Posgrado</span> -->
+    <!-- 3. Acciones (Tema, Ingresar, Hamburguesa) -->
+    <div class="navbar__actions">
+
+      <!-- Botón de tema -->
+      <button
+        class="theme-button"
+        type="button"
+        (click)="toggleTheme()"
+        [attr.aria-label]="
+          themeService.theme() === 'light'
+            ? 'Activar modo oscuro'
+            : 'Activar modo claro'
+        "
+        [attr.aria-pressed]="themeService.theme() === 'dark'"
+        [title]="
+          themeService.theme() === 'light'
+            ? 'Cambiar a modo oscuro'
+            : 'Cambiar a modo claro'
+        "
+      >
+        @if (themeService.theme() === 'light') {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+        }
+      </button>
+
+      <!-- Login -->
+      <a routerLink="/login" class="navbar__login">
+        <svg class="navbar__login-icon" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+          <path d="M3 18a7 7 0 0 1 14 0H3Z"/>
+        </svg>
+        Ingresar
       </a>
 
-
-      <!-- Navegación -->
-      <nav
-        class="navbar__nav"
-        aria-label="Navegación principal"
+      <!-- Hamburguesa -->
+      <button
+        class="navbar__burger"
+        type="button"
+        [class.navbar__burger--open]="menuOpen()"
+        (click)="toggleMenu()"
+        [attr.aria-expanded]="menuOpen()"
+        aria-label="Abrir menú de navegación"
+        aria-controls="navbar-mobile-menu"
       >
-
-        <a
-          routerLink="/inicio"
-          class="navbar__link navbar__link--active"
-        >
-          Inicio
-        </a>
-
-        <a
-          routerLink="/" fragment="conocenos"
-          class="navbar__link"
-        >
-          Conócenos 
-        </a>
-
-        <a
-          routerLink="/" fragment="testimonios"
-          class="navbar__link"
-        >
-          Testimonios
-        </a>
-
-        <a
-          routerLink="/" fragment="programas"
-          class="navbar__link"
-        >
-          Programas
-        </a>
-
-        <!-- <a
-          href="#como-funciona"
-          class="navbar__link"
-        >
-          Cómo funciona
-        </a> -->
-
-        <a
-          routerLink="/" fragment="ubicacion"
-          class="navbar__link"
-        >
-          Ubicación
-        </a>
-
-      </nav>
-
-
-      <!-- Acciones -->
-      <div class="navbar__actions">
-
-        <!-- Botón de tema -->
-        <button
-          class="theme-button"
-          type="button"
-          (click)="toggleTheme()"
-          [attr.aria-label]="
-            themeService.theme() === 'light'
-              ? 'Activar modo oscuro'
-              : 'Activar modo claro'
-          "
-        >
-          {{ themeService.theme() === 'light' ? '☾' : '☀' }}
-          
-        </button>
-
-        <!-- Login -->
-        <a
-          routerLink="/login"
-          class="navbar__login"
-        >
-          Ingresar
-        </a>
-
-            <button
-            class="navbar__burger"
-            type="button"
-            [class.navbar__burger--open]="menuOpen()"
-            (click)="toggleMenu()"
-            [attr.aria-expanded]="menuOpen()"
-            aria-label="Abrir menú de navegación"
-            aria-controls="navbar-mobile-menu"
-            >
-                <span></span>
-                <span></span>
-                <span></span>
-
-                
-            </button>
-
-      </div>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
     </div>
+  </div>
 
-     <!-- =========================================================
-       MENÚ MÓVIL
-       ========================================================= -->
-    <div
-        id="navbar-mobile-menu"
-        class="navbar__mobile"
-        [class.navbar__mobile--open]="menuOpen()"
-    >
-        <nav aria-label="Navegación móvil">
-        <a routerLink="/" class="navbar__mobile-link" (click)="closeMenu()">Inicio</a>
-        <a href="#conocenos" class="navbar__mobile-link" (click)="closeMenu()">Conócenos</a>
-        <a href="#testimonios" class="navbar__mobile-link" (click)="closeMenu()">Testimonios</a>
-        <a href="#programas" class="navbar__mobile-link" (click)="closeMenu()">Programas</a>
-        <!-- <a href="#como-funciona" class="navbar__mobile-link" (click)="closeMenu()">Cómo funciona</a>s -->
-        <a href="#ubicacion" class="navbar__mobile-link" (click)="closeMenu()">Ubicación</a>
-        <a routerLink="/login" class="navbar__mobile-login" (click)="closeMenu()">Ingresar al sistema</a>
-        </nav>
-    </div>
+  <!-- 4. Menú Móvil -->
+  <div
+    id="navbar-mobile-menu"
+    class="navbar__mobile"
+    [class.navbar__mobile--open]="menuOpen()"
+  >
+    <nav aria-label="Navegación móvil">
+      <a routerLink="/inicio" class="navbar__mobile-link" routerLinkActive="navbar__mobile-link--active" (click)="closeMenu()">Inicio</a>
+      <a href="#conocenos" class="navbar__mobile-link" (click)="closeMenu()">Conócenos</a>
+      <a href="#testimonios" class="navbar__mobile-link" (click)="closeMenu()">Testimonios</a>
+      <a href="#programas" class="navbar__mobile-link" (click)="closeMenu()">Programas</a>
+      <a href="#ubicacion" class="navbar__mobile-link" (click)="closeMenu()">Ubicación</a>
+      <a routerLink="/login" class="navbar__mobile-login" (click)="closeMenu()">
+        <svg class="navbar__login-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+          <path d="M3 18a7 7 0 0 1 14 0H3Z"/>
+        </svg>
+        Ingresar al sistema
+      </a>
+    </nav>
+  </div>
 
-  </header>
+</header>

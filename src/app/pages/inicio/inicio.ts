@@ -11,7 +11,7 @@ import { ScrollToTop } from '../../components/scroll-to-top/scroll-to-top';
 import { ProgramasPosgrado } from '../../components/programas-posgrado/programas-posgrado';
 @Component({
   selector: 'app-inicio',
-  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Hero,Banner,ScrollToTop,ProgramasPosgrado],
+  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios,Banner,ScrollToTop,ProgramasPosgrado],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
 })

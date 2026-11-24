@@ -3,6 +3,7 @@ import { AsignacionesService } from '../../services/asignaciones.service';
 import { Router } from '@angular/router';
 import { AsignacionRequest } from '../../models/asignacion-request.interface';
 import { AsignacionForm } from '../../components/asignacion-form/asignacion-form';
+import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-crear-asignacion',
   imports: [AsignacionForm],
@@ -10,6 +11,8 @@ import { AsignacionForm } from '../../components/asignacion-form/asignacion-form
   styleUrl: './crear-asignacion.scss',
 })
 export class CrearAsignacion {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
    // inyectar asignacionService
   private readonly asignacionesService= inject(AsignacionesService)
 
@@ -23,17 +26,28 @@ export class CrearAsignacion {
       this.asignacionesService.crearAsignacion(datos).subscribe({
         next: () => {
           console.log('Asignacion creada correctamente');
+            //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Asignacion creada correctamente.');
   
           // Volver al listado
           this.router.navigate(['/dashboard/asignaciones']);
         },
   
-        error: (error) => {
-          console.error('Error al crear la asignacion:', error);
-            console.error('Error al crear la asignación:', error);
-            console.error('Estado HTTP:', error.status);
-            console.error('Respuesta del backend:', error.error);
+        error: (err) => {
+          console.error('Error al crear la asignacion:', err);
+            console.error('Error al crear la asignación:', err);
+            console.error('Estado HTTP:', err.status);
+            console.error('Respuesta del backend:', err.error);
+
+            // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al crear la asignación.';
+            
+            this.toast.error(msg);
         },
+        
       });
     }
 

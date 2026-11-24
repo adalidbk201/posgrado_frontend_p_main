@@ -14,6 +14,7 @@ import { ButacasService } from '../../../butacas/services/butacas.service';
 import { Butaca } from '../../../butacas/models/butaca.interface';
 
 import { Nivel } from '../../../niveles/models/nivel.interface';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-lista-asignaciones',
@@ -22,6 +23,8 @@ import { Nivel } from '../../../niveles/models/nivel.interface';
   styleUrl: './lista-asignaciones.scss',
 })
 export class ListaAsignaciones {
+   /** inyectar toas para notificaiones */
+   private toast = inject(ToastService);
 
   // =====================================================
   // SERVICIOS
@@ -502,6 +505,9 @@ export class ListaAsignaciones {
       next: (respuesta) => {
 
         console.log(respuesta.Message);
+           //  1. MOSTRAR TOAST DE ÉXITO
+          this.toast.exito('Se asignaron butacas automaticamente en la colación.');
+          this.cerrarModal('modalAsignacionAutomatica');
 
         // Limpiar los datos anteriores
         this.asignaciones.set([]);
@@ -515,14 +521,44 @@ export class ListaAsignaciones {
 
       },
 
-      error: (error) => {
+      error: (err) => {
         console.error(
           'Error al crear la asignación automática:',
-          error
+          err
         );
+
+        // Extrae el mensaje del backend si existe, sino usa uno por defecto
+            const msg = err?.error?.Errores.estado
+                    || err?.error?.Message 
+                    || err?.message 
+                    || 'Error al crear la asignación automática.';
+            
+            this.toast.error(msg);
       },
 
     });
   }
+
+
+  /** Cierra el modal de Bootstrap 4 de forma segura */
+  cerrarModal(idModal: string): void {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    // 1. Remover clases y atributos que mantienen el modal abierto en Bootstrap 4
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+
+    // 2. Limpiar el fondo oscuro (backdrop) si se quedó "pegado"
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+
+    // 3. Restaurar el scroll normal del cuerpo de la página
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
 
 }

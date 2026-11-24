@@ -122,6 +122,9 @@ export class AsistenciaForm {
     };
 
     this.guardar.emit({datos, id_colacion: v.colacion});
+    this.formulario.patchValue({
+        ci: '',
+      })
   }
 }
 
