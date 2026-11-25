@@ -57,8 +57,8 @@
   align-items: center;
   justify-content: center;
 
-  width: 46px;
-  height: 46px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
 
   background:   #00518C;
@@ -88,15 +88,15 @@
 }
 
 .navbar__brand-name {
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   font-weight: 500;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-text-secondary);
 }
 
 .navbar__brand-institution {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--color-primary, #1a73e8);
+  color: var(--color-text-secondary);
   letter-spacing: 0.02em;
 }
 
@@ -117,7 +117,7 @@
   padding: 8px 18px;
   border-radius: 50px;          /* ← Píldora */
 
-  color: var(--color-text-secondary, #374151);
+  color: var(--color-text-secondary);
 
   text-decoration: none;
   font-size: 0.92rem;
@@ -386,19 +386,42 @@
 }
 
 /* =========================================================
-   RESPONSIVE — MÓVIL
+   RESPONSIVE — MÓVIL (una sola fila)
    ========================================================= */
-
 @media (max-width: 768px) {
   .navbar__container {
     display: flex;
-    flex-wrap: wrap;
-    min-height: auto;
-    padding: 12px 0;
+    flex-wrap: nowrap;  /* ⭐ sin wrap: todo en una fila */
+    min-height: 64px;   /* ⭐ más compacto */
+    padding: 8px 0;
+    gap: 8px;           /* ⭐ gap reducido */
   }
 
   .navbar__brand {
     margin-right: auto;
+  }
+
+  /* Reducir logo para que quepa */
+  .navbar__logo-circle {
+    width: 38px;
+    height: 38px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .navbar__logo-text {
+    font-size: 0.4rem;
+  }
+
+  .navbar__brand-name {
+    font-size: 0.72rem;
+  }
+
+  .navbar__brand-institution {
+    font-size: 0.88rem;
   }
 
   .navbar__nav {
@@ -406,12 +429,32 @@
   }
 
   .navbar__actions {
-    margin-left: 15px;
+    margin-left: 0;
+    gap: 8px;  /* ⭐ gap compacto */
   }
 
+  /* Botón tema más pequeño */
+  .theme-button {
+    width: 36px;
+    height: 36px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  /* Botón Ingresar compacto */
   .navbar__login {
+    min-height: 36px;
     padding: 0 14px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    gap: 6px;
+  }
+
+  .navbar__login-icon {
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -448,3 +491,4 @@
     height: 16px;
   }
 }
+ 

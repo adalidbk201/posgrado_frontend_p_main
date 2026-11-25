@@ -1,129 +1,63 @@
 <!-- =========================================================
-     Banner 
+     HERO
      ========================================================= -->
 <section class="hero" id="hero">
 
-  <!-- 1. Carrusel de fondo (solo imágenes, sin contenido) -->
-  <div
-    id="heroCarousel"
-    class="carousel slide hero__carousel"
-    data-ride="carousel"
-    role="region"
-    aria-label="Galería de imágenes del Posgrado UPEA"
-  >
+  <!-- Carrusel de fondo (incluye overlay + indicadores dentro) -->
+  <div id="heroCarousel" class="carousel slide hero__carousel" data-ride="carousel"
+       role="region" aria-label="Galería de imágenes del Posgrado UPEA">
+
     <div class="carousel-inner hero__carousel-inner">
-
-      <div class="carousel-item active">
-        <img src="/img/fondo1.png" alt="" />
-      </div>
-      <div class="carousel-item">
-        <img src="/img/fondo2.png" alt="" />
-      </div>
-      <div class="carousel-item">
-        <img src="/img/fondo3.png" alt="" />
-      </div>
-      <div class="carousel-item">
-        <img src="/img/fondo4.png" alt="" />
-      </div>
-      <div class="carousel-item">
-        <img src="/img/fondo5.png" alt="" />
-      </div>
-      <div class="carousel-item">
-        <img src="/img/fondo6.png" alt="" />
-      </div>
-
+      <div class="carousel-item active"><img src="/img/fondo1.webp" alt="" loading="eager" decoding="async" /></div>
+      <div class="carousel-item"><img src="/img/fondo2.webp" alt="" loading="lazy" decoding="async" /></div>
+      <div class="carousel-item"><img src="/img/fondo3.webp" alt="" loading="lazy" decoding="async" /></div>
+      <div class="carousel-item"><img src="/img/fondo4.webp" alt="" loading="lazy" decoding="async" /></div>
+      <div class="carousel-item"><img src="/img/fondo5.webp" alt="" loading="lazy" decoding="async" /></div>
+      <div class="carousel-item"><img src="/img/fondo6.webp" alt="" loading="lazy" decoding="async" /></div>
     </div>
+
+    <!-- Overlay de legibilidad (dentro del carrusel, bajo los dots) -->
+    <div class="hero__overlay" aria-hidden="true"></div>
+
+    <!-- ⭐ Indicadores (dots) — Bootstrap 4 los sincroniza automáticamente -->
+    <ol class="carousel-indicators hero__indicators">
+      <li data-target="#heroCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#heroCarousel" data-slide-to="1"></li>
+      <li data-target="#heroCarousel" data-slide-to="2"></li>
+      <li data-target="#heroCarousel" data-slide-to="3"></li>
+      <li data-target="#heroCarousel" data-slide-to="4"></li>
+      <li data-target="#heroCarousel" data-slide-to="5"></li>
+    </ol>
+
   </div>
 
-  <!-- 2. Overlay degradado (legibilidad del texto) -->
-  <div class="hero__overlay" aria-hidden="true"></div>
-
-  <!-- 3. Contenido (capa superior fija) -->
+  <!-- Contenido (capa superior) -->
   <div class="hero__container">
-
     <div class="hero__content" data-aos="fade-right">
-
-      <span class="hero__eyebrow">
-        POSGRADO UPEA
-      </span>
-
-      <h1>
-        Sistema de Gestión
-        <span>de Butacas</span>
-      </h1>
-
+      <span class="hero__eyebrow">POSGRADO UPEA</span>
+      <h1>Sistema de Gestión <span>de Butacas</span></h1>
       <p class="hero__description">
-        Organiza y asigna butacas para eventos académicos
-        del Posgrado UPEA de manera rápida, ordenada y eficiente.
+        Organiza y asigna butacas para eventos académicos del Posgrado UPEA
+        de manera rápida, ordenada y eficiente.
       </p>
-
       <div class="hero__actions">
-
         <a routerLink="/login" class="hero__button">
-          <svg
-            class="hero__button-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M5 12h14" />
-            <path d="M13 6l6 6-6 6" />
+          <svg class="hero__button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
           </svg>
           Ingresar al sistema
         </a>
-
       </div>
-
     </div>
-
   </div>
 
-  <!-- 4. Controles del carrusel (fuera del carousel, z-index alto) -->
-  <button
-    class="hero__nav hero__nav--prev"
-    type="button"
-    data-target="#heroCarousel"
-    data-slide="prev"
-    aria-label="Imagen anterior"
-  >
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-         aria-hidden="true">
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  </button>
-
-  <button
-    class="hero__nav hero__nav--next"
-    type="button"
-    data-target="#heroCarousel"
-    data-slide="next"
-    aria-label="Imagen siguiente"
-  >
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-         aria-hidden="true">
-      <path d="M9 6l6 6-6 6" />
-    </svg>
-  </button>
-
-  <!-- 5. Indicador de scroll -->
-  <a
-    routerLink="/" fragment="conocenos"
-    class="hero__scroll"
-    aria-label="Desplazarse a la sección Conócenos"
-  >
+  <!-- Indicador de scroll -->
+  <a routerLink="/" fragment="conocenos" class="hero__scroll" aria-label="Desplazarse a Conócenos">
     <span>Descubre más</span>
     <span class="hero__scroll-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 5v14" />
-        <path d="M19 12l-7 7-7-7" />
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
     </span>
   </a>
 

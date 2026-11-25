@@ -9,9 +9,10 @@ import { Hero } from '../../components/hero/hero';
 import { Banner } from '../../components/banner/banner';
 import { ScrollToTop } from '../../components/scroll-to-top/scroll-to-top';
 import { ProgramasPosgrado } from '../../components/programas-posgrado/programas-posgrado';
+import { ComoFunciona } from '../../components/como-funciona/como-funciona';
 @Component({
   selector: 'app-inicio',
-  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios,Banner,ScrollToTop,ProgramasPosgrado],
+  imports: [Navbar, Footer, Conocenos, Ubicacion, Testimonios, Banner, ScrollToTop, ProgramasPosgrado, ComoFunciona],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
 })

@@ -1,0 +1,284 @@
+@use '../../../styles/variables' as v;
+
+/* =========================================================
+   SECCIÓN
+   ========================================================= */
+.como-funciona {
+  padding-block: v.$spacing-24;
+  background: var(--color-background);
+
+  @media (max-width: v.$breakpoint-md) {
+    padding-block: v.$spacing-16;
+  }
+}
+
+.como-funciona__container {
+  width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
+}
+
+/* =========================================================
+   HEADER: línea + título
+   ========================================================= */
+.como-funciona__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.como-funciona__line {
+  display: block;
+  width: 60px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.como-funciona__title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.2;
+ 
+}
+
+/* =========================================================
+   BODY: tarjeta con gradiente dinámico
+   ========================================================= */
+.como-funciona__body {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 2rem;
+
+  /* ⭐ Gradiente dinámico: azul primario muy sutil → superficie */
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 8%, transparent) 0%,
+    var(--color-surface) 60%
+  );
+  border: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent);
+  border-radius: 24px;
+  padding: 2.5rem;
+
+  box-shadow: var(--shadow-md);
+
+  align-items: center;
+
+  @media (max-width: v.$breakpoint-md) {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* =========================================================
+   LISTA DE PASOS
+   ========================================================= */
+.como-funciona__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+
+  @media (max-width: v.$breakpoint-md) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.como-funciona__step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+
+  @media (max-width: v.$breakpoint-md) {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   ÍCONO CIRCULAR
+   ========================================================= */
+.como-funciona__icon {
+  position: relative;
+
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* ⭐ Gradiente radial con color primario dinámico */
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--color-primary) 12%, transparent) 0%,
+    color-mix(in srgb, var(--color-primary) 4%, transparent) 70%
+  );
+  border: 2px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
+
+  flex-shrink: 0;
+
+  /* ⭐ Color del SVG: primario en claro, blanco en oscuro */
+  color: var(--color-primary);
+
+  svg {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.como-funciona__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color-primary);
+  color: #ffffff;
+
+  font-size: 0.8rem;
+  font-weight: 800;
+
+  border: 2px solid var(--color-surface);
+  box-shadow: color-mix(in srgb, var(--color-primary) 35%, transparent) 0 2px 6px;
+}
+
+/* =========================================================
+   TEXTO DEL PASO
+   ========================================================= */
+.como-funciona__step-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.como-funciona__step-desc {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 180px;
+
+  @media (max-width: v.$breakpoint-md) {
+    max-width: none;
+  }
+}
+
+/* =========================================================
+   FLECHAS ENTRE PASOS
+   ========================================================= */
+.como-funciona__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  @media (max-width: v.$breakpoint-md) {
+    display: none;
+  }
+}
+
+/* =========================================================
+   IMAGEN DECORATIVA (derecha)
+   ========================================================= */
+.como-funciona__image {
+  position: relative;
+
+  height: 320px;
+  width: 100%;
+
+  border-radius: 20px;
+  overflow: hidden;
+
+  /* ⭐ Gradiente con color primario */
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    color-mix(in srgb, var(--color-primary) 60%, #000) 100%
+  );
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: v.$breakpoint-md) {
+    height: 240px;
+    order: -1;
+  }
+}
+
+.como-funciona__check {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: color-mix(in srgb, var(--color-primary) 90%, transparent);
+  color: #ffffff;
+
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--color-primary) 40%, transparent);
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  @media (max-width: v.$breakpoint-md) {
+    width: 56px;
+    height: 56px;
+    top: 12px;
+    right: 12px;
+
+    svg { width: 28px; height: 28px; }
+  }
+}
+
+/* =========================================================
+   ACCESIBILIDAD — menos movimiento
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .como-funciona__check {
+    animation: none;
+  }
+}
