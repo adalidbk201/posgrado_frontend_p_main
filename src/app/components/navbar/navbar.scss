@@ -8,7 +8,7 @@
   top: 0;
   z-index: 50;
 
-  background: var(--color-background, #ffffff);
+  background: color-mix(in srgb, var(--color-background) 82%, transparent);
   border-bottom: 1px solid var(--color-border, #e5e7eb);
 
   transition:
@@ -391,10 +391,10 @@
 @media (max-width: 768px) {
   .navbar__container {
     display: flex;
-    flex-wrap: nowrap;  /* ⭐ sin wrap: todo en una fila */
-    min-height: 64px;   /* ⭐ más compacto */
+    flex-wrap: nowrap;  /*  sin wrap: todo en una fila */
+    min-height: 64px;   /*  más compacto */
     padding: 8px 0;
-    gap: 8px;           /* ⭐ gap reducido */
+    gap: 8px;           /*  gap reducido */
   }
 
   .navbar__brand {
@@ -430,7 +430,7 @@
 
   .navbar__actions {
     margin-left: 0;
-    gap: 8px;  /* ⭐ gap compacto */
+    gap: 8px;  /*  gap compacto */
   }
 
   /* Botón tema más pequeño */

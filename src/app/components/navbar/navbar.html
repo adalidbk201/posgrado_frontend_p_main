@@ -31,16 +31,54 @@
     <!-- 2. Navegación Desktop (¡Esta es la que faltaba!) -->
     <nav class="navbar__nav" aria-label="Navegación principal">
       <a
-        routerLink="/inicio"
-        routerLinkActive="navbar__link--active"
+        routerLink="/"
         class="navbar__link"
+        [class.navbar__link--active]="isActive('inicio')"
+        [attr.aria-current]="isActive('inicio') ? 'page' : null"
+        (click)="onNavClick('inicio')"
       >
         Inicio
       </a>
-      <a routerLink="/" fragment="conocenos"   class="navbar__link">Conócenos</a>
-      <a routerLink="/" fragment="testimonios" class="navbar__link">Testimonios</a>
-      <a routerLink="/" fragment="programas"   class="navbar__link">Programas</a>
-      <a routerLink="/" fragment="ubicacion"   class="navbar__link">Ubicación</a>
+
+      <a
+        routerLink="/" fragment="conocenos"
+        class="navbar__link"
+        [class.navbar__link--active]="isActive('conocenos')"
+        [attr.aria-current]="isActive('conocenos') ? 'page' : null"
+        (click)="onNavClick('conocenos')"
+      >
+        Conócenos
+      </a>
+
+      <a
+        routerLink="/" fragment="testimonios"
+        class="navbar__link"
+        [class.navbar__link--active]="isActive('testimonios')"
+        [attr.aria-current]="isActive('testimonios') ? 'page' : null"
+        (click)="onNavClick('testimonios')"
+      >
+        Testimonios
+      </a>
+
+      <a
+        routerLink="/" fragment="programas"
+        class="navbar__link"
+        [class.navbar__link--active]="isActive('programas')"
+        [attr.aria-current]="isActive('programas') ? 'page' : null"
+        (click)="onNavClick('programas')"
+      >
+        Programas
+      </a>
+
+      <a
+        routerLink="/" fragment="ubicacion"
+        class="navbar__link"
+        [class.navbar__link--active]="isActive('ubicacion')"
+        [attr.aria-current]="isActive('ubicacion') ? 'page' : null"
+        (click)="onNavClick('ubicacion')"
+      >
+        Ubicación
+      </a>
     </nav>
 
     <!-- 3. Acciones (Tema, Ingresar, Hamburguesa) -->

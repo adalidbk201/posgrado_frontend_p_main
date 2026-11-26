@@ -1,14 +1,16 @@
+@use '../../../styles/variables' as v;
+
 /* =========================================================
    PROGRAMAS DE POSGRADO
    ========================================================= */
 
 .programas-section {
-  width: 100%;
-  padding: 6rem 1.5rem;
+   width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
 
-  background: var(--bg-primary);
-
-  scroll-margin-top: 80px;
+  background: color-mix(in srgb, var(--color-background) 22%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 

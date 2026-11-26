@@ -23,7 +23,7 @@ export class Testimonios {
 
   readonly fotoActivaIndex = signal<number | null>(null);
 
-  // ⭐ Detectar si es móvil (breakpoint-sm = 576px, ajusta si usas otro)
+  //  Detectar si es móvil (breakpoint-sm = 576px, ajusta si usas otro)
   readonly isMobile = signal<boolean>(false);
 
   constructor() {
@@ -40,7 +40,7 @@ export class Testimonios {
   }
 
   abrirLightbox(index: number): void {
-    // ⭐ No abrir en móvil
+    //  No abrir en móvil
     if (this.isMobile()) return;
     this.fotoActivaIndex.set(index);
   }

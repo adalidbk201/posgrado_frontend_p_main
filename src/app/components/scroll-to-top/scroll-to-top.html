@@ -4,5 +4,27 @@
   [class.scroll-to-top--visible]="visible()"
   (click)="irArriba()"
   aria-label="Volver al inicio">
-  <span class="scroll-to-top__icon">^</span>
+
+  <!--  Anillo de progreso (detrás del ícono) -->
+  <svg class="scroll-to-top__ring" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="ring-track" cx="20" cy="20" r="17" />
+    <circle
+      class="ring-progress"
+      cx="20" cy="20" r="17"
+      [attr.stroke-dashoffset]="progressOffset()">
+    </circle>
+  </svg>
+
+  <!--  Chevron (encima del anillo) -->
+  <svg
+    class="scroll-to-top__icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true">
+    <path d="m6 14 6-6 6 6"/>
+  </svg>
 </button>

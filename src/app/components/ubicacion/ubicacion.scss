@@ -1,20 +1,14 @@
 @use '../../../styles/variables' as v;
 
 .ubicacion {
+    width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
   // background: var(--color-background);
   padding-block: v.$spacing-24;
 
-   background:
-    radial-gradient(
-      circle at 80% 20%,
-      var(--color-primary-light),
-      transparent 35%
-    ),
-    linear-gradient(
-      135deg,
-      var(--color-background),
-      var(--color-background-secondary)
-    );
+    background: color-mix(in srgb, var(--color-background) 22%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
      border-top: 1px solid var(--color-border);
 

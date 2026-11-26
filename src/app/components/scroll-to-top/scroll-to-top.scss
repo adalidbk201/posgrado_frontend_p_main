@@ -12,29 +12,49 @@
   border: none;
 
   background: var(--color-primary);
-  color: #fff;
-  box-shadow: var(--shadow-lg);
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 12px color-mix(in srgb, var(--color-primary) 45%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+
   cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
 
-  // oculto por defecto: invisible + desplazado hacia abajo + sin eventos de click
+  /* oculto por defecto */
   opacity: 0;
-  transform: translateY(1rem);
+  transform: translateY(1rem) scale(0.9);
   pointer-events: none;
 
-  transition: opacity var(--transition-normal), transform var(--transition-normal), background var(--transition-fast);
+  transition:
+    opacity var(--transition-normal),
+    transform var(--transition-normal),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
 
   &:hover {
     background: var(--color-primary-dark);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow:
+      0 8px 20px color-mix(in srgb, var(--color-primary) 55%, transparent),
+      0 3px 8px rgba(0, 0, 0, 0.18);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
   }
 
   &--visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     pointer-events: auto;
   }
 
@@ -46,7 +66,64 @@
   }
 }
 
-.scroll-to-top__icon {
-  line-height: 1;
+/* =========================================================
+   ANILLO DE PROGRESO
+   ========================================================= */
+.scroll-to-top__ring {
+  position: absolute;
+  // inset: -4px; // sale 4px más allá del botón
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+
+  // Rotar -90° para que el progreso empiece arriba (12 en punto)
+  transform: rotate(-90deg);
+
+  pointer-events: none; // no interfiere con el click del botón
 }
- 
+
+.ring-track,
+.ring-progress {
+  fill: none;
+  stroke-width: 3;
+  transform-origin: center;
+}
+
+/* Pista: blanco translúcido */
+.ring-track {
+  stroke: rgba(255, 255, 255, 0.35);
+}
+
+/* Progreso: blanco sólido, con transición suave */
+.ring-progress {
+  stroke: #ffffff;
+  stroke-dasharray: 106.81; // = 2π·17
+  stroke-linecap: round;
+  transition: stroke-dashoffset 120ms linear;
+}
+
+/* =========================================================
+   CHEVRON (encima del anillo)
+   ========================================================= */
+.scroll-to-top__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2; // sobre el anillo
+}
+
+/* =========================================================
+   ACCESIBILIDAD — menos movimiento
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-to-top {
+    transition: opacity 150ms linear;
+
+    &:hover,
+    &:active { transform: none; }
+  }
+
+  .ring-progress {
+    transition: none;
+  }
+}

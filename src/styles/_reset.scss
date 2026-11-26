@@ -17,11 +17,29 @@ body {
   margin: 0;
   padding: 0;
 
-  background: var(--color-background);
+  min-height: 100vh;
+
+  /*  Color de respaldo + imagen de fondo */
+  background-color: var(--color-background);
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  color: var(--color-text-primary);
 
   transition:
     background-color 250ms ease,
+    background-image 250ms ease,
     color 250ms ease;
+}
+
+/*  iOS no soporta background-attachment: fixed → scroll normal en móvil */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 

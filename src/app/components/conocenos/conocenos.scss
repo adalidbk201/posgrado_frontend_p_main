@@ -3,9 +3,9 @@
 .conocenos {
   
   padding-block: v.$spacing-24;
-  background:
-    radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-primary) 6%, transparent), transparent 35%),
-    linear-gradient(135deg, var(--color-background), var(--color-background-secondary));
+  background: color-mix(in srgb, var(--color-background) 22%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid var(--color-border);
 
   /*  MISMA fórmula que .container de responsive.scss */

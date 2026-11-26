@@ -1,21 +1,25 @@
 <footer class="footer">
 
+  <!-- =========================================================
+       CONTENEDOR PRINCIPAL
+       ========================================================= -->
   <div class="footer__container">
 
-    <!-- =========================================================
-         MARCA
-         ========================================================= -->
+    <!-- 1. Marca -->
     <div class="footer__brand">
 
-      <a  
-        routerLink="/"
-        aria-label="Posgrado UPEA - Inicio"
-      >
-        <img
-          src="/img/logo.png"
-          alt="Logo Posgrado UPEA"
-        />
-        <span></span>
+      <a routerLink="/" aria-label="Posgrado UPEA - Inicio" class="footer__logo">
+        <span class="footer__logo-circle">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M20 8 L34 14 L20 20 L6 14 Z" fill="currentColor" opacity="0.9"/>
+            <path d="M12 17 L12 24 C12 24 16 27 20 27 C24 27 28 24 28 24 L28 17"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="footer__logo-text">
+          <small>Posgrado</small>
+          <strong>UPEA</strong>
+        </span>
       </a>
 
       <p class="footer__description">
@@ -25,47 +29,72 @@
 
     </div>
 
-
-    <!-- =========================================================
-         NAVEGACIÓN
-         ========================================================= -->
+    <!-- 2. Navegación -->
     <div class="footer__column">
-
       <h3>Navegación</h3>
-
-      <nav aria-label="Enlaces del pie de página">
+      <nav aria-label="Enlaces del pie de página" class="footer__nav">
         <a routerLink="/">Inicio</a>
         <a href="#conocenos">Conócenos</a>
         <a href="#como-funciona">Cómo funciona</a>
         <a href="#ubicacion">Ubicación</a>
       </nav>
-
     </div>
 
-
-    <!-- =========================================================
-         CONTACTO
-         ========================================================= -->
+    <!-- 3. Contacto -->
     <div class="footer__column">
-
       <h3>Contacto</h3>
-
       <address>
         <p>Posgrado UPEA</p>
         <p>La Paz, Bolivia</p>
-        <p><a href="mailto:posgrado@upea.bo">posgrado&#64;upea.bo</a></p>
+        <p>
+          <a href="mailto:posgrado@upea.bo">posgrado&#64;upea.bo</a>
+        </p>
       </address>
+    </div>
+
+    <!-- 4. Copyright + Redes -->
+    <div class="footer__column footer__column--meta">
+
+      <p class="footer__copyright">
+        © {{ year }} Posgrado UPEA. Todos los derechos reservados.
+      </p>
+
+      <ul class="footer__social" aria-label="Redes sociales">
+        <li>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+             aria-label="Facebook de Posgrado UPEA">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z"/>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"
+             aria-label="YouTube de Posgrado UPEA">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 0 0 1 7.5C.5 9.4.5 12 .5 12s0 2.6.5 4.5a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.5.5-4.5s0-2.6-.5-4.5ZM9.8 15.5v-7l5.7 3.5-5.7 3.5Z"/>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+             aria-label="Twitter de Posgrado UPEA">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.3 1.7-2.3-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.6a4.1 4.1 0 0 0 1.3 5.5c-.6 0-1.3-.2-1.8-.5v.1c0 2 1.4 3.6 3.3 4a4.1 4.1 0 0 1-1.8.1 4.1 4.1 0 0 0 3.8 2.9A8.3 8.3 0 0 1 2 18.4a11.6 11.6 0 0 0 6.3 1.9c7.5 0 11.7-6.3 11.7-11.7v-.5c.8-.6 1.5-1.3 2-2.2Z"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
 
     </div>
 
   </div>
 
-
   <!-- =========================================================
-       BARRA INFERIOR
+       ONDA DECORATIVA INFERIOR
        ========================================================= -->
-  <div class="footer__bottom">
-    <p>© {{ year }} Posgrado UPEA. Todos los derechos reservados.</p>
-  </div>
+  <svg class="footer__wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,60 C240,110 480,10 720,50 C960,90 1200,20 1440,60 L1440,120 L0,120 Z"/>
+  </svg>
 
 </footer>

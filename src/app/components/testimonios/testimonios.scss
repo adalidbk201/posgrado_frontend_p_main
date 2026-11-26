@@ -1,8 +1,20 @@
 @use '../../../styles/variables' as v;
 
 .testimonios {
-  background: var(--color-background-secondary);
+    width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
+  position: relative;
+
   padding-block: v.$spacing-24;
+
+  /*  Fondo translúcido + blur: se ve la imagen global detrás */
+  background: color-mix(in srgb, var(--color-background) 22%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* Borde sutil que separa visualmente la sección sin "taparla" */
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
 
   @media (max-width: v.$breakpoint-md) {
     padding-block: v.$spacing-16;
@@ -13,6 +25,7 @@
    TÍTULO BICOLOR
    ========================================================= */
 .testimonios__title {
+  
   font-size: clamp(1.5rem, 2.6vw, 1.9rem);
   font-weight: 800;
   color: var(--color-text-primary);
@@ -20,6 +33,9 @@
   max-width: 46rem;
   margin: 0 auto v.$spacing-24;
   line-height: 1.3;
+
+  /*  Sombra de texto para contraste sobre la imagen */
+  text-shadow: 0 1px 2px color-mix(in srgb, var(--color-background) 80%, transparent);
 
   span {
     color: var(--color-primary);

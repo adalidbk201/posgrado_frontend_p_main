@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-footer',
   imports: [RouterLink],
@@ -7,7 +8,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './footer.scss',
 })
 export class Footer {
-  // Capturar año
   readonly year = new Date().getFullYear();
 }
-

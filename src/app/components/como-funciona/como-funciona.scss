@@ -3,13 +3,14 @@
 /* =========================================================
    SECCIÓN
    ========================================================= */
+/* En como-funciona.scss */
 .como-funciona {
-  padding-block: v.$spacing-24;
-  background: var(--color-background);
+  width: min(100% - (v.$container-padding * 2), v.$container-max-width);
+  margin-inline: auto;
 
-  @media (max-width: v.$breakpoint-md) {
-    padding-block: v.$spacing-16;
-  }
+  background: color-mix(in srgb, var(--color-background) 22%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .como-funciona__container {
@@ -53,7 +54,7 @@
   grid-template-columns: 1.3fr 1fr;
   gap: 2rem;
 
-  /* ⭐ Gradiente dinámico: azul primario muy sutil → superficie */
+  /*  Gradiente dinámico: azul primario muy sutil → superficie */
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--color-primary) 8%, transparent) 0%,
@@ -120,7 +121,7 @@
   align-items: center;
   justify-content: center;
 
-  /* ⭐ Gradiente radial con color primario dinámico */
+  /*  Gradiente radial con color primario dinámico */
   background: radial-gradient(
     circle at center,
     color-mix(in srgb, var(--color-primary) 12%, transparent) 0%,
@@ -130,7 +131,7 @@
 
   flex-shrink: 0;
 
-  /* ⭐ Color del SVG: primario en claro, blanco en oscuro */
+  /*  Color del SVG: primario en claro, blanco en oscuro */
   color: var(--color-primary);
 
   svg {
@@ -218,7 +219,7 @@
   border-radius: 20px;
   overflow: hidden;
 
-  /* ⭐ Gradiente con color primario */
+  /*  Gradiente con color primario */
   background: linear-gradient(
     135deg,
     var(--color-primary) 0%,
