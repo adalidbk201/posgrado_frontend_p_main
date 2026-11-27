@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthApiService } from '../../services/auth-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
+import { ThemeService } from '../../../../core/services/theme.service';
 @Component({
   imports: [
     ReactiveFormsModule,
@@ -16,6 +17,14 @@ import { UsuariosService } from '../../../usuarios/services/usuarios.service';
   templateUrl: './login.html',
 })
 export class Login {
+  // thema
+  readonly themeService = inject(ThemeService);
+  // =========================
+  // TEMA
+  // =========================
+  toggleTheme(): void {
+    this.themeService.toggle();
+  }
 
   private readonly authService = inject(AuthService);
 
@@ -36,6 +45,15 @@ export class Login {
     contrasena: ['', [Validators.required]],
     recordarme: [false],
   });
+
+  //  Logo que cambia según el tema
+  readonly iconoSrc = computed(() =>
+    this.themeService.theme() === 'dark'
+      ? '/img/logo-dark.webp'
+      : '/img/logo-light.webp'
+  );
+
+
 
   // Mostrar u ocultar contraseña
   readonly mostrarContrasena = signal(false);
@@ -187,7 +205,7 @@ export class Login {
       error: (error: HttpErrorResponse) => {
 
         console.error(
-          '❌ Error en login',
+          ' Error en login',
         );
 
         console.error(

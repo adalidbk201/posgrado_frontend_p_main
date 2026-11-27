@@ -30,6 +30,7 @@
   border-radius: 28px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-xl);
+   align-items: stretch;
 }
 
 /* ===== PANEL VISUAL ===== */
@@ -38,7 +39,10 @@
   overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content: center; 
   padding: 64px;
+  height: 100%; 
+  align-self: stretch;
   background: linear-gradient(
     145deg,
     color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)) 0%,
@@ -51,10 +55,11 @@
   z-index: 2;
   width: 100%;
   max-width: 500px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .visual-badge {
+   
   display: inline-flex;
   padding: 7px 13px;
   border-radius: 999px;
@@ -399,6 +404,7 @@
   content: '';
   flex: 1; height: 1px;
   background: var(--color-border);
+ 
 }
 
 /* ===== BOTÓN SECUNDARIO ===== */
@@ -516,4 +522,124 @@
   .login-button-secondary,
   .back-button,
   .spinner { transition: none; animation: none; }
+}
+
+
+/* =========================================================
+   BOTÓN TEMA
+   ========================================================= */
+
+.theme-button {
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  /* Mismo lenguaje visual que el botón Ingresar:
+     cuadrado redondeado en lugar de círculo */
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: rotate(15deg);
+  }
+
+  &:active {
+    transform: rotate(15deg) scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+/* =========================================================
+   BOTÓN DE TEMA — floating (esquina superior derecha)
+   ========================================================= */
+.login-theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+
+  width: 44px;
+  height: 44px;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: var(--color-surface);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: rotate(15deg);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:active {
+    transform: rotate(15deg) scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 760px) {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
 }

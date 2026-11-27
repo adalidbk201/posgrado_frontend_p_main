@@ -123,7 +123,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status !== 401) {
 
         console.log(
-          '❌ Error HTTP:',
+          ' Error HTTP:',
           error.status,
         );
 
@@ -266,7 +266,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         catchError((refreshError) => {
 
           console.error(
-            '❌ No se pudo renovar el access token',
+            ' No se pudo renovar el access token',
             refreshError,
           );
 

@@ -41,6 +41,8 @@
 --color-error: #d44f5c;
 --color-error-surface: #fff5f6;
 --color-error-border: #f1c4c8;
+// logo
+--logo-icono: url('/img/logo-light.webp');
 }
 
 
@@ -88,4 +90,7 @@
 --color-error: #f87171;
 --color-error-surface: rgba(248, 113, 113, 0.12);
 --color-error-border: rgba(248, 113, 113, 0.35);
+
+
+--logo-icono: url('/img/logo-dark.webp');
 }
